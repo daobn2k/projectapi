@@ -1,70 +1,52 @@
 import { Image, Space, Table } from 'antd'
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import {AiOutlineEdit,AiFillDelete} from 'react-icons/ai'
+import { GetProduct } from '../../axios';
 
-const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      category: 32,
-      description: 'New York No. 1 Lake Park',
-      price:3000
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      category: 42,
-      description: 'London No. 1 Lake Park',
-      price:3000
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      category: 32,
-      description: 'Sidney No. 1 Lake Park',
-      price:3000
-    },
-  ];
 
   const columns = [
     {
       title: 'Name',
-      dataIndex: 'name',
+      dataIndex: 'product_name',
       key: 'name',
     },
     {
       title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-      renden:() =>{
-
-      }
+      dataIndex: 'category_id',
+      key: 'category_id',
+      render:(e) =>
+        e
     },
     {
       title: 'Image',
-      dataIndex: 'image',
+      dataIndex: 'product_image',
       key: 'image',
-      render:() =>{
-          <Image 
-          src=""
-          />
+      render:(e) =>{
+        console.log(e)
+         return (<Image 
+          src={e}
+          />)
       }
     },
     {
       title: 'Description',
-      dataIndex: 'description',
+      dataIndex: 'product_description',
       key: 'description',
     },
     {
       title: 'Price',
-      dataIndex: 'price',
+      dataIndex: 'product_price',
       key: 'price',
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'product_quantity',
+      key: 'quantity',
     },
     {
       title: 'Action',
       key: 'action',
-      render: (text, record) => (
+      render: () => (
         <Space size="middle">
         <AiOutlineEdit />
          <AiFillDelete />
@@ -77,26 +59,20 @@ export default function ListProduct() {
     const [currentData, setCurrentData] = useState()
 
     useEffect(() => {
-      axios.get('http://127.0.0.1:8000/product',{
-        headers: {
-          "Content-Type": "application/json",
-          'Access-Control-Allow-Origin' : '*',
-          'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-      }
-      })
+      GetProduct()
       .then( res => {
-        console.log(res)
+        setCurrentData(res.data)
       }).catch(err =>{
         console.log(err)
       })
     }, [])  
     return (
-        <div>
+        <>
       
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={currentData}
         />
-      </div>
+      </>
     )
 }
