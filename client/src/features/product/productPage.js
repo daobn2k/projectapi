@@ -5,7 +5,9 @@ import listProduct from '../../components/product/listproduct'
 export default function productPage() {
     return (
         <>
+
            <Route path="/product" component ={listProduct} />
+
         </>
     )
 }
