@@ -1,9 +1,13 @@
-import { Image, Space, Table } from 'antd'
+import { Image, notification, Space, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import {AiOutlineEdit,AiFillDelete} from 'react-icons/ai'
 import { GetProduct } from '../../axios';
+import { DeleteProduct } from '../../axios/product';
+import { useHistory} from "react-router-dom";
+import queryString from 'query-string';     
 
-
+export default function ListProduct() {
+  const history = useHistory()
   const columns = [
     {
       title: 'Name',
@@ -12,18 +16,18 @@ import { GetProduct } from '../../axios';
     },
     {
       title: 'Category',
-      dataIndex: 'category_id',
-      key: 'category_id',
+      dataIndex: 'category',
+      key: 'category.id',
       render:(e) =>
-        e
+        e.name
     },
     {
       title: 'Image',
       dataIndex: 'product_image',
-      key: 'image',
       render:(e) =>{
-        console.log(e)
          return (<Image 
+          key={e.id}
+          width={100}
           src={e}
           />)
       }
@@ -44,18 +48,21 @@ import { GetProduct } from '../../axios';
       key: 'quantity',
     },
     {
+      title: 'Favorite',
+      dataIndex: 'product_hot',
+      key: 'product_hot',
+    },
+    {
       title: 'Action',
       key: 'action',
-      render: () => (
+      render: (e) => (
         <Space size="middle">
-        <AiOutlineEdit />
-         <AiFillDelete />
-
+        <AiOutlineEdit key={e.id} onClick={()=>handleEdit(e.id)}/>
+        <AiFillDelete key={e.id}  onClick={()=>handleDelete(e.id)}/>
         </Space>
       ),
     },
   ];
-export default function ListProduct() {
     const [currentData, setCurrentData] = useState()
 
     useEffect(() => {
@@ -65,7 +72,37 @@ export default function ListProduct() {
       }).catch(err =>{
         console.log(err)
       })
-    }, [])  
+
+    }, [currentData])  
+
+  
+   
+    const handleDelete = (id) =>{
+      DeleteProduct(id)
+      .then(res=>{
+        notification.success({
+          message: `Notification Delete`,
+          description:
+            'Delete Product SuccessFully !',
+          placement:'topRight ',
+        });
+      })
+      .catch(err=>{
+        notification.error({
+          message: `Notification Delete`,
+          description:
+            'Delete Product Failed !',
+          placement:'topRight ',
+        });
+      })
+    }
+
+    const handleEdit = (id) =>{
+      history.push({
+          pathname:`/product/add`,
+          search:'?' + new URLSearchParams({product_id:id}).toString()
+      })
+    }
     return (
         <>
       

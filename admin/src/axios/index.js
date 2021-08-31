@@ -7,10 +7,14 @@ const config = {
  };
 
 const getCategory = () => {
-   return axios.get('https://ecomerce-be.herokuapp.com/categories')
+   return axios.get('/category',config)
 }
 
 const GetProduct = ()=>{
    return axios.get('/product',config);
  }
-export { getCategory,GetProduct }
+
+const getProductbyId = (id) =>{
+      return axios.get(`/product/${id}`,config);
+}
+export { getCategory,GetProduct ,getProductbyId}
