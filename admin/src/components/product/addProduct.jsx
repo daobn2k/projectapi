@@ -1,7 +1,7 @@
 import { Button, Input, InputNumber, Form, Select } from 'antd';
 import queryString from 'query-string';
 import './product.css'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getCategory, getProductbyId } from '../../axios';
 import { addNewProduct, UpdateNewProduct } from '../../axios/product';
 import { storage } from '../../firebase'
@@ -11,7 +11,6 @@ import { useLocation } from 'react-router-dom';
 export default function AddProduct() {
   const [category, setCategory] = useState()
   const [currentData, setcurrentData] = useState({})
-  const [url, setUrl] = useState()
   const location = useLocation()
   const query = queryString.parse(location.search);
   let imageUrl = '';
@@ -28,7 +27,7 @@ export default function AddProduct() {
         .then(res => { setcurrentData(res.data) })
         .catch(err => { console.log(err) })
     }
-  }, [])
+  }, [query.product_id])
   const data = [
     { id: 0, name: 'Normal' },
     { id: 1, name: 'Favorite' },
@@ -70,7 +69,7 @@ export default function AddProduct() {
       product_hot: values.hot
       
     }
-    console.log(imageUrl);
+    console.log(data);  
     if (query.product_id) {
       UpdateNewProduct(query.product_id, data)
         .then(res => {

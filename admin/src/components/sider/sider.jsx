@@ -80,14 +80,17 @@ export default function SiderComponent({collapsed}) {
             <Menu.Item key="7" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
               <Link to="/product/list"> </Link>Product List</Menu.Item>
             <Menu.Item key="8" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
-              <Link to="/product/list"> </Link>New Product</Menu.Item>
+              <Link to="/product/detail"> </Link>View Product</Menu.Item>
             <Menu.Item key="9"  icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
               <Link to="/product/add"> </Link>New Product</Menu.Item>
             </SubMenu>
             <SubMenu className="SubMenu" key="sub3" icon={<MdShoppingBasket />} title="Category">
-            <Menu.Item key="10" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>Customer List</Menu.Item>
-            <Menu.Item key="11" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>View Customer</Menu.Item>
-            <Menu.Item key="12" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>new Customer</Menu.Item>
+            <Menu.Item key="10" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
+              <Link to="/category/list"> Category List</Link></Menu.Item>
+            <Menu.Item key="11" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
+              <Link to="/category/detail"> View Category</Link></Menu.Item>
+            <Menu.Item key="12" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
+              <Link to="/category/add"> New Category</Link></Menu.Item>
             </SubMenu>
             <SubMenu className="SubMenu" key="sub4" icon={<AiOutlineFolderOpen />} title="Orders">
             <Menu.Item key="13" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>Customer List</Menu.Item>

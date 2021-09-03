@@ -1,30 +1,12 @@
-import { Image, Space, Table } from 'antd'
-import React from 'react'
+import { Image, notification, Space, Table } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
 import {AiOutlineEdit,AiFillDelete} from 'react-icons/ai'
+import { useHistory } from 'react-router-dom';
+import { GetUser } from '../../axios';
+import { DeleteAccount } from '../../axios/account';
 
-const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      category: 32,
-      description: 'New York No. 1 Lake Park',
-      price:3000
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      category: 42,
-      description: 'London No. 1 Lake Park',
-      price:3000
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      category: 32,
-      description: 'Sidney No. 1 Lake Park',
-      price:3000
-    },
-  ];
+
+export default function ListCustomer() {
 
   const columns = [
     {
@@ -33,46 +15,101 @@ const data = [
       key: 'name',
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-      renden:() =>{
-
-      }
+      title: 'BirthDay',
+      dataIndex: 'dob',
+      key: 'dob',
     },
     {
-      title: 'Image',
+      title: 'Avatar',
       dataIndex: 'image',
-      key: 'image',
-      render:() =>{
-          <Image 
-          src=""
-          />
+      render:(e) =>{
+        return (<Image 
+          preview={false}
+          key={e}
+          width={50}
+          src={e}
+          />)
       }
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
+      title: 'Password',
+      dataIndex: 'password',
+      key: 'password',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phone',
     },
     {
       title: 'Action',
       key: 'action',
-      render: (text, record) => (
+      render: (e) => (
         <Space size="middle">
-        <AiOutlineEdit />
-         <AiFillDelete />
+        <AiOutlineEdit key={e.id} onClick={()=>handleEdit(e.id)}/>
+         <AiFillDelete key={e.id} onClick={()=>handleDelete(e.id)}/>
 
         </Space>
       ),
     },
   ];
-export default function ListCustomer() {
+    const history = useHistory()
+    const [data, setData] = useState()
+    const GetInfoUser =  useCallback(
+      () => {
+        GetUser()
+        .then(res =>
+          {
+            const ListUserData = res.data.filter( (e) => e.role === 'user')
+            setData(ListUserData)
+          }
+        ).catch(err=>{
+            console.log(err)
+        })
+      },
+      [],
+    )
+
+    useEffect(() => {
+      GetInfoUser()
+    }, [GetInfoUser,data])
+
+    const handleDelete = (id) =>{
+      DeleteAccount(id)
+      .then(res=>{
+        notification.success({
+          message: `Notification Delete`,
+          description:
+            'Delete Product SuccessFully !',
+          placement:'topRight ',
+        });
+      })
+      .catch(err=>{
+        notification.error({
+          message: `Notification Delete`,
+          description:
+            'Delete Product Failed !',
+          placement:'topRight ',
+        });
+      })
+    }
+
+    const handleEdit = (id) =>{
+      history.push({
+          pathname:`/customer/add`,
+          search:'?' + new URLSearchParams({account_id:id}).toString()
+      })
+    }
     return (
         <div>
       

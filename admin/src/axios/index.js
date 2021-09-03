@@ -13,8 +13,17 @@ const getCategory = () => {
 const GetProduct = ()=>{
    return axios.get('/product',config);
  }
+const GetUser = ()=>{
+   return axios.get('/user',config);
+ }
+const GetCategory = ()=>{
+   return axios.get('/category',config);
+}
 
 const getProductbyId = (id) =>{
       return axios.get(`/product/${id}`,config);
 }
-export { getCategory,GetProduct ,getProductbyId}
+const getUserbyId = (id) =>{
+      return axios.get(`/user/searchID=${id}`,config);
+}
+export { getCategory,GetProduct ,getProductbyId,GetUser,getUserbyId,GetCategory}

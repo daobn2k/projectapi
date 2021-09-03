@@ -1,51 +1,50 @@
 import styled from "styled-components";
-import { Container } from "../../globalStyled";
-import { RadarChartOutlined,ShoppingCartOutlined,HeartOutlined,SettingOutlined } from '@ant-design/icons'
+import { ShoppingCartOutlined,HeartOutlined,SettingOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom";
 
-
-
 export const Nav = styled.nav`
-background:#D7DBDC;
-height: 80px;
+width: 100%;
+background-color: transparent;
+height: 64px;
 display: flex;
-justify-content: center;
 align-items: center;
-position: sticky;
+position:absolute;
+padding:0 100px;
 font-size:1.2rem;
 top:0;
 z-index:999;
+
 `
 
 
-export const NavbarContainer = styled(Container)`
+export const NavbarContainer = styled.div`
 display:flex;
-/* justify-content: space-between; */
 height: 100%;
-${Container}
+width:100%;
 `
 
 export const NavLogo = styled.div`
-color:#101522;
-justify-self: flex-start;
+color:#333;
+justify-self: center;
 cursor: pointer;
 text-decoration: none;
-font-size:2rem;
+font-size:1.5rem;
 display:flex;
 align-items: center;
 
 `
 
-export const NavIcon = styled(RadarChartOutlined)`
+export const NavIcon = styled.img`
 margin-right:0.5rem;
 `
 
 export const NavMenu =styled.ul`
+height:64px;
 display:flex;
 align-items:center;
 text-align:center;
 justify-content: center;
-
+margin-bottom:0;
 `
 
 export const NavItem =styled.li`
@@ -56,24 +55,31 @@ justify-content: center;
 `
 
 export const NavLinks =styled(Link)`
-color:#101522;
+color:#1f1f1f;
 display: flex;
 align-items: center;
 text-decoration:none;
 font-size:1rem;
 padding:0.5rem 1rem;
 cursor: pointer;
-
 &:hover{
-    color:#9AA3E1;
+    color: #6c7ae0;
+}
+
+&:active{
+    color: #6c7ae0;
 }
 
 
 `
 export const NavMenuIcon =styled.ul`
 flex:1;
+height:64px;
 display:flex;
+align-items:center;
+text-align:center;
 justify-content: flex-end;
+margin-bottom:0;
 width:100%;
 `
 

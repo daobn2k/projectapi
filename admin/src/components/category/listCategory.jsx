@@ -1,57 +1,32 @@
 import { Image, notification, Space, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import {AiOutlineEdit,AiFillDelete} from 'react-icons/ai'
-import { GetProduct } from '../../axios';
-import { DeleteProduct } from '../../axios/product';
+import { GetCategory } from '../../axios';
 import { useHistory} from "react-router-dom";
+import { DeleteCategory } from '../../axios/category';
 
-export default function ListProduct() {
+export default function ListCategory() {
   const history = useHistory()
   const columns = [
     {
       title: 'Name',
-      dataIndex: 'product_name',
+      dataIndex: 'name',
       render: (e,item)=>
       
       <a style={{color:"#404040"}} key={item.id} href={`/product/detail?${item.id}`}> {e}</a> 
       
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      render: e=>
-      <a style={{color:"#404040"}} key={e.id} href={`/product/detail?${e.id}`}> {e.name}</a> 
-    },
-    {
       title: 'Image',
       dataIndex: 'product_image',
       render:(e) =>{
          return (<Image 
-          key={e.id}
+          preview={false}
+          key={e}
           width={50}
           src={e}
           />)
       }
-    },
-    {
-      title: 'Description',
-      dataIndex: 'product_description',
-      key: 'description',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'product_price',
-      key: 'price',
-    },
-    {
-      title: 'Quantity',
-      dataIndex: 'product_quantity',
-      key: 'quantity',
-    },
-    {
-      title: 'Favorite',
-      dataIndex: 'product_hot',
-      key: 'product_hot',
     },
     {
       title: 'Action',
@@ -67,19 +42,19 @@ export default function ListProduct() {
     const [currentData, setCurrentData] = useState()
 
     useEffect(() => {
-      GetProduct()
+      GetCategory()
       .then( res => {
         setCurrentData(res.data)
       }).catch(err =>{
         console.log(err)
       })
 
-    }, [currentData])  
+    }, [])  
 
   
    
     const handleDelete = (id) =>{
-      DeleteProduct(id)
+      DeleteCategory(id)
       .then(res=>{
         notification.success({
           message: `Notification Delete`,
@@ -100,8 +75,8 @@ export default function ListProduct() {
 
     const handleEdit = (id) =>{
       history.push({
-          pathname:`/product/add`,
-          search:'?' + new URLSearchParams({product_id:id}).toString()
+          pathname:`/category/add`,
+          search:'?' + new URLSearchParams({category_id:id}).toString()
       })
     }
     return (

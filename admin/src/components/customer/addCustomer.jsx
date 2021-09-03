@@ -1,15 +1,15 @@
-import { Button, Input, InputNumber, Form, Select, DatePicker } from 'antd';
+import { Button, Input,  Form , DatePicker } from 'antd';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react'
-import { getCategory, getProductbyId } from '../../axios';
-import { addNewProduct, UpdateNewProduct } from '../../axios/product';
+import {  getUserbyId } from '../../axios';
 import { storage } from '../../firebase'
 import { useLocation } from 'react-router-dom';
+import { addNewAccount } from '../../axios/account';
 
 
 export default function AddCustomer() {
-  const [category, setCategory] = useState()
-  const [currentData, setcurrentData] = useState({})
+  let datepicker = ''
+  const [currentData, setcurrentData] = useState([{}])
   const location = useLocation()
   const query = queryString.parse(location.search);
   let imageUrl = '';
@@ -18,20 +18,16 @@ export default function AddCustomer() {
     wrapperCol: { span: 8 },
   };
   useEffect(() => {
-    getCategory()
-      .then(res => setCategory(res.data))
-      .catch(err => console.log(err))
-    if (query.product_id) {
-      getProductbyId(query.product_id)
-        .then(res => { setcurrentData(res.data) })
+    if (query.account_id) {
+      getUserbyId(query.account_id)
+        .then(res => { 
+       
+          setcurrentData(res.data)
+         }) 
         .catch(err => { console.log(err) })
     }
-  }, [])
-  const data = [
-    { id: 0, name: 'Normal' },
-    { id: 1, name: 'Favorite' },
-    { id: 2, name: 'Hot' }
-  ]
+  }, [query.account_id])
+
   const handleChange = (e) => {
     console.log(e.target.files[0])
     if (e.target.files[0]) {
@@ -58,32 +54,31 @@ export default function AddCustomer() {
 
   const onFinish = (values) => {
     console.log(values)
-    // const data = {
-    //   product_name: values.name,
-    //   category_id: values.category,
-    //   product_quantity: values.quantity,
-    //   product_price: values.price,
-    //   product_description: values.description,
-    //   product_image: imageUrl,
-    //   product_hot: values.hot
-      
-    // }
-    // console.log(imageUrl);
+    const data = {
+      name: values.name,
+      dob: datepicker,
+      email: values.email,
+      phone: values.phone,
+      username: values.username,
+      password: values.password,
+      role: "membership",
+      image:imageUrl
+    }
     // if (query.product_id) {
     //   UpdateNewProduct(query.product_id, data)
     //     .then(res => {
     //       console.log(res)
     //     })
     // } else {
-    //   addNewProduct(data)
-    //     .then(res => { console.log(res) 
-    //     })
-    //     .catch(error => { console.log(error.response.data) })
+      addNewAccount(data)
+        .then(res => { console.log(res) 
+        })
+        .catch(error => { console.log(error.response.data) })
     // }
   }
+    console.log(currentData)
   return (
     <>
-      {currentData ? currentData.product_name : ''}
       <Form
       style={{height: "100%",
         display: "flex",
@@ -95,23 +90,27 @@ export default function AddCustomer() {
         fields={[
           {
             name: ["name"],
-            value: currentData ? currentData.product_name : '',
+            value: currentData ? currentData[0].name : '',
           },
           {
             name: ["username"],
-            value: currentData ? currentData.category_id : '',
+            value: currentData ? currentData[0].username : '',
           },
           {
-            name: ["password"],
-            value: currentData ? currentData.product_quantity : '',
+            name: ["dob"],
+            value: currentData ? currentData[0].dob : '',
           },
           {
             name: ["email"],
-            value: currentData ? currentData.product_price : '',
+            value: currentData ? currentData[0].email : '',
           },
           {
             name: ["phone"],
-            value: currentData ? currentData.product_description : '',
+            value: currentData ? currentData[0].phone : '',
+          },
+          {
+            name: ["image"],
+            value: currentData ? currentData[0].image : '',
           },
        
         ]}
@@ -141,9 +140,9 @@ export default function AddCustomer() {
           hasFeedback>
         <Input style={{ borderRadius: '4px', cursor: 'pointer' }} />
         </Form.Item>
-        <Form.Item 
-        name='password'
-        label="Password"
+       {query.account_id ? (<Form.Item 
+        name='Currentpassword'
+        label="CurrentPassword"
         rules={[
           {
             required: true,
@@ -152,6 +151,28 @@ export default function AddCustomer() {
         ]}
         initialValue=''
         hasFeedback
+        >
+          <Input.Password style={{ borderRadius: '4px', cursor: 'pointer' }}/>
+        </Form.Item>):''} 
+        <Form.Item 
+        name='password'
+        dependencies={['CurrentPassword']}
+        hasFeedback
+        label='Password'
+        rules={[
+          {
+            required: true,
+            message: 'Please confirm your password!',
+          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('The current password is the same as the new password!'));
+            },
+          }),
+        ]}
         >
           <Input.Password style={{ borderRadius: '4px', cursor: 'pointer' }}/>
         </Form.Item>
@@ -177,8 +198,9 @@ export default function AddCustomer() {
       >
         <Input.Password />
         </Form.Item>
-        <Form.Item name="date-picker" label="Date of Birth" >
-        <DatePicker format="YYYY-MM-DD"/>
+        <Form.Item name="datepicker" label="Date of Birth" format="YYYY-MM-DD">
+          
+        <DatePicker onChange={(date,dateString)=> datepicker = dateString} />
         </Form.Item>
         <Form.Item   name="email"
         label="E-mail"
@@ -200,6 +222,14 @@ export default function AddCustomer() {
          rules={[{ required: true, message: 'Please input your phone number!' }]}
         >
         <Input style={{ borderRadius: '4px', cursor: 'pointer' }} />
+        </Form.Item>
+        <Form.Item
+          name="image"
+          label="Avatar"
+          valuePropName="image"
+        >
+          <input name="upload" type="file" onChange={handleChange}></input>
+
         </Form.Item>
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button type="primary" htmlType="submit" style={{ width: '100%', height: '40px', borderRadius: '4px', fontSize: '16px' }}>

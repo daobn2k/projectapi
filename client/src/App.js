@@ -12,19 +12,22 @@ import { Container } from "./globalStyled";
 
 function App() {
   return (
-    <Router>
+    <Router >
+      <div style={{position:'relative'}}> 
       <GlobalStyle/>
       <NavBar />
       <Switch>
-        <Container>
 
         <Route path="/" exact component={HomePage} />
+        
+        <Container>
         <Route path="/product" exact component={productPage} />
-
         </Container>
+
        
 
       </Switch>
+      </div>
   </Router>
      
   );
