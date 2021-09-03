@@ -2,7 +2,9 @@ import { Button, Card, Col, Image, Row,Typography } from 'antd'
 import Meta from 'antd/lib/card/Meta'
 import React from 'react'
 import './product.css'
+import {ShoppingCartOutlined} from '@ant-design/icons'
 const { Title,Text } = Typography
+
 export default function ProductHot() {
     const data = [
         {
@@ -35,7 +37,7 @@ export default function ProductHot() {
         style={{
             marginBottom: "1.5rem",
             fontWeight: 700,
-            fontSize: 32,
+            fontSize: 24,
             lineHeight: 1.23,
         }}
         >
@@ -44,7 +46,7 @@ export default function ProductHot() {
         <Row gutter={24}>
          {data.map( (e,index)=>{
              return(
-                  <Col span={8}>
+                  <Col key={index} span={8}>
                         <Card                        
                          cover={<Image src ={e.image} style={{height:' 300px'}}/>} 
                          bordered={false}>
@@ -65,7 +67,7 @@ export default function ProductHot() {
                                     fontSize:14,
                                     marginBottom:8,
                                 }}>{e.description}</Text>
-                                <Button type="primary" className="BTN">Buy Now</Button>
+                                <Button type="primary" className="BTN"><ShoppingCartOutlined />Buy Now</Button>
                             </div>
                         } />
                         </Card>

@@ -79,14 +79,15 @@ height: 100vh;
 
 
 export const SliderButton =styled.div`
-position: absolute;
-bottom:100px;
-right:100px;
-display:flex;
-z-index: 10;
+
 `
 
 export const SliderPrev = styled(ArrowRightOutlined)`
+position: absolute;
+bottom:50%;
+right:0;
+z-index: 10;
+
 width:50px;
 height:50px;
 color:#fff;
@@ -107,6 +108,11 @@ justify-content: center;
 }
 `
 export const SliderNext = styled(ArrowLeftOutlined)`
+position: absolute;
+bottom:50%;
+left:10px;
+z-index: 10;
+
 display:flex;
 justify-content: center;
 align-items:center;

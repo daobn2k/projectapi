@@ -1,7 +1,7 @@
-import { Badge } from 'antd'
+import { Badge, Button } from 'antd'
 import React, { useState } from 'react'
 import { Nav,NavbarContainer,NavLogo,NavIcon,NavMenu,NavItem,NavLinks, IconShoppingCart, IconHeart, IconSettingUser, NavMenuIcon} from './NavBar.element'
-
+import {UserOutlined} from '@ant-design/icons'
 const listMenu =[
     {id:1,to:'/',title:'Home'},
     {id:2,to:'/product',title:'Product'},
@@ -10,8 +10,11 @@ const listMenu =[
     {id:5,to:'/contact',title:'Contact'},
 ]
 
+
 const NavBar = () => {
     const [navbar, setNavbar] = useState(false)
+    const [activeIndex, setActiveIndex] = useState(1)
+
     const ChangeBackground = () =>{
         if(window.scrollY >= 40) {
             setNavbar(true)
@@ -21,13 +24,16 @@ const NavBar = () => {
         }
     }
     window.addEventListener('scroll',ChangeBackground)
+
+    function chooseValue(item) {
+        setActiveIndex(item.id)
+        }
     return (
         <>
          <Nav style={{
              position:navbar?'fixed':'sticky',
-             background:navbar?'#fff':'',
-             boxShadow: navbar?'0 0px 3px 0px rgb(0 0 0 / 20%)':''
-             ,
+             background:navbar?'#fff':'#F7F7F7',
+             boxShadow: navbar?'0 0px 3px 0px rgb(0 0 0 / 20%)':'',
              
              }}>
             <NavbarContainer>
@@ -39,10 +45,21 @@ const NavBar = () => {
                 <NavMenu>
                 {listMenu.map((e,index) =>{
                     return(
-                        <NavItem key={index}>
-                        <NavLinks to={e.to} >
+                        <NavItem 
+                        key={index}
+                        onClick={()=>chooseValue(e)}
+                        >
+                        <NavLinks 
+                        to={e.to} 
+                        style={{
+                            color:activeIndex === e.id ? '#333':'#888',
+                            borderBottom: activeIndex === e.id ?'1px solid transparent':'',
+                            borderColor: activeIndex === e.id ?'#797979':''
+                        }}
+                        
+                        >
                                 {e.title}
-                            </NavLinks>
+                        </NavLinks>
                         </NavItem>
                     )
                 })}
@@ -57,13 +74,21 @@ const NavBar = () => {
                     </NavItem>
                     <NavItem>
                         <NavLinks to ='/'>
-                            <IconHeart />
+                            <IconHeart style={{color:"#404040"}}/>
                         </NavLinks>
                     </NavItem>
                     <NavItem>
                         <NavLinks to ='/'>
-                            <IconSettingUser />
+                            <IconSettingUser style={{color:"#404040"}}/>
                         </NavLinks>
+                    </NavItem>
+                    <NavItem>
+                        <NavLinks to ='/'>
+                          <UserOutlined style={{color:"#404040"}}/>
+                        </NavLinks>
+                    </NavItem>
+                    <NavItem>
+                        <Button>Sign In</Button>
                     </NavItem>
             
                 </NavMenuIcon>  

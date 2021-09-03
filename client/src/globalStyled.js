@@ -14,8 +14,8 @@ width: 100%;
 max-width:1300px;
 margin-left: auto ;
 margin-right: auto ;
-padding-right: 100px;
-padding-left: 100px;
+padding-right: 50px;
+padding-left: 50px;
 `
 
 export default GlobalStyle;

@@ -11,7 +11,7 @@ import {
   Slider,
   Content,
   ButtonStyled,
-  SliderButton
+
 
 } from './infoSection.element';
 
@@ -101,11 +101,8 @@ const InfoSection = () => {
               </Slide>
             )
           })}
-          <SliderButton>
             <SliderNext onClick={nextSlide} />
-
             <SliderPrev onClick={prevSlide} />
-          </SliderButton>
          
         </SectionWrapper>
       </Section>

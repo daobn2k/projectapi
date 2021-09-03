@@ -9,7 +9,7 @@ height: 64px;
 display: flex;
 align-items: center;
 position:absolute;
-padding:0 100px;
+padding: 0px 70px;
 font-size:1.2rem;
 top:0;
 z-index:999;
@@ -55,22 +55,16 @@ justify-content: center;
 `
 
 export const NavLinks =styled(Link)`
-color:#1f1f1f;
 display: flex;
 align-items: center;
 text-decoration:none;
 font-size:1rem;
-padding:0.5rem 1rem;
+margin-right: 30px;
 cursor: pointer;
 &:hover{
-    color: #6c7ae0;
+    color:#cd853f;
+    transform:scale(1.05);
 }
-
-&:active{
-    color: #6c7ae0;
-}
-
-
 `
 export const NavMenuIcon =styled.ul`
 flex:1;

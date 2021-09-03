@@ -1,0 +1,11 @@
+.ListItem{
+    height: 300px;
+    background: #f8f9fd;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.ant-card-meta-title{
+    text-align: center;
+}
