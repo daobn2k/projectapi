@@ -2,7 +2,6 @@ import { Col, Row } from 'antd'
 import React from 'react'
 import { Route } from 'react-router-dom'
 import AddCategory from '../components/category/addCategory'
-import deatailCategory from '../components/category/deatailCategory'
 import ListCategory from '../components/category/listCategory'
 
 export default function CategoryPage() {
@@ -13,7 +12,6 @@ export default function CategoryPage() {
     
         <Route path="/category/list" component={ListCategory} />
         <Route path="/category/add" component ={AddCategory} />
-        <Route path="/category/detail" component={deatailCategory} />
    
       </Col>
       </Row>

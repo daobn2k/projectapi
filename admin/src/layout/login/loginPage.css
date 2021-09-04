@@ -1,0 +1,60 @@
+.Container{
+    background-image: url(https://colorlib.com/etc/lf/Login_v4/images/bg-01.jpg);
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+}
+.Card{
+    background: #fff;
+    border-radius: 10px;
+    padding:55px;
+}
+.CardTitle{
+    font-size: 32px;
+    color: #333;
+    line-height: 1.2;
+    text-align: center;
+}
+.CardText{
+    padding-left: 15px;
+}
+.Button{
+    width: 100%;
+    font-size: 16px;
+    color: #fff;
+    line-height: 1.2;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    height: 50px;
+    cursor: pointer;
+    outline: none!important;
+    border: none;
+    transition: all 0.4s;
+    border-radius: 20px;
+    
+}
+
+.Input{
+    font-family: Poppins-Medium;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.2;
+    width: 100%;
+    height: 40px;
+}
+
+.Link{
+    text-align: center;
+    text-decoration: underline;
+    color:#333;
+    width: 100%;
+    font-size: 14;
+}

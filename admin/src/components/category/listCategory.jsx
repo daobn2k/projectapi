@@ -19,12 +19,15 @@ export default function ListCategory() {
     {
       title: 'Image',
       dataIndex: 'image',
-      render:(e) =>{
+      render:(e,index) =>{
          return (<Image 
           preview={false}
-          key={e}
-          width={50}
+          key={index}
           src={e}
+          style={{
+            width: 50,
+            height: 50
+          }}
           />)
       }
     },

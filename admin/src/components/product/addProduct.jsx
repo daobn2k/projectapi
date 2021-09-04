@@ -1,31 +1,31 @@
-import { Button, Input, InputNumber, Form, Select } from 'antd';
+import { Button, Input, InputNumber, Form, Select, Image, notification, Breadcrumb } from 'antd';
 import queryString from 'query-string';
 import './product.css'
 import React, { useEffect, useState } from 'react'
 import { getCategory, getProductbyId } from '../../axios';
 import { addNewProduct, UpdateNewProduct } from '../../axios/product';
 import { storage } from '../../firebase'
-import { useLocation } from 'react-router-dom';
-
+import { useLocation,useHistory } from 'react-router-dom';
+import {HomeOutlined} from '@ant-design/icons'
 
 export default function AddProduct() {
+  const history = useHistory()
   const [category, setCategory] = useState()
   const [currentData, setcurrentData] = useState({})
   const location = useLocation()
   const query = queryString.parse(location.search);
-  let imageUrl = '';
   const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 8 },
+    labelCol: { span: 4 },
+    wrapperCol: { span: 16 },
   };
   useEffect(() => {
     getCategory()
       .then(res => setCategory(res.data))
-      .catch(err => console.log(err))
+      .catch(err => {})
     if (query.product_id) {
       getProductbyId(query.product_id)
         .then(res => { setcurrentData(res.data) })
-        .catch(err => { console.log(err) })
+        .catch(err => { })
     }
   }, [query.product_id])
   const data = [
@@ -40,7 +40,11 @@ export default function AddProduct() {
         "state_changed",
         snapshot => { },
         error => {
-          console.log(error);
+          notification.error({
+            message: `Notification`,  
+            description:"  Upload Image Failed",
+            placement:'topRight',
+          });
         },
         () => {
           storage
@@ -48,44 +52,64 @@ export default function AddProduct() {
             .child(e.target.files[0].name)
             .getDownloadURL()
             .then(url => {
-              // setUrl(url)
-              imageUrl = url
+              setcurrentData({...currentData,product_image:url})
             })
         }
       )
     }
   }
 
-  const onFinish = (values) => {
+  const onFinish = () => {
 
-    const data = {
-      product_name: values.name,
-      category_id: values.category,
-      product_quantity: values.quantity,
-      product_price: values.price,
-      product_description: values.description,
-      product_image: imageUrl,
-      product_hot: values.hot
-      
-    }
-    console.log(data);  
     if (query.product_id) {
-      UpdateNewProduct(query.product_id, data)
+      UpdateNewProduct(query.product_id, currentData)
         .then(res => {
-          console.log(res)
+          notification.success({
+            message: `Notification`,  
+            description:"  Update Product SuccessFully",
+            placement:'topRight',
+          });
+        }).catch(err =>{
+          notification.error({
+            message: `Notification`,  
+            description:"  Update Product Failed",
+            placement:'topRight',
+          });
         })
     } else {
-      addNewProduct(data)
-        .then(res => { console.log(res) 
+      addNewProduct(currentData)
+        .then(res => {
+          history.push({
+            pathname:'/customer/list'
+          })
         })
-        .catch(error => { console.log(error.response.data) })
+        .catch(error => { 
+          notification.error({
+            message: `Notification`,  
+            description:"  Created Product Failed",
+            placement:'topRight',
+          });
+         })
     }
   }
   console.log(currentData)
   return (
-    <>
+    <div>
+    <Breadcrumb separator=">" style={{paddingBottom:20}}>
+    <Breadcrumb.Item href="">
+      <HomeOutlined />
+    </Breadcrumb.Item>
+    <Breadcrumb.Item>Product</Breadcrumb.Item>
+    <Breadcrumb.Item>{query.product_id ? 'Edit Product': 'Add Product'}</Breadcrumb.Item>
+  </Breadcrumb>
+    <div
+    className ="FormAddProduct"style={{display:"flex"}}
+    >
       <Form
         {...layout}
+        style={{
+          width:'50%'
+        }}
         name="nest-messages"
         onFinish={onFinish}
         fields={[
@@ -125,25 +149,34 @@ export default function AddProduct() {
           ]}
           hasFeedback
           name="name"
-          label="Name" >
+          label="Name" 
+          onChange = {(e)=> setcurrentData({...currentData,product_name:e.target.value})}
+          >
           <Input
              
             style={{ height: '40px', borderRadius: '4px', fontSize: 14, lineHeight: 22, cursor: 'pointer' }}
           />
         </Form.Item>
-        <Form.Item name='category' label="Category" >
+        <Form.Item name='category' label="Category" 
+        >
           <Select
             style={{ height: '40px', borderRadius: '4px', fontSize: 14, lineHeight: 22, cursor: 'pointer' }}
             options={category && category.map((o) => {
               return { id: o.id, value: o.id, label: o.name };
             })}
+            onChange = {(e)=> setcurrentData({...currentData,category_id:e})}
           >
           </Select>
         </Form.Item>
-        <Form.Item name='quantity' label="Quantity" >
-          <InputNumber style={{ borderRadius: '4px', cursor: 'pointer' }} />
+        <Form.Item name='quantity' label="Quantity" 
+        >
+          <InputNumber 
+          onChange = {(e)=> setcurrentData({...currentData,product_quantity:e})}
+          style={{ borderRadius: '4px', cursor: 'pointer' }} />
         </Form.Item>
         <Form.Item name='price' 
+          onChange = {(e)=> setcurrentData({...currentData,product_price:e.target.value})}
+
          rules={[
           {
             required: true,
@@ -158,6 +191,8 @@ export default function AddProduct() {
         <Form.Item 
           name='description'
           label="Description"
+          onChange = {(e)=> setcurrentData({...currentData,product_description:e.target.value})}
+
           rules={[
             {
               required: true,
@@ -168,12 +203,16 @@ export default function AddProduct() {
          >
           <Input.TextArea style={{ borderRadius: '4px', fontSize: 14, cursor: 'pointer' }} />
         </Form.Item>
-        <Form.Item name='hot' label="Favorite" >
+        <Form.Item name='hot' label="Favorite" 
+          onChange = {(e)=> setcurrentData({...currentData,product_hot:e.target.value})}
+        
+        >
           <Select
             style={{ height: '40px', borderRadius: '4px', fontSize: 14, lineHeight: 22, cursor: 'pointer' }}
             options={data.map((o) => {
               return { id: o.id, value: o.id, label: o.name };
             })}
+            onChange = {(e)=> setcurrentData({...currentData,product_hot:e})}
           >
           </Select>
         </Form.Item>
@@ -186,14 +225,26 @@ export default function AddProduct() {
 
         </Form.Item>
 
-        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 4 }}>
           <Button type="primary" htmlType="submit" style={{ width: '100%', height: '40px', borderRadius: '4px', fontSize: '16px' }}>
             Submit
           </Button>
         </Form.Item>
 
       </Form>
+      {
+    currentData.product_image?
+    ( <Image 
+      style={
+        {
+          width:'100%',
+          height:'300px'
+        }
+      }
+      src={currentData.product_image}/>):''
 
-    </>
+      }        
+    </div>
+    </div>
   )
 }

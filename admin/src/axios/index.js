@@ -29,4 +29,13 @@ const getUserbyId = (id) =>{
 const getCategorybyId = (id) =>{
       return axios.get(`/category/${id}`,config);
 }
-export { getCategory,GetProduct ,getProductbyId,GetUser,getUserbyId,GetCategory,getCategorybyId}
+
+
+export { getCategory,
+   GetProduct ,
+   getProductbyId,
+   GetUser,
+   getUserbyId,
+   GetCategory,
+   getCategorybyId
+}

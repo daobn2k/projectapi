@@ -65,7 +65,6 @@ export default function ListProduct() {
     },
   ];
     const [currentData, setCurrentData] = useState()
-
     useEffect(() => {
       GetProduct()
       .then( res => {

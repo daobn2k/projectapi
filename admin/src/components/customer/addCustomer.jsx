@@ -1,33 +1,43 @@
-import { Button, Input,  Form , DatePicker, notification } from 'antd';
+import { Button, Input,  Form , DatePicker, notification, Image, Breadcrumb } from 'antd';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react'
 import {  getUserbyId } from '../../axios';
 import { storage } from '../../firebase'
 import {  useLocation,useHistory } from 'react-router-dom';
 import { addNewAccount, UpdateAccount } from '../../axios/account';
+import {HomeOutlined} from '@ant-design/icons'
 
+import './customer.css'
+import moment from 'moment'
 
 export default function AddCustomer() {
-  let datepicker = ''
-  const [currentData, setcurrentData] = useState([{}])
+  const [currentData, setcurrentData] = useState({
+    name: '',
+      dob: '',
+      email: '',
+      phone: '',
+      username: '',
+      password: '',
+      role: "user",
+      image:''
+  })
   const location = useLocation()
   const query = queryString.parse(location.search);
-  let imageUrl = '';
   const history = useHistory()
   const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 8 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 16 },
   };
   useEffect(() => {
-    if (query.account_id) {
-      getUserbyId(query.account_id)
+    if (query.customer_id) {
+      getUserbyId(query.customer_id)
         .then(res => { 
        
           setcurrentData(res.data)
          }) 
-        .catch(err => { console.log(err) })
+        .catch(err => {})
     }
-  }, [query.account_id])
+  }, [query.customer_id])
 
   const handleChange = (e) => {
     if (e.target.files[0]) {
@@ -36,7 +46,7 @@ export default function AddCustomer() {
         "state_changed",
         snapshot => { },
         error => {
-          console.log(error);
+         
         },
         () => {
           storage
@@ -44,33 +54,31 @@ export default function AddCustomer() {
             .child(e.target.files[0].name)
             .getDownloadURL()
             .then(url => {
-              imageUrl = url
+              setcurrentData({...currentData,image:url})
             })
         }
       )
     }
   }
 
-  const onFinish = (values) => {
-  
-    const data = {
-      name: values.name,
-      dob: datepicker,
-      email: values.email,
-      phone: values.phone,
-      username: values.username,
-      password: values.password,
-      role: "user",
-      image:imageUrl
-    }
- 
-    if (query.account_id) {
-      UpdateAccount(query.account_id, data)
+  const onFinish = () => {
+    if (query.customer_id) {
+      UpdateAccount(query.customer_id, currentData)
         .then(res => {
-          console.log(res)
+          notification.success({
+            message: `Notification`,  
+            description:" Update Info SuccessFully",
+            placement:'topRight',
+          });
+        }).catch(err=>{
+          notification.error({
+            message: `Notification`,  
+            description:" Error Can't Update Data",
+            placement:'topRight',
+          });
         })
     } else {
-      addNewAccount(data)
+      addNewAccount(currentData)
         .then(res => {
           if(res){
             history.push({
@@ -78,7 +86,6 @@ export default function AddCustomer() {
             })
           }
       }).catch(err=>{
-        console.log(err)
         notification.error({
           message: `Notification`,  
           description:" Accout Or Email Is Currently Inactive",
@@ -89,11 +96,20 @@ export default function AddCustomer() {
        
     }
   }
-    console.log(currentData)
   return (
-    <>
+    <div>
+    <Breadcrumb separator=">" style={{paddingBottom:20,paddingLeft:40}}>
+    <Breadcrumb.Item href="">
+      <HomeOutlined />
+    </Breadcrumb.Item>
+    <Breadcrumb.Item>Customer</Breadcrumb.Item>
+    <Breadcrumb.Item>{query.customer_id ? 'Edit Customer': 'Add Customer'}</Breadcrumb.Item>
+  </Breadcrumb>
+    <div  className ="FormAddCustomer"style={{display:"flex"}}>
       <Form
-      style={{height: "100%",
+      style={{
+        width:'50%',
+        height: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",}}
@@ -103,27 +119,27 @@ export default function AddCustomer() {
         fields={[
           {
             name: ["name"],
-            value: currentData ? currentData[0].name : '',
+            value: currentData ? currentData.name : '',
           },
           {
             name: ["username"],
-            value: currentData ? currentData[0].username : '',
+            value: currentData ? currentData.username : '',
           },
           {
-            name: ["dob"],
-            value: currentData ? currentData[0].dob : '',
+            name: ["datepicker"],
+            value: currentData ? moment(currentData.dob) : '',
           },
           {
             name: ["email"],
-            value: currentData ? currentData[0].email : '',
+            value: currentData ? currentData.email : '',
           },
           {
             name: ["phone"],
-            value: currentData ? currentData[0].phone : '',
+            value: currentData ? currentData.phone : '',
           },
           {
             name: ["image"],
-            value: currentData ? currentData[0].image : '',
+            value: currentData ? currentData.image : '',
           },
        
         ]}
@@ -137,13 +153,17 @@ export default function AddCustomer() {
           ]}
           hasFeedback
           name="name"
-          label="Full Name" >
+          label="Full Name"
+          onChange = {(e)=> setcurrentData({...currentData,name:e.target.value})}
+          >
+        
           <Input/>
         </Form.Item>
   
         <Form.Item 
           name='username'
          label="UserName" 
+         onChange = {(e)=> setcurrentData({...currentData,username:e.target.value})}
          rules={[
             {
               required: true,
@@ -153,67 +173,27 @@ export default function AddCustomer() {
           hasFeedback>
         <Input style={{ borderRadius: '4px', cursor: 'pointer' }} />
         </Form.Item>
-       {query.account_id ? (<Form.Item 
-        name='Currentpassword'
-        label="CurrentPassword"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-        initialValue=''
-        hasFeedback
-        >
-          <Input.Password style={{ borderRadius: '4px', cursor: 'pointer' }}/>
-        </Form.Item>):''} 
+     
         <Form.Item 
         name='password'
-        dependencies={['CurrentPassword']}
         hasFeedback
         label='Password'
+        onChange = {(e)=> setcurrentData({...currentData,password:e.target.value})}
+
         rules={[
           {
             required: true,
             message: 'Please confirm your password!',
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('The current password is the same as the new password!'));
-            },
-          }),
+          }
+         
         ]}
         >
           <Input.Password style={{ borderRadius: '4px', cursor: 'pointer' }}/>
         </Form.Item>
-        <Form.Item
-        name="confirm"
-        label="Confirm Password"
-        dependencies={['password']}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: 'Please confirm your password!',
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('The two passwords that you entered do not match!'));
-            },
-          }),
-        ]}
-      >
-        <Input.Password />
-        </Form.Item>
+       
         <Form.Item name="datepicker" label="Date of Birth" format="YYYY-MM-DD">
           
-        <DatePicker onChange={(date,dateString)=> datepicker = dateString} />
+        <DatePicker onChange={(date,dateString)=> setcurrentData({...currentData,dob:dateString})} />
         </Form.Item>
         <Form.Item   name="email"
         label="E-mail"
@@ -226,13 +206,18 @@ export default function AddCustomer() {
             required: true,
             message: 'Please input your E-mail!',
           },
-        ]} >
+        ]} 
+        onChange = {(e)=> setcurrentData({...currentData,email:e.target.value})}
+        
+        >
         <Input style={{ borderRadius: '4px', cursor: 'pointer' }} />
         </Form.Item>
         <Form.Item   
          name="phone"
-         label="TelePhone"
+         label="Phone"
          rules={[{ required: true, message: 'Please input your phone number!' }]}
+        onChange = {(e)=> setcurrentData({...currentData,phone:e.target.value})}
+
         >
         <Input style={{ borderRadius: '4px', cursor: 'pointer' }} />
         </Form.Item>
@@ -242,16 +227,26 @@ export default function AddCustomer() {
           valuePropName="image"
         >
           <input name="upload" type="file" onChange={handleChange}></input>
-
+        
         </Form.Item>
-        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
           <Button type="primary" htmlType="submit" style={{ width: '100%', height: '40px', borderRadius: '4px', fontSize: '16px' }}>
             Submit
           </Button>
         </Form.Item>
-       
       </Form>
-
-    </>
+      {
+    currentData.image?
+    ( <Image 
+      style={
+        {
+          width:'100%',
+          height:'300px'
+        }
+      }
+      src={currentData.image}/>):null
+      }
+    </div>
+    </div>
   )
 }

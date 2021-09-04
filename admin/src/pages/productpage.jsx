@@ -2,7 +2,6 @@ import { Col, Row } from 'antd'
 import React from 'react'
 import { Route } from 'react-router-dom'
 import AddProduct from '../components/product/addProduct'
-import deatailProduct from '../components/product/deatailProduct'
 import ListProduct from '../components/product/listProduct'
 
 export default function ProductPage() {
@@ -13,7 +12,6 @@ export default function ProductPage() {
     ,padding: 24}}>
             <Route path="/product/list" component={ListProduct} />
             <Route path="/product/add" component ={AddProduct} />
-            <Route path="/product/detail" component={deatailProduct} />
        
           </Col>
 

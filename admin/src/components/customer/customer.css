@@ -1,7 +1,4 @@
-.ant-select-selector{
-    height: 40px !important;
-}
-.FormAddCategory .ant-image{
+.FormAddCustomer .ant-image{
     flex: 1;
     height: 300px;
     display: flex;

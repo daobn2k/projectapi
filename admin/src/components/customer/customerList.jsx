@@ -22,10 +22,10 @@ export default function ListCustomer() {
     {
       title: 'Avatar',
       dataIndex: 'image',
-      render:(e) =>{
+      render:(e,index) =>{
         return (<Image 
-          preview={false}
-          key={e}
+          style={{borderRadius:0,height:'50px',objectFit:'cover'}}
+          key={index}
           width={50}
           src={e}
           />)
@@ -82,7 +82,7 @@ export default function ListCustomer() {
 
     useEffect(() => {
       GetInfoUser()
-    }, [GetInfoUser])
+    }, [GetInfoUser,data])
 
     const handleDelete = (id) =>{
       DeleteAccount(id)
@@ -107,7 +107,7 @@ export default function ListCustomer() {
     const handleEdit = (id) =>{
       history.push({
           pathname:`/customer/add`,
-          search:'?' + new URLSearchParams({account_id:id}).toString()
+          search:'?' + new URLSearchParams({customer_id:id}).toString()
       })
     }
     return (

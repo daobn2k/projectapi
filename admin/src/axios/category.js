@@ -5,7 +5,7 @@ const addCategory = async(data) =>{
 }
 
 const UpdateCategory = async(id,data) =>{
-  return await axios.put(`/category/update/${id}`, data);
+  return await axios.put(`/category/${id}`, data);
 }
 const DeleteCategory = async(id) =>{
   return await axios.delete(`/category/${id}`);
