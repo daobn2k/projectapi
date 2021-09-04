@@ -67,7 +67,7 @@ export default function ProductHot() {
                                     fontSize:14,
                                     marginBottom:8,
                                 }}>{e.description}</Text>
-                                <Button type="primary" className="BTN"><ShoppingCartOutlined />Buy Now</Button>
+                                <Button type="primary" className="BTN"><ShoppingCartOutlined />Add To Cart</Button>
                             </div>
                         } />
                         </Card>

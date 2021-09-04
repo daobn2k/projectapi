@@ -44,11 +44,13 @@ export const ButtonPayment = styled(Button)`
     height: 46px;
     line-height: 20px;
     font-size: 16px;
-    background:#000;
+    background-color: #f74877;
+
     color:#fff;
     &:hover{
-    color:#cd853f;
-    background:#000;
+    color:#fff;
+    background-color: #f74877;
+
     transform:scale(1.05);
 }
 `

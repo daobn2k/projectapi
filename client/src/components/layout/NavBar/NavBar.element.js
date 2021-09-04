@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ShoppingCartOutlined,HeartOutlined,SettingOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom";
+import { Button } from "antd/lib/radio";
 
 export const Nav = styled.nav`
 width: 100%;
@@ -88,4 +89,34 @@ font-size:1.2rem;
 export const IconSettingUser = styled(SettingOutlined)`
 font-size:1.2rem;
 
+`
+
+export const CartDetail = styled.div`
+display:flex;
+`
+export const TitleCart = styled.h1`
+    font-size: 16px;
+    color: #555;
+    line-height: 1.3;
+    font-weight: bold;
+`
+export const TextCart = styled.p`
+    font-size: 14px;
+    color: #888;
+    line-height: 1.5;
+`
+export const ButtonPayment = styled(Button)`
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: 47%;
+    height: 46px;
+    line-height: 20px;
+    font-size: 16px;
+    background-color: #f74877;
+    color:#fff;
+    &:hover{
+    color:#fff;
+    transform:scale(1.05);
+}
 `
