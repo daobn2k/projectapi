@@ -67,6 +67,10 @@ width:100%;
 height: 40px;
 font-size: 18px;
 line-height: 22px;
+&:hover{
+    color:#cd853f;
+    transform:scale(1.05);
+}
 `
 export const ImageSlider = styled.img`
 position:absolute;

@@ -82,7 +82,7 @@ export default function ListCustomer() {
 
     useEffect(() => {
       GetInfoUser()
-    }, [GetInfoUser,data])
+    }, [GetInfoUser])
 
     const handleDelete = (id) =>{
       DeleteAccount(id)

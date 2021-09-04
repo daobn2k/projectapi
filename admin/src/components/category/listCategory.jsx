@@ -13,12 +13,12 @@ export default function ListCategory() {
       dataIndex: 'name',
       render: (e,item)=>
       
-      <a style={{color:"#404040"}} key={item.id} href={`/product/detail?${item.id}`}> {e}</a> 
+      <a style={{color:"#404040"}} key={item.id} href={`/category/detail?${item.id}`}> {e}</a> 
       
     },
     {
       title: 'Image',
-      dataIndex: 'product_image',
+      dataIndex: 'image',
       render:(e) =>{
          return (<Image 
           preview={false}
@@ -45,11 +45,8 @@ export default function ListCategory() {
       GetCategory()
       .then( res => {
         setCurrentData(res.data)
-      }).catch(err =>{
-        console.log(err)
       })
-
-    }, [])  
+    }, [currentData])  
 
   
    

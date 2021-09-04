@@ -1,13 +1,12 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-
-import listProduct from '../../components/product/listproduct'
+import ListProduct from '../../components/product/listproduct'
 export default function productPage() {
     return (
         <>
 
-           <Route path="/product" component ={listProduct} />
-
+           <Route path="/product" component ={ListProduct} />
+            
         </>
     )
 }

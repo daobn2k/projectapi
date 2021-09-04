@@ -34,7 +34,6 @@ export default function AddProduct() {
     { id: 2, name: 'Hot' }
   ]
   const handleChange = (e) => {
-    console.log(e.target.files[0])
     if (e.target.files[0]) {
       const upLoadTask = storage.ref(`images/${e.target.files[0].name}`).put(e.target.files[0]);
       upLoadTask.on(
@@ -82,9 +81,9 @@ export default function AddProduct() {
         .catch(error => { console.log(error.response.data) })
     }
   }
+  console.log(currentData)
   return (
     <>
-      {currentData ? currentData.product_name : ''}
       <Form
         {...layout}
         name="nest-messages"

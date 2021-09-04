@@ -1,15 +1,14 @@
-import { Button, Input, Form, Image} from 'antd';
+import { Button, Input, Form} from 'antd';
 import queryString from 'query-string';
 import './product.css'
 import React, { useEffect, useState } from 'react'
-import { getCategory, getProductbyId } from '../../axios';
+import { getCategorybyId } from '../../axios';
 import { storage } from '../../firebase'
 import { useLocation } from 'react-router-dom';
-import { addCategory } from '../../axios/category';
+import { addCategory, UpdateCategory } from '../../axios/category';
 
 
 export default function AddCategory() {
-  const [category, setCategory] = useState()
   const [currentData, setcurrentData] = useState({})
   const location = useLocation()
   const query = queryString.parse(location.search);
@@ -19,15 +18,13 @@ export default function AddCategory() {
     wrapperCol: { span: 8 },
   };
   useEffect(() => {
-    getCategory()
-      .then(res => setCategory(res.data))
-      .catch(err => console.log(err))
+  
     if (query.category_id) {
-      getProductbyId(query.category_id)
+      getCategorybyId(query.category_id)
         .then(res => { setcurrentData(res.data) })
         .catch(err => { console.log(err) })
     }
-  }, [query.category_id])
+  }, [])
 
   const handleChange = (e) => {
     console.log(e.target.files[0])
@@ -62,10 +59,10 @@ export default function AddCategory() {
     }
     console.log(data)
     if (query.category_id) {
-      // UpdateNewProduct(query.category_id, data)
-      //   .then(res => {
-      //     console.log(res)
-      //   })
+      UpdateCategory(query.category_id, data)
+        .then(res => {
+          console.log(res)
+        })
     } else {
       addCategory(data)
         .then(res => { console.log(res) 
@@ -73,10 +70,9 @@ export default function AddCategory() {
         .catch(error => { console.log(error.response.data) })
     }
   }
-  console.log(imageUrl)
+  console.log(currentData)
   return (
     <>
-      {currentData ? currentData.product_name : ''}
       <Form
         {...layout}
         name="nest-messages"
@@ -84,12 +80,9 @@ export default function AddCategory() {
         fields={[
           {
             name: ["name"],
-            value: currentData ? currentData.product_name : '',
+            value: currentData ? currentData.name : ''
           },
-          {
-            name: ["category"],
-            value: currentData ? currentData.category_id : '',
-          },
+        
         ]}
       >
         <Form.Item 
@@ -121,7 +114,6 @@ export default function AddCategory() {
             Submit
           </Button>
         </Form.Item>
- <Image  src="https://firebasestorage.googleapis.com/v0/b/web-ap…=media&token=76097d42-3aac-4263-85f8-6a8ba933f3fb"/>   
       </Form>
          
       </>

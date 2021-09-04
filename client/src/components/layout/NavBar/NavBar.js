@@ -1,7 +1,7 @@
 import { Badge, Button } from 'antd'
 import React, { useState } from 'react'
 import { Nav,NavbarContainer,NavLogo,NavIcon,NavMenu,NavItem,NavLinks, IconShoppingCart, IconHeart, IconSettingUser, NavMenuIcon} from './NavBar.element'
-import {UserOutlined} from '@ant-design/icons'
+import {GoSignIn} from 'react-icons/go'
 const listMenu =[
     {id:1,to:'/',title:'Home'},
     {id:2,to:'/product',title:'Product'},
@@ -30,12 +30,13 @@ const NavBar = () => {
         }
     return (
         <>
-         <Nav style={{
+         <Nav 
+         style={{
              position:navbar?'fixed':'sticky',
              background:navbar?'#fff':'#F7F7F7',
-             boxShadow: navbar?'0 0px 3px 0px rgb(0 0 0 / 20%)':'',
-             
-             }}>
+             boxShadow: navbar?'0 0px 3px 0px rgb(0 0 0 / 20%)':'',           
+             }}
+        >
             <NavbarContainer>
                 <NavLogo >
                     <NavIcon  style={{color:navbar?'#666':'#fff'}}/>
@@ -82,13 +83,29 @@ const NavBar = () => {
                             <IconSettingUser style={{color:"#404040"}}/>
                         </NavLinks>
                     </NavItem>
+                 
                     <NavItem>
-                        <NavLinks to ='/'>
-                          <UserOutlined style={{color:"#404040"}}/>
-                        </NavLinks>
-                    </NavItem>
-                    <NavItem>
-                        <Button>Sign In</Button>
+                        <Button
+                        style={{
+                            fontSize: 16,
+                            marginLeft: 10,
+                            height: "40px",
+                            padding: "0px 20px",
+                            background: "#fff",
+                            boxShadow: "0px 0px 5px #0000000a",
+                            display: 'flex',
+                            alignItems: 'center',
+                            border:'navajowhite'
+                         
+                        }}
+                        >
+                        
+                        Sign In
+                        <GoSignIn
+                        style={{marginLeft:8}}
+                        />
+                        </Button>
+                    
                     </NavItem>
             
                 </NavMenuIcon>  

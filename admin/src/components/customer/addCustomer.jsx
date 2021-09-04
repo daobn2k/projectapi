@@ -1,10 +1,10 @@
-import { Button, Input,  Form , DatePicker } from 'antd';
+import { Button, Input,  Form , DatePicker, notification } from 'antd';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react'
 import {  getUserbyId } from '../../axios';
 import { storage } from '../../firebase'
-import { useLocation } from 'react-router-dom';
-import { addNewAccount } from '../../axios/account';
+import {  useLocation,useHistory } from 'react-router-dom';
+import { addNewAccount, UpdateAccount } from '../../axios/account';
 
 
 export default function AddCustomer() {
@@ -13,6 +13,7 @@ export default function AddCustomer() {
   const location = useLocation()
   const query = queryString.parse(location.search);
   let imageUrl = '';
+  const history = useHistory()
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 8 },
@@ -29,7 +30,6 @@ export default function AddCustomer() {
   }, [query.account_id])
 
   const handleChange = (e) => {
-    console.log(e.target.files[0])
     if (e.target.files[0]) {
       const upLoadTask = storage.ref(`images/${e.target.files[0].name}`).put(e.target.files[0]);
       upLoadTask.on(
@@ -44,7 +44,6 @@ export default function AddCustomer() {
             .child(e.target.files[0].name)
             .getDownloadURL()
             .then(url => {
-              // setUrl(url)
               imageUrl = url
             })
         }
@@ -53,7 +52,7 @@ export default function AddCustomer() {
   }
 
   const onFinish = (values) => {
-    console.log(values)
+  
     const data = {
       name: values.name,
       dob: datepicker,
@@ -61,20 +60,34 @@ export default function AddCustomer() {
       phone: values.phone,
       username: values.username,
       password: values.password,
-      role: "membership",
+      role: "user",
       image:imageUrl
     }
-    // if (query.product_id) {
-    //   UpdateNewProduct(query.product_id, data)
-    //     .then(res => {
-    //       console.log(res)
-    //     })
-    // } else {
-      addNewAccount(data)
-        .then(res => { console.log(res) 
+ 
+    if (query.account_id) {
+      UpdateAccount(query.account_id, data)
+        .then(res => {
+          console.log(res)
         })
-        .catch(error => { console.log(error.response.data) })
-    // }
+    } else {
+      addNewAccount(data)
+        .then(res => {
+          if(res){
+            history.push({
+              pathname:'/customer/list'
+            })
+          }
+      }).catch(err=>{
+        console.log(err)
+        notification.error({
+          message: `Notification`,  
+          description:" Accout Or Email Is Currently Inactive",
+          placement:'topRight',
+        });
+      })
+        
+       
+    }
   }
     console.log(currentData)
   return (

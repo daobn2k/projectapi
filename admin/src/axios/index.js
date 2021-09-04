@@ -26,4 +26,7 @@ const getProductbyId = (id) =>{
 const getUserbyId = (id) =>{
       return axios.get(`/user/searchID=${id}`,config);
 }
-export { getCategory,GetProduct ,getProductbyId,GetUser,getUserbyId,GetCategory}
+const getCategorybyId = (id) =>{
+      return axios.get(`/category/${id}`,config);
+}
+export { getCategory,GetProduct ,getProductbyId,GetUser,getUserbyId,GetCategory,getCategorybyId}

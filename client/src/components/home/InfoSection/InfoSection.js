@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { ArrowRightOutlined } from '@ant-design/icons';
-
 import {
   Section,
   SliderPrev,
@@ -91,8 +89,7 @@ const InfoSection = () => {
 
 
                     >
-                      SHOP NOW
-                      <ArrowRightOutlined style={{fontSize:14}}/>
+                      More Info ...
                     </ButtonStyled>
                   </Content>
                 </Slider>
