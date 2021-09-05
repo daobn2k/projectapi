@@ -6,7 +6,7 @@ import { GetUser } from '../../axios';
 import { DeleteAccount } from '../../axios/account';
 
 
-export default function ListCustomer() {
+export default function ListMember() {
 
   const columns = [
     {
@@ -70,7 +70,7 @@ export default function ListCustomer() {
         GetUser()
         .then(res =>
           {
-            const ListUserData = res.data.filter( (e) => e.role === 'user')
+            const ListUserData = res.data.filter( (e) => e.role === 'membership')
             setData(ListUserData)
           }
         ).catch(err=>{
@@ -84,6 +84,7 @@ export default function ListCustomer() {
       GetInfoUser()
     }, [GetInfoUser])
 
+    console.log(data)
     const handleDelete = (id) =>{
       DeleteAccount(id)
       .then(res=>{

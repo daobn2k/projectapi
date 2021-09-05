@@ -1,4 +1,4 @@
-const storage = {
+const LocalStorage = {
     getCurentUser: () => {
       return JSON.parse(window.localStorage.getItem(`currentUser`));
     },
@@ -10,5 +10,5 @@ const storage = {
     },
   };
   
-  export { storage };
+  export { LocalStorage };
   

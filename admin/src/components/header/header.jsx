@@ -1,14 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout } from 'antd'
 import { BellOutlined,ShoppingCartOutlined, CarryOutOutlined, MailOutlined, SearchOutlined, StarOutlined } from '@ant-design/icons'
 import { AiOutlineMenu,AiOutlineSetting } from 'react-icons/ai'
 import { FiLogOut } from 'react-icons/fi'
+import LogOut from './logout'
 // import Avatar from 'antd/lib/avatar/avatar'
 import './header.css'
+import { LocalStorage } from '../../storage'
+import { useHistory } from 'react-router'
 const { Header } = Layout
-// const { Title,Text } = Typography
 export default function HeaderComponent( {toggle}) {
-    
+      const [isModalVisible, setIsModalVisible] = useState(false);
+      const history = useHistory()
+      const showModal = () => {
+      setIsModalVisible(true);
+      };
+
+      const handleOk = () => {
+            LocalStorage.clearAll()
+            history.push({
+                  pathname:'/auth/login'
+            })
+            setIsModalVisible(false);
+      };
+
+      const handleCancel = () => {
+      setIsModalVisible(false);
+      };
     return (
         <Header className="HeaderComponent">
             <nav className="NavBar">
@@ -39,22 +57,14 @@ export default function HeaderComponent( {toggle}) {
                     </li>
               <li className="NavItem">
                    <AiOutlineSetting className="NavIcon"/>
-                    {/* <Text className="NavText">Hi</Text>
-                    <Title level={5} className="NavTitle">Vũ Văn Đạo</Title>
-                    <Avatar className="NavImageUser"
-                    src="/logo192.png"
-                    /> */}
+                 
             </li>
-              <li className="NavItem">
+              <li className="NavItem" onClick={showModal}>
                    <FiLogOut className="NavIcon"/>
-                    {/* <Text className="NavText">Hi</Text>
-                    <Title level={5} className="NavTitle">Vũ Văn Đạo</Title>
-                    <Avatar className="NavImageUser"
-                    src="/logo192.png"
-                    /> */}
             </li>
                 </ul>
             </nav>
+            <LogOut isModalVisible={isModalVisible} handleOk={handleOk} handleCancel={handleCancel}/>
         </Header>
     )
 }

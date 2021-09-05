@@ -13,6 +13,7 @@ import NavBar from './components/layout/NavBar/NavBar';
 import CartPage from './features/Cart';
 import DetailProduct from './components/product/detailproduct';
 import ContactPage from './features/Contact';
+import AboutPage from './features/About';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path ="/detail" component = {DetailProduct} /> 
         <Route path="/cart"  component={CartPage} />
         <Route path="/contact"  component={ContactPage} />
+        <Route path="/about"  component={AboutPage} />
         </Container>
       
       </Switch>

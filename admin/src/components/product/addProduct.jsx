@@ -80,7 +80,7 @@ export default function AddProduct() {
       addNewProduct(currentData)
         .then(res => {
           history.push({
-            pathname:'/customer/list'
+            pathname:'/product/list'
           })
         })
         .catch(error => { 

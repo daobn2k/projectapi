@@ -73,7 +73,7 @@ export default function ListProduct() {
         console.log(err)
       })
 
-    }, [currentData])  
+    }, [])  
 
   
    

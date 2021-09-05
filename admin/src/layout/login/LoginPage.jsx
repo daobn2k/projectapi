@@ -1,29 +1,40 @@
 import React from 'react'
 import './loginPage.css'
-import { Row, Col, Form, Input, Checkbox, Button } from 'antd'
+import { Row, Col, Form, Input, Checkbox, Button, notification } from 'antd'
 import {Link} from "react-router-dom";
 import { Login } from '../../axios/login';
+import {useHistory} from "react-router-dom";
+import { LocalStorage } from '../../storage';
 export default function LoginPage() {
-
+    const history = useHistory();
     const onFinish = (values) => {
         const data = {
             username:values.username,
             password:values.password
         }
-        console.log(data)
         Login(data)
         .then(res=>{
-            console.log(res)
+            if(res.data.role === 'membership' || res.data.role === 'admin') {  
+                LocalStorage.setCurrentUser(res.data)
+                history.push({
+                    pathname:'/'
+                })
+              
+            }else{
+                notification.error({
+                    duration:2,
+                    message: `Error`,  
+                    description:"Account Can't Sign In Admin Page "
+                })
+            }
         }).catch(err=>
-            console.log(err)
+            notification.error({
+                duration:2,
+                message: `Error user or password `,  
+                description:"Please check your password or account !"
+            })
         )
     };
-
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
-
-
     return (
         <Row
             className="Container"
@@ -44,7 +55,6 @@ export default function LoginPage() {
                         remember: false,
                     }}
                     onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
                 >
                     <Form.Item
                         label="Username"

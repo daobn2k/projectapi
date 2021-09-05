@@ -10,6 +10,7 @@ import ProductPage from '../pages/productpage'
 import CategoryPage from '../pages/categorypage'
 import Customer from '../pages/customerpage'
 import MemberShip from '../pages/membership'
+import { LocalStorage } from '../storage';
 const {  Content } = Layout;
 
 export default function  PrivateLayout(){
@@ -18,8 +19,8 @@ export default function  PrivateLayout(){
     const  toggle = () => {
       setCollapsed(!collapsed)
     };
-    const isLoggedIn = ''
-    if (!isLoggedIn) {
+    const currentUser = LocalStorage.getCurentUser()
+    if (!currentUser) {
      return <Redirect to="/auth/login" />;
    }
   return (
@@ -44,7 +45,7 @@ export default function  PrivateLayout(){
 <Route path="/category">
 <CategoryPage />
 </Route>
-<Route path="/membership">
+<Route path="/member">
 <MemberShip />
 </Route>
 <Route path="/customer">

@@ -60,9 +60,11 @@ export default function AddCategory() {
     } else {
       addCategory(currentData)
         .then(res => { 
-          history.push({
+          if(res) {
+             history.push({
             pathname:'/category/list'
           })
+          }
         })
         .catch(error => { 
       

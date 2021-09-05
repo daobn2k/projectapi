@@ -53,13 +53,14 @@ export default function SiderComponent({collapsed}) {
           defaultSelectedKeys={['1']}
           >
             <Menu.Item key="1" style={{color:"#fff"}}icon={<AppstoreOutlined />} className="MenuItem">
-              Dashboard
+            
+              <Link to ="/"> Dashboard</Link>
             </Menu.Item>
             <Menu.Item key="2" style={{color:"#fff"}}icon={<AiOutlineAreaChart />} className="MenuItem">
-              Alternative
+              <Link to ="/">Alternative</Link>
             </Menu.Item>
             <Menu.Item key="3" style={{color:"#fff"}}icon={<AiFillShop />} className="MenuItem">
-             Management
+             <Link to ="/">Management</Link>
             </Menu.Item>
         
             <SubMenu className="SubMenu" key="sub1" icon={<AiOutlineUser />} title="Customers">
@@ -102,7 +103,7 @@ export default function SiderComponent({collapsed}) {
               
             <Menu.Item key="13" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
               
-              <Link to="/member/list"> New Member</Link></Menu.Item>
+              <Link to="/member/add"> New Member</Link></Menu.Item>
 
             </SubMenu>
           </Menu>
