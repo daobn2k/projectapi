@@ -1,12 +1,19 @@
-import { Image, notification, Space, Table } from 'antd'
+import { Image, notification, Space, Table,Button,Input, Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import {AiOutlineEdit,AiFillDelete} from 'react-icons/ai'
 import { GetCategory } from '../../axios';
-import { useHistory} from "react-router-dom";
-import { DeleteCategory } from '../../axios/category';
+import { Link, useHistory} from "react-router-dom";
+import { DeleteCategory, SearchCategory } from '../../axios/category';
+import { PlusOutlined ,LoadingOutlined } from "@ant-design/icons";
+const {Search} = Input
 
 export default function ListCategory() {
   const history = useHistory()
+  const [currentData, setCurrentData] = useState()
+  const [loading,setLoading] = useState(false)
+
+
+
   const columns = [
     {
       title: 'Name',
@@ -26,7 +33,6 @@ export default function ListCategory() {
           src={e}
           style={{
             width: 50,
-            height: 50
           }}
           />)
       }
@@ -42,28 +48,40 @@ export default function ListCategory() {
       ),
     },
   ];
-    const [currentData, setCurrentData] = useState()
 
+  const LoadingData = () =>{
+    GetCategory()
+    .then( res => {
+      setCurrentData(res.data)
+    })
+    .catch( err =>{
+      console.log(err)
+    })
+  }
     useEffect(() => {
-      GetCategory()
-      .then( res => {
-        setCurrentData(res.data)
-      })
-    }, [currentData])  
+      LoadingData()
+    }, [])  
 
   
    
     const handleDelete = (id) =>{
+      setLoading(true)
       DeleteCategory(id)
       .then(res=>{
-        notification.success({
-          message: `Notification Delete`,
-          description:
-            'Delete Product SuccessFully !',
-          placement:'topRight ',
-        });
+        if(res){
+          setTimeout(
+            LoadingData()
+          ,3000)
+          notification.success({
+            message: `Notification Delete`,
+            description:
+              'Delete Product SuccessFully !',
+            placement:'topRight ',
+          });
+        }
       })
       .catch(err=>{
+        setLoading(false)
         notification.error({
           message: `Notification Delete`,
           description:
@@ -79,13 +97,37 @@ export default function ListCategory() {
           search:'?' + new URLSearchParams({category_id:id}).toString()
       })
     }
+
+    const handleSearch = (e) => {
+      SearchCategory({key:e})
+      .then(res => setCurrentData(res.data))
+      .catch(err => console.log(err))
+    }
+    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     return (
-        <>
-      
+      <Spin indicator={antIcon} spinning={loading}>
+        <Space size={14} className="Space">
+       <div className="top-table">
+        <Search
+          allowClear 
+          placeholder="Search to Select"
+          optionFilterProp="children"
+          className="input-search"
+          onSearch={handleSearch}
+          enterButton 
+        >
+        </Search>
+        <Link to="/category/add">
+        <Button  className="btn-add" icon={<PlusOutlined />} >
+          Thêm Mới Sản Phẩm
+        </Button>
+        </Link>
+      </div>
         <Table
           columns={columns}
           dataSource={currentData}
         />
-      </>
+      </Space>
+      </Spin>
     )
 }

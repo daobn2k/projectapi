@@ -10,4 +10,10 @@ const UpdateNewProduct = async(id,data) =>{
 const DeleteProduct = async(id) =>{
   return await axios.delete(`/product/${id}`);
 }
-export { addNewProduct ,DeleteProduct,UpdateNewProduct};
+
+const SearchProduct = async(data) =>{
+  return await axios.post(`/product/searchname`,data)
+}
+
+export { addNewProduct ,DeleteProduct,UpdateNewProduct ,SearchProduct};
+

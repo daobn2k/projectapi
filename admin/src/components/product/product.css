@@ -1,12 +1,59 @@
-.ant-select-selector{
-    height: 40px !important;
+.ant-select-selector {
+  height: 40px !important;
 }
 
-.FormAddProduct .ant-image{
-    flex: 1;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0;
+.FormAddProduct .ant-image {
+  flex: 1;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0;
+}
+
+.Space {
+  display: flex;
+  flex-direction: column;
+  align-items: unset;
+}
+
+.ant-space-item {
+  display: flex;
+  width: 100%;
+}
+.top-table {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.input-search {
+  height: 40px;
+  max-width: 40%;
+  color: #fff;
+  font: 16px;
+  line-height: 22px;
+  border-radius: 4px;
+}
+
+.ant-input-affix-wrapper {
+  height: 40px;
+}
+
+.ant-input-search-button {
+  height: 40px;
+}
+.btn-add {
+  height: 40px;
+  font-weight: 500;
+
+  color: #fff;
+  background-color: #85a5ff;
+  font: 16px;
+  line-height: 22px;
+  border-radius: 4px;
+}
+
+.ant-table-wrapper {
+  width: 100%;
 }

@@ -1,38 +1,52 @@
-.ant-card{
-    box-shadow: 0px 4px 8px #F3F3F3;
+.ant-card {
+  box-shadow: 0px 4px 8px #f3f3f3;
 }
-.ant-card-body{
-    padding:10px 0;
-    
+.ant-card-body {
+  padding: 10px 0;
 }
-.ant-card-meta{
-    padding: 20px;
+.ant-card-meta {
+  padding: 20px;
 }
-.ant-card-meta-title{
-    font-size:18px;
-    line-height: 22px;
-    font-weight: 700;
-}
-
-.BTN{
-    height: 40px;
-    font-size: 18px;
-    line-height: 22px;
+.ant-card-meta-title {
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 700;
 }
 
-.Fitler_List{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    padding:25px 0;
+.product_title {
+  font-size: 18px !important;
+  line-height: 22px !important;
+  font-weight: 700 !important;
+}
+.BTN {
+  height: 40px;
+  font-size: 18px;
+  line-height: 22px;
+  width: 100%;
 }
 
-.active{
-    border-bottom: 1px solid transparent;
-    color: #333 !important;
-    border-color: #797979;
+.filter-product {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0;
+}
+.filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.active {
+  border-bottom: 1px solid transparent;
+  color: #333 !important;
+  border-color: #797979;
 }
 
-.site-card-wrapper{
-    padding-bottom: 3rem;
+.site-card-wrapper {
+  padding-bottom: 3rem;
+}
+
+.site-card-wrapper {
+  display: flex;
+  flex-direction: column;
 }

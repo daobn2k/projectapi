@@ -1,11 +1,12 @@
-import { Image, notification, Space, Table } from 'antd'
+import { Image, notification, Space, Table ,Input ,Button} from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import {AiOutlineEdit,AiFillDelete} from 'react-icons/ai'
 import { useHistory } from 'react-router-dom';
 import { GetUser } from '../../axios';
-import { DeleteAccount } from '../../axios/account';
+import { DeleteAccount, SearchAccount } from '../../axios/account';
+import { PlusOutlined } from "@ant-design/icons";
 
-
+const {Search} = Input
 export default function ListCustomer() {
 
   const columns = [
@@ -24,7 +25,6 @@ export default function ListCustomer() {
       dataIndex: 'image',
       render:(e,index) =>{
         return (<Image 
-          style={{borderRadius:0,height:'50px',objectFit:'cover'}}
           key={index}
           width={50}
           src={e}
@@ -103,20 +103,44 @@ export default function ListCustomer() {
         });
       })
     }
-
+  
     const handleEdit = (id) =>{
       history.push({
           pathname:`/customer/add`,
           search:'?' + new URLSearchParams({customer_id:id}).toString()
       })
     }
+
+    const handleSearch = (e) => {
+      SearchAccount({key:e})
+      .then(res =>{
+        const ListCustomer = res.data.filter( e => e.role === "user")
+        console.log(ListCustomer)
+        setData(ListCustomer)
+      } )
+      .catch(err => console.log(err))
+    }
+
     return (
-        <div>
-      
+        <Space className="Space" size={14}>
+       <div className="top-table">
+        <Search
+          allowClear 
+          placeholder="Search to name"
+          optionFilterProp="children"
+          className="input-search"
+          onSearch={handleSearch}
+          enterButton 
+        >
+        </Search>
+        <Button  className="btn-add" icon={<PlusOutlined />} >
+          Thêm Mới Tài Khoản
+        </Button>
+      </div>
         <Table
           columns={columns}
           dataSource={data}
         />
-      </div>
+      </Space>
     )
 }

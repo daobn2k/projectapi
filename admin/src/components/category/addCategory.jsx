@@ -50,8 +50,6 @@ export default function AddCategory() {
   }
 
   const onFinish = () => {
-
-   
     if (query.category_id) {
       UpdateCategory(query.category_id, currentData)
         .then(res => {

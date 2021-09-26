@@ -46,7 +46,7 @@ export default function LoginPage() {
                 sm={12}
                 xl={8}
             >
-                <h1 className="CardTitle">Login</h1>
+                <h1 className="CardTitle">Super Admin Login</h1>
                 <p className="CardText">Sign in by entering the information below</p>
 
                 <Form

@@ -91,9 +91,8 @@ position: absolute;
 bottom:50%;
 right:0;
 z-index: 10;
-
-width:50px;
-height:50px;
+width:40px;
+height:40px;
 color:#fff;
 border-radius:50%;
 padding:10px;
@@ -116,12 +115,11 @@ position: absolute;
 bottom:50%;
 left:10px;
 z-index: 10;
-
 display:flex;
 justify-content: center;
 align-items:center;
-width:50px;
-height:50px;
+width:40px;
+height:40px;
 color:#fff;
 border-radius:50%;
 padding:10px;

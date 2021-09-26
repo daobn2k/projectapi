@@ -14,10 +14,7 @@ padding: 0px 70px;
 font-size:1.2rem;
 top:0;
 z-index:999;
-
 `
-
-
 export const NavbarContainer = styled.div`
 display:flex;
 height: 100%;
@@ -33,6 +30,7 @@ font-size:1.5rem;
 display:flex;
 align-items: center;
 
+font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 `
 
 export const NavIcon = styled.img`
@@ -109,11 +107,12 @@ export const ButtonPayment = styled(Button)`
     display:flex;
     align-items: center;
     justify-content: center;
-    width: 47%;
-    height: 46px;
+    width: 100%;
+    height: 46px;   
     line-height: 20px;
     font-size: 16px;
     background-color: #f74877;
+    border-radius:4px;
     color:#fff;
     &:hover{
     color:#fff;

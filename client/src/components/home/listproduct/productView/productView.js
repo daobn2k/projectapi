@@ -5,9 +5,12 @@ import {ShoppingCartOutlined } from '@ant-design/icons'
 import './productView.css'
 import { NavItem, NavLinks, NavMenu } from './product.element'
 import Search from 'antd/lib/input/Search'
-const { Title, Text } = Typography
-export default function ProductView() {
+import { addToCart } from '../../../../comon/addToCart'
+import { Link } from 'react-router-dom'
+const { Title } = Typography
+export default function ProductView( { productData }) {
     const [activeIndex, setActiveIndex] = useState(1)
+    const [ellipsis, setEllipsis] = React.useState(true);
     const listMenu = [
         { id: 1, title: 'All List Car' },
         { id: 2, title: 'Bently' },
@@ -15,45 +18,16 @@ export default function ProductView() {
         { id: 4, title: 'Audi' },
         { id: 5, title: 'Ranger Rover' },
     ]
-    const data = [
-        {
-            title: 'Xe Bentley',
-            description: 'Bentley là thương hiệu xe đã có tuổi đời 100 năm thành lập và phát triển. Những chiếc xe thuộc thương hiệu này luôn tạo cho người dùng cảm giác của sự sang trọng và quý phái. Chính vì thế...',
-            price: '307.0002',
-            image: '/image/mecbenz.jpg',
-            alt: 'Car'
-        },
-
-        {
-            title: 'Xe Mercesdes',
-            description: 'Bentley là thương hiệu xe đã có tuổi đời 100 năm thành lập và phát triển. Những chiếc xe thuộc thương hiệu này luôn tạo cho người dùng cảm giác của sự sang trọng và quý phái. Chính vì thế...',
-            price: '307.0001',
-            image: '/image/zero-take-t4yzxOtDZgQ-unsplash.jpg',
-            alt: 'Car'
-        },
-
-        {
-            title: 'Xe Bentley',
-            description: 'Bentley là thương hiệu xe đã có tuổi đời 100 năm thành lập và phát triển. Những chiếc xe thuộc thương hiệu này luôn tạo cho người dùng cảm giác của sự sang trọng và quý phái. Chính vì thế...',
-            price: '307.0003',
-            image: '/image/bentley-mulsanne-4.jpg',
-            alt: 'Car'
-        },
-
-        {
-            title: 'Xe Bentley',
-            description: 'Bentley là thương hiệu xe đã có tuổi đời 100 năm thành lập và phát triển. Những chiếc xe thuộc thương hiệu này luôn tạo cho người dùng cảm giác của sự sang trọng và quý phái. Chính vì thế...',
-            price: '307.0003',
-            image: '/image/bentley-mulsanne-4.jpg',
-            alt: 'Car'
-        },
-    ]
-
+    console.log(productData)
     function chooseValue(item) {
         setActiveIndex(item.id)
     }
 
     const onSearch = value => console.log(value);
+
+    const HandleAddToCart =(e) =>{
+       addToCart(e)
+    }
     return (
         <div className="site-card-wrapper">
             <Title
@@ -92,39 +66,45 @@ export default function ProductView() {
                             borderRadius: '10px',
                             fontSize:14,
                             lineHeight:20,
-
+                            height: 40
                             }}
                     />
             </div>
             <Row gutter={24} >
-                {data.map((e, index) => {
+                {productData &&productData.map((e, index) => {
                     return (
                         <Col key={index} span={6}>
-                            <Card
-                                cover={<Image src={e.image} style={{ height: ' 200px' }} />}
-                                bordered={false}>
-                                <Meta title={e.title} description={
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column'
-                                        }}
-
+                        <Card
+                            cover={<Image preview={false} src={e.product_image} style={{ height: ' 200px' }} />}
+                            bordered={false}>
+                            <Meta  description={
+                                <>
+                                <Link
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column'
+                                    }}
+                                   to={`/product/${e.id}`}
+                                >
+                                    <Typography.Title className="product_title">{e.product_name} </Typography.Title>
+                                     <Typography.Paragraph 
+                                    ellipsis={ellipsis ? { rows: 2, expandable: true, symbol: 'more' } : false} 
+                                    style={{
+                                        fontSize: 14,
+                                        marginBottom: 8,
+                                    }}  
+                                    onClick={()=>setEllipsis(!ellipsis)}
                                     >
-                                        <Text style={{
-                                            fontSize: 14,
-                                            marginBottom: 8,
-
-                                        }}>{e.price}</Text>
-                                        <Text style={{
-                                            fontSize: 14,
-                                            marginBottom: 8,
-                                        }}>{e.description}</Text>
-                                        <Button type="primary" className="BTN"> <ShoppingCartOutlined />Add To Cart</Button>
-                                    </div>
-                                } />
-                            </Card>
-                        </Col>
+                                        {e.product_description}
+                                    </Typography.Paragraph>
+                                </Link>
+                                    <Button type="primary" className="BTN" 
+                                    onClick={()=>HandleAddToCart(e)}
+                                    > <ShoppingCartOutlined />Add To Cart</Button>
+                                </>
+                            } />
+                        </Card>
+                    </Col>
                     )
                 })}
 

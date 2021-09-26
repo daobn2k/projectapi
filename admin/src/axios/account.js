@@ -10,4 +10,10 @@ const UpdateAccount = async(id,data) =>{
 const DeleteAccount= async(id) =>{
   return await axios.delete(`/user/${id}`);
 }
-export { addNewAccount ,DeleteAccount,UpdateAccount};
+
+
+const SearchAccount = async(data) =>{
+  return await axios.post(`/user/searchname`,data)
+}
+
+export { addNewAccount ,DeleteAccount,UpdateAccount,SearchAccount};

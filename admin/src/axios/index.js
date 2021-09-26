@@ -19,7 +19,6 @@ const GetUser = ()=>{
 const GetCategory = ()=>{
    return axios.get('/category',config);
 }
-
 const getProductbyId = (id) =>{
       return axios.get(`/product/${id}`,config);
 }
@@ -31,7 +30,8 @@ const getCategorybyId = (id) =>{
 }
 
 
-export { getCategory,
+export { 
+   getCategory,
    GetProduct ,
    getProductbyId,
    GetUser,

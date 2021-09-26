@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import GlobalStyle from './globalStyled';
 import {
   BrowserRouter as Router,
@@ -6,32 +6,41 @@ import {
   Route,
 } from "react-router-dom";
 import HomePage from './features/Home/pages/HomePage';
-import productPage from './features/product/productPage';
 import { Container } from "./globalStyled";
 import FooterClient from './components/layout/Footer/footer';
 import NavBar from './components/layout/NavBar/NavBar';
 import CartPage from './features/Cart';
-import DetailProduct from './components/product/detailproduct';
 import ContactPage from './features/Contact';
 import AboutPage from './features/About';
+import { GetProduct } from './api';
+import ProductPage from './features/product/productPage';
 
 function App() {
+
+  const [productData, setProductData] = useState()
+  useEffect(() => {
+    
+    GetProduct()
+
+    .then(res=>setProductData(res.data))
+  },[])
   return (
     <Router >
       <div style={{position:'relative'}}> 
       <GlobalStyle/>
       <NavBar />
       <Switch>
-        <Route path="/" exact component={HomePage} />
-
+        <Route path="/" exact >
+          <HomePage productData={productData}/>
+           </Route>
         <Container>
-        <Route path="/product"  component={productPage} />
-        <Route path ="/detail" component = {DetailProduct} /> 
+        <Route path="/product">
+          <ProductPage productData={productData}/>
+        </Route>
         <Route path="/cart"  component={CartPage} />
         <Route path="/contact"  component={ContactPage} />
         <Route path="/about"  component={AboutPage} />
         </Container>
-      
       </Switch>
         <FooterClient />
       </div>

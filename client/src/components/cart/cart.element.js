@@ -39,7 +39,7 @@ export const TextCard = styled.p`
     color: #333;
 `
 export const ButtonPayment = styled(Button)`
-   width: 100%;
+    width: 100%;
     margin-top: 10px;
     height: 46px;
     line-height: 20px;

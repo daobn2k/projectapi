@@ -5,7 +5,7 @@ import './product.css'
 import {ShoppingCartOutlined} from '@ant-design/icons'
 const { Title,Text } = Typography
 
-export default function ProductHot() {
+export default function ProductFavorite() {
     const data = [
         {
           title: 'Xe Bentley',
@@ -41,7 +41,7 @@ export default function ProductHot() {
             lineHeight: 1.23,
         }}
         >
-        Hot Car
+        Favorite Car 
         </Title>
         <Row gutter={24}>
          {data.map( (e,index)=>{

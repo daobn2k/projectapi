@@ -1,8 +1,10 @@
-import { Badge, Button } from 'antd'
+import { Badge, Button, notification } from 'antd'
 import React, { useState } from 'react'
+import MiniCart from '../../cart/miniCart'
+import ModalClientForm from '../../Modal'
+import { Login } from '../../../api'
+import { storage } from '../../../comon/storage'
 import { Nav,NavbarContainer,NavLogo,NavIcon,NavMenu,NavItem,NavLinks, IconShoppingCart, IconHeart, IconSettingUser, NavMenuIcon} from './NavBar.element'
-import {GoSignIn} from 'react-icons/go'
-import ProductCart from './productCart'
 const listMenu =[
     {id:1,to:'/',title:'Home'},
     {id:2,to:'/product',title:'Product'},
@@ -14,9 +16,10 @@ const listMenu =[
 
 const NavBar = () => {
     const [visible, setVisible] = useState(false);
+    const [visibleModal, setVisibleModal] = useState(false);
     const [navbar, setNavbar] = useState(false)
     const [activeIndex, setActiveIndex] = useState(1)
-
+    const cartCurrent =  storage.getCartCurrent()
     const ChangeBackground = () =>{
         if(window.scrollY >= 40) {
             setNavbar(true)
@@ -36,7 +39,32 @@ const NavBar = () => {
         };
         const onClose = () => {
           setVisible(false);
-        };
+  };
+
+  const handleClickModal = () =>{
+      setVisibleModal(true)
+  }
+
+  const handleSignin = (valuesForm) => {
+console.log(valuesForm)
+  }
+ const handleLogin = (valuesForm) =>{
+    Login(valuesForm)
+    .then(res=>{ 
+        storage.setCurrentUser(res.data)
+        setVisibleModal(false)
+    })
+    .catch(err => 
+     notification.error({
+         message:'Login failed please check your value input',
+         placement:'topRight',
+         duration:2
+     })
+     )
+ }
+ const onCancel = () => {
+    setVisibleModal(false);
+  };
     return (
         <>
          <Nav 
@@ -49,7 +77,6 @@ const NavBar = () => {
             <NavbarContainer>
                 <NavLogo >
                     <NavIcon  style={{color:navbar?'#666':'#fff'}}/>
-                    
                     GOOD CAR
                 </NavLogo>
                 <NavMenu>
@@ -76,7 +103,7 @@ const NavBar = () => {
                 </NavMenu>      
                 <NavMenuIcon>
                     <NavItem>
-                        <NavLinks  >
+                        <NavLinks  to ='/'>
                         <Badge size="small"  count={5}>
                         <IconShoppingCart  onClick={showDrawer}/>
                         </Badge>
@@ -92,16 +119,17 @@ const NavBar = () => {
                             <IconSettingUser style={{color:"#404040"}}/>
                         </NavLinks>
                     </NavItem>
-                 
                     <NavItem>
-                      
+                    {
+                     storage.getCurrentUser() ? '' : (
                         <Button
                         style={{
                             fontSize: 16,
                             marginLeft: 10,
-                            height: "40px",
+                            height: "36px",
                             padding: "0px 20px",
-                            background:navbar?"#f9f0ff":"",
+                            textTransform:'uppercase',
+                            // background:navbar?"#f9f0ff":"",
                             boxShadow: "0px 0px 5px #0000000a",
                             display: 'flex',
                             alignItems: 'center',
@@ -109,21 +137,26 @@ const NavBar = () => {
                             border:'navajowhite'
                          
                         }}
+                        type="primary"
+                        onClick={handleClickModal}
                         >
-                          <GoSignIn
-                        style={{marginRight:8}}
-                        />
                         Sign In
-                       
                         </Button>
-                    
+                     )
+                    }   
                     </NavItem>
             
                 </NavMenuIcon>  
             </NavbarContainer>
-            <ProductCart visible={visible} onClose={onClose}/>
+            <MiniCart visible={visible} onClose={onClose} cartCurrent={cartCurrent}/>
         </Nav>   
-        
+        <ModalClientForm 
+        visibleModal={visibleModal}
+        handleLogin={handleLogin}
+        onCancel={onCancel}
+        handleSignin={handleSignin}
+        />
+    
         </>
     )
 }

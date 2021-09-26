@@ -21,10 +21,19 @@ const getCategorybyId = (id) =>{
       return axios.get(`/category/${id}`,config);
 }
 
+const Login = async(data) =>{
+   return await axios.post('/user/login', data);
+ }
 
+ const addNewAccount = async(data) =>{
+   return await axios.post('/user/adduserfromadmin', data);
+ }
+ 
 export { 
    GetProduct ,
    getProductbyId,
    GetCategory,
-   getCategorybyId
+   getCategorybyId,
+   Login,
+   addNewAccount
 }

@@ -1,38 +1,37 @@
-.ant-card{
-    box-shadow: 0px 4px 8px #F3F3F3;
+.ant-card {
+  box-shadow: 0px 4px 8px #f3f3f3;
 }
-.ant-card-body{
-    padding:10px 0;
-    
+.ant-card-body {
+  padding: 10px 0;
 }
-.ant-card-meta{
-    padding: 20px;
+.ant-card-meta {
+  padding: 20px;
 }
-.ant-card-meta-title{
-    font-size:18px;
-    line-height: 22px;
-    font-weight: 700;
-}
-
-.BTN{
-    height: 40px;
-    font-size: 18px;
-    line-height: 22px;
+.ant-card-meta-title {
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 700;
 }
 
-.Fitler_List{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom:50px;
+.BTN {
+  height: 40px;
+  font-size: 18px;
+  line-height: 22px;
 }
 
-.active{
-    border-bottom: 1px solid transparent;
-    color: #333 !important;
-    border-color: #797979;
+.Fitler_List {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 25px;
 }
 
-.site-card-wrapper{
-    padding-bottom: 3rem;
+.active {
+  border-bottom: 1px solid transparent;
+  color: #333 !important;
+  border-color: #797979;
+}
+
+.site-card-wrapper {
+  padding-bottom: 3rem;
 }
