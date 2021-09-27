@@ -160,7 +160,7 @@ export default function ListProduct() {
         </Search>
         <Link to="/product/add">
         <Button  className="btn-add" icon={<PlusOutlined />}>
-          Thêm Mới Sản Phẩm
+         New Product
         </Button>
         </Link>
       </div>

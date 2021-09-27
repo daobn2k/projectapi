@@ -78,6 +78,7 @@ export default function ListCategory() {
               'Delete Product SuccessFully !',
             placement:'topRight ',
           });
+        setLoading(false)
         }
       })
       .catch(err=>{
@@ -119,7 +120,7 @@ export default function ListCategory() {
         </Search>
         <Link to="/category/add">
         <Button  className="btn-add" icon={<PlusOutlined />} >
-          Thêm Mới Sản Phẩm
+          New Category
         </Button>
         </Link>
       </div>

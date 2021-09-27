@@ -1,13 +1,14 @@
-import { Image, notification, Space, Table ,Input ,Button} from 'antd'
+import { Image, notification, Space, Table ,Input ,Button, Spin} from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import {AiOutlineEdit,AiFillDelete} from 'react-icons/ai'
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { GetUser } from '../../axios';
 import { DeleteAccount, SearchAccount } from '../../axios/account';
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined ,LoadingOutlined} from "@ant-design/icons";
 
 const {Search} = Input
 export default function ListCustomer() {
+  const [loading,setLoading] = useState(false)
 
   const columns = [
     {
@@ -85,14 +86,17 @@ export default function ListCustomer() {
     }, [GetInfoUser])
 
     const handleDelete = (id) =>{
+      setLoading(true)
       DeleteAccount(id)
       .then(res=>{
+        GetInfoUser()
         notification.success({
           message: `Notification Delete`,
           description:
             'Delete Product SuccessFully !',
           placement:'topRight ',
         });
+        setLoading(false)
       })
       .catch(err=>{
         notification.error({
@@ -101,6 +105,8 @@ export default function ListCustomer() {
             'Delete Product Failed !',
           placement:'topRight ',
         });
+        setLoading(false)
+
       })
     }
   
@@ -120,8 +126,10 @@ export default function ListCustomer() {
       } )
       .catch(err => console.log(err))
     }
+    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
     return (
+      <Spin indicator={antIcon} spinning={loading}>
         <Space className="Space" size={14}>
        <div className="top-table">
         <Search
@@ -133,14 +141,18 @@ export default function ListCustomer() {
           enterButton 
         >
         </Search>
+        <Link to="/customer/add">
+
         <Button  className="btn-add" icon={<PlusOutlined />} >
-          Thêm Mới Tài Khoản
+          New Account Customer
         </Button>
+        </Link>
       </div>
         <Table
           columns={columns}
           dataSource={data}
         />
       </Space>
+      </Spin>
     )
 }

@@ -53,12 +53,28 @@ export default function AddCategory() {
     if (query.category_id) {
       UpdateCategory(query.category_id, currentData)
         .then(res => {
-          console.log(res)
+          notification.success({
+            message:'Category update successfully',
+            placement:'topRight',
+            duration:2
+          })
+        })
+        .catch(err=>{
+          notification.err({
+            message:'Category update failed',
+            placement:'topRight',
+            duration:2
+          })
         })
     } else {
       addCategory(currentData)
         .then(res => { 
           if(res) {
+            notification.success({
+              message:' Created category successfully',
+              placement:'topRight',
+              duration:2
+            })
              history.push({
             pathname:'/category/list'
           })
@@ -68,7 +84,7 @@ export default function AddCategory() {
       
           notification.error({
             message: `Notification`,  
-            description:"  Created Category Failed",
+            description:"  Created category failed",
             placement:'topRight',
           });
              })

@@ -12,6 +12,6 @@ const DeleteCategory = async(id) =>{
 }
 
 const SearchCategory = async(data) =>{
-  return await axios.post(`/user/searchname`,data)
+  return await axios.post(`/category/searchname`,data)
 }
 export { addCategory ,UpdateCategory,DeleteCategory,SearchCategory};

@@ -1,11 +1,13 @@
-import { Image, notification, Space, Table } from 'antd'
+import { Button, Image, notification, Space, Table ,Input} from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import {AiOutlineEdit,AiFillDelete} from 'react-icons/ai'
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { GetUser } from '../../axios';
-import { DeleteAccount } from '../../axios/account';
+import { DeleteAccount, SearchAccount } from '../../axios/account';
+import {PlusOutlined} from '@ant-design/icons'
 
 
+const {Search} = Input
 export default function ListMember() {
 
   const columns = [
@@ -84,7 +86,7 @@ export default function ListMember() {
       GetInfoUser()
     }, [GetInfoUser])
 
-    console.log(data)
+   
     const handleDelete = (id) =>{
       DeleteAccount(id)
       .then(res=>{
@@ -111,13 +113,41 @@ export default function ListMember() {
           search:'?' + new URLSearchParams({customer_id:id}).toString()
       })
     }
+
+
+    const handleSearch = (e) => {
+      SearchAccount({key:e})
+      .then(res =>{
+        const ListCustomer = res.data.filter( e => e.role === "membership")
+        console.log(ListCustomer)
+        setData(ListCustomer)
+      } )
+      .catch(err => console.log(err))
+    }
+
+
     return (
-        <div>
-      
+        <Space className="Space" size={14}>
+        <div className="top-table">
+        <Search
+          allowClear 
+          placeholder="Search to name"
+          optionFilterProp="children"
+          className="input-search"
+          onSearch={handleSearch}
+          enterButton 
+        >
+        </Search>
+        <Link to="/member/add">
+        <Button  className="btn-add" icon={<PlusOutlined />} >
+          New Account Membership
+        </Button>
+        </Link>
+      </div>
         <Table
           columns={columns}
           dataSource={data}
         />
-      </div>
+      </Space>
     )
 }
