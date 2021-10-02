@@ -1,135 +1,131 @@
-.SiderBar{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-
+.SiderBar {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
-.SiderBar::-webkit-scrollbar{
-    width: 6px;
+.SiderBar::-webkit-scrollbar {
+  width: 6px;
 }
 
-
-.SiderBar::-webkit-scrollbar-track {  
-    border: 6px solid transparent;
-
-
+.SiderBar::-webkit-scrollbar-track {
+  border: 6px solid transparent;
 }
 .SiderBar::-webkit-scrollbar-thumb {
-    background-color: #d9d9d9;
-    border-radius: 20px;
-    background-clip: content-box;
-
+  background-color: #d9d9d9;
+  border-radius: 20px;
+  background-clip: content-box;
 }
-
 
 .SiderBar ul {
-    background: #222A44 !important;
+  background: #222a44 !important;
 }
-.MenuBar{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    background:'#222A44';
+.MenuBar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: "#222A44";
 }
 
 .MenuBar li {
-    color: #fff;
+  color: #fff;
 }
 
-.MenuItem{
-    color: #fff;
-
+.MenuItem {
+  color: #fff;
 }
 
-.MenuBar .MenuItem:last-child{
-    height: 70px;
-    padding: 0;
-    flex:1;
-    display: flex;
-    justify-content: flex-end;
-    background: #222A44;
+.MenuBar .MenuItem:last-child {
+  height: 70px;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  background: #222a44;
 }
 
-.ant-menu-item-selected
-{
-    color:#fff;
-   background-color: rgb(118, 118, 118)!important; 
-    border-radius: 4px;
-    
+.ant-menu-item-selected {
+  color: #fff;
+  background-color: rgb(118, 118, 118) !important;
+  border-radius: 4px;
 }
 
-.ant-menu-light .ant-menu-item:hover, .ant-menu-light .ant-menu-item-active, .ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open, .ant-menu-light , .ant-menu-light .ant-menu-submenu-title:hover{
-    background-color: rgb(118, 118, 118)!important; 
-    border-radius: 4px;
+.ant-menu-light .ant-menu-item:hover,
+.ant-menu-light .ant-menu-item-active,
+.ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open,
+.ant-menu-light,
+.ant-menu-light .ant-menu-submenu-title:hover {
+  background-color: rgb(118, 118, 118) !important;
+  border-radius: 4px;
 }
 
-.ant-menu-submenu-active{
-    /* background-color: none !important; */
-    color:#fff !important;
+.ant-menu-submenu-active {
+  /* background-color: none !important; */
+  color: #fff !important;
 }
-.ant-menu-item-active{
-    background-color: rgb(118, 118, 118)!important; 
-    border-radius: 4px;
-    color:#fff !important;
+.ant-menu-item-active {
+  background-color: rgb(118, 118, 118) !important;
+  border-radius: 4px;
+  color: #fff !important;
 }
-.ant-menu-item-selected:after{
-    border-right:none !important;
+.ant-menu-item-selected:after {
+  border-right: none !important;
 }
-.ant-menu-item-selected:last-child{
-    border:none;
-    background: none;
+.ant-menu-item-selected:last-child {
+  border: none;
+  background: none;
 }
-.Btn{
-    color:#21C0F6;
-    width: 100%;
-    height: 48px;
-    border: 1.5px solid #21C0F6;
-    box-sizing: border-box;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 20px;       
+.Btn {
+  color: #21c0f6;
+  width: 100%;
+  height: 48px;
+  border: 1.5px solid #21c0f6;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
 }
-.SubMenu{
-    background: #222A44;
+.SubMenu {
+  background: #222a44;
 }
-.SubMenu li {   
-    background: #222A44;
-    color:#fff;
-}
-
-.Logo{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding:10px 0;
+.SubMenu li {
+  background: #222a44;
+  color: #fff;
 }
 
-.ant-image{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #fff;
+.Logo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
 }
 
-.Logo .Title{
-    width: 100%;
-    font-size: 16px !important;
-    line-height:22px;
-    font-weight: 500;
-    color:#fff;
-    margin-left: 15px; 
-    margin-bottom: 0;
+.ant-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
 }
 
-.Logo .Text{
-    width: 100%;
-    font-size: 12px !important;
-    line-height:20px;
-    color:#fff;
-    margin-left: 20px; 
+.Logo .Title {
+  width: 100%;
+  font-size: 16px !important;
+  line-height: 22px;
+  font-weight: 500;
+  color: #fff;
+  margin-left: 15px;
+  margin-bottom: 0;
+}
+
+.Logo .Text {
+  width: 100%;
+  font-size: 12px !important;
+  line-height: 20px;
+  color: #fff;
+  margin-left: 20px;
 }

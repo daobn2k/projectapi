@@ -98,13 +98,15 @@ export default function SiderComponent({collapsed}) {
             </SubMenu>
             <SubMenu className="SubMenu" key="sub5" icon={<UsergroupAddOutlined />} title="Membership">
             <Menu.Item key="12" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
-        
               <Link to="/member/list"> List Member</Link></Menu.Item>
-              
             <Menu.Item key="13" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
-              
               <Link to="/member/add"> New Member</Link></Menu.Item>
-
+            </SubMenu>
+            <SubMenu className="SubMenu" key="sub6" icon={<UsergroupAddOutlined />} title="Storage">
+            <Menu.Item key="14" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
+              <Link to="/storage/list"> Warehouse</Link></Menu.Item>
+            <Menu.Item key="15" icon={< BsDot/>} style={{color:"#fff",paddingLeft:20}}>
+              <Link to="/storage/add"> New Warehouse</Link></Menu.Item>
             </SubMenu>
           </Menu>
           </div>

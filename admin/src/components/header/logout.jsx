@@ -1,11 +1,11 @@
 import { Button, Modal, Typography } from 'antd'
-import React from 'react'
+import React, { Fragment } from 'react'
 import './header.css'
 const {Text} = Typography
 
 export default function LogOut({ isModalVisible, handleOk, handleCancel }) {
     return (
-        <>
+        <Fragment>
               <Modal width={394} zIndex={700} visible={isModalVisible} footer={null} closable={false} className="Modal">
                             <Text className="TextModal">Do you really want to cancel the registration?</Text>
                             <div style={{display: 'flex', width: '100%', marginTop: 15, padding: '0 10px' }}>
@@ -20,6 +20,6 @@ export default function LogOut({ isModalVisible, handleOk, handleCancel }) {
                             </div> 
                                
                 </Modal>  
-        </>
+        </Fragment>
     )
 }

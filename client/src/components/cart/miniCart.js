@@ -1,34 +1,111 @@
-import React from 'react'
-import {  Drawer, Image, Space} from 'antd';
-import { ButtonPayment, CartDetail, TextCart, TitleCart } from '../layout/NavBar/NavBar.element';
-export default function MiniCart({onClose,visible,cartCurrent}) {
-    return (
-        <>
-          <Drawer width={450} title="Mini Cart Shopping " placement="right" onClose={onClose} visible={visible}>
-                    <Space direction="vertical" style={{width:'100%'}} size={20}>
-                        {cartCurrent.length && cartCurrent.map((item,index)=>{
-                            return(
-                                <CartDetail key={index} >
-                                <Image 
-                                preview={false}
-                                style={{width:100,height:100,marginRight:12,cursor:'pointer' }}
-                                src={item.product_image}
-                                />
-                                <div style={{display:'flex',flexDirection:'column'}}>
-                                <TitleCart>{item.product_name}</TitleCart>
-                                <TextCart>{item.product_quantity} * {item.product_price}</TextCart>
-                            
-                                </div>
-                                </CartDetail>            
-                            )
-                        })}  
-                            <TitleCart style={{marginTop:20}}>Total: $75</TitleCart>
-                        <div style={{display:'flex',width:'100%',}} >
-                            <ButtonPayment style={{marginRight:20}}>View Cart</ButtonPayment>
-                            <ButtonPayment >Check Out</ButtonPayment>
-                        </div>
-                    </Space>
-            </Drawer>   
-        </>
-    )
+import React, { useState } from "react";
+import { Button, Drawer, Image, Modal, Space } from "antd";
+import {
+  ButtonPayment,
+  CartDetail,
+  TextCart,
+  TitleCart,
+} from "../layout/NavBar/NavBar.element";
+import "./cart.css";
+import { parseMoney } from "../../comon/parseMoney";
+export default function MiniCart({ onClose, visible, cartCurrent }) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [totalMoney, setTotalMoney] = useState(0);
+
+  React.useEffect(() => {
+    if (cartCurrent.length > 0) {
+      const listTotal = cartCurrent?.map(
+        (e) => e.product_price * e.product_quantity
+      );
+      const result = listTotal?.reduce((previousValue, r) => previousValue + r);
+      setTotalMoney(result);
+    }
+  }, []);
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {};
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  return (
+    <>
+      <Drawer
+        width={450}
+        title="Mini Cart Shopping "
+        placement="right"
+        onClose={onClose}
+        visible={visible}
+      >
+        <Space direction="vertical" style={{ width: "100%" }} size={20}>
+          {cartCurrent &&
+            cartCurrent.map((item, index) => {
+              return (
+                <CartDetail key={index}>
+                  <Image
+                    preview={false}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      marginRight: 12,
+                      cursor: "pointer",
+                    }}
+                    src={item.product_image}
+                  />
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <TitleCart>{item.product_name}</TitleCart>
+                    <TextCart>
+                      {`${parseMoney(item.product_price)} VNĐ`} *{" "}
+                      {item.product_quantity}
+                    </TextCart>
+                  </div>
+                </CartDetail>
+              );
+            })}
+          <TitleCart style={{ marginTop: 20 }}>
+            Total: {`${parseMoney(totalMoney)} VNĐ`}
+          </TitleCart>
+          <div style={{ display: "flex", width: "100%" }}>
+            <ButtonPayment style={{ marginRight: 20 }}>View Cart</ButtonPayment>
+            <ButtonPayment onClick={showModal}>Check Out</ButtonPayment>
+          </div>
+        </Space>
+        <Modal
+          className="basic-modal"
+          title="Check Out"
+          visible={isModalVisible}
+          footer={[
+            <>
+              <Button
+                key="checkout"
+                className="btn_ok"
+                type="primary"
+                size="large"
+                onClick={handleOk}
+              >
+                Check Out Now
+              </Button>
+              <Button
+                key="cancel"
+                className="btn_cancel"
+                size="large"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </>,
+          ]}
+        >
+          <p>
+            We will contact you after placing your order.Please click the "Check
+            Out Now" button to place your order
+          </p>
+          <p>Thank you for your visit!</p>
+        </Modal>
+      </Drawer>
+    </>
+  );
 }

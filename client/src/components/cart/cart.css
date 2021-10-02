@@ -1,0 +1,19 @@
+.basic-modal .ant-modal-body {
+  padding: 16px 24px;
+}
+.basic-modal .ant-modal-body p {
+  font-size: 16px;
+  line-height: 20px;
+  color: #404040;
+}
+.basic-modal .ant-modal-title {
+  font-size: 20px;
+  line-height: 22px;
+  font-weight: 500;
+  color: #404040;
+}
+
+.ant-table-cell{
+  font-size: 18px;
+  line-height: 22px;
+}

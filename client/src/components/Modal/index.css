@@ -29,8 +29,9 @@
   margin-left: 0 20px;
 }
 .ant-modal-body {
-  padding: 54px;
+  padding: 0 75px;
   padding-top: 0;
+  padding-bottom: 30px;
 }
 .input {
   border-radius: 2px;
@@ -90,4 +91,19 @@
 .fbicon {
   font-size: 22px;
   margin-right: 4px;
+}
+
+.ant-col-18 {
+  max-width: 100%;
+}
+
+.ant-modal {
+  border-radius: 4px;
+  top: 20px !important;
+}
+.ant-modal-body {
+  border-radius: 4px;
+}
+.ant-modal-content {
+  border-radius: 4px;
 }

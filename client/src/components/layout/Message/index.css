@@ -1,0 +1,40 @@
+.ant-message-custom-content {
+  display: flex;
+}
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ant-message-notice-content {
+  min-width: 650px;
+  border-radius: 4px;
+}
+.msg {
+  width: 600px;
+  text-align: left;
+  margin-left: 10px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 17px;
+  line-height: 150%;
+  letter-spacing: 0.1px;
+  color: #343434;
+}
+.close-icon {
+  cursor: pointer;
+}
+.anticon-check-circle,
+.anticon-close-circle {
+  display: flex;
+  align-items: center;
+}
+.standby-notice-success .ant-message-notice-content {
+  border: 1px solid #34c759;
+  background-color: #eaffe2;
+}
+
+.standby-notice-error .ant-message-notice-content {
+  border: 1px solid #ff3b30;
+  background-color: #ffe7e7;
+}

@@ -6,7 +6,7 @@ import ListMember from '../components/member/memberList'
 
 export default function MemberShip() {
   return (
-    <>
+    <React.Fragment>
       <Row style={{ width: '100%', height: '100%' }}>
         <Col style={{ width: '100%', height: '100%',margin: '24px 16px'
     ,padding: 24 }}>
@@ -15,6 +15,6 @@ export default function MemberShip() {
         </Col>
 
       </Row>
-    </>
+    </React.Fragment>
   )
 }

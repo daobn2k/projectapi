@@ -1,5 +1,5 @@
-import styled,{ createGlobalStyle } from 'styled-components';
-import 'antd/dist/antd.css';
+import styled, { createGlobalStyle } from "styled-components";
+import "antd/dist/antd.css";
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
@@ -7,15 +7,15 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
   }
 `;
- 
+
 export const Container = styled.div`
-z-index:1;
-width: 100%;
-max-width:1300px;
-margin-left: auto ;
-margin-right: auto ;
-padding-right: 50px;
-padding-left: 50px;
-`
+  z-index: 1;
+  width: 100%;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 50px;
+  padding-left: 50px;
+`;
 
 export default GlobalStyle;

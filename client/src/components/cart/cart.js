@@ -1,186 +1,205 @@
-import { Breadcrumb, Table, Space, Row, Col, Input } from 'antd'
-import { DeleteOutlined } from '@ant-design/icons'
-import { Button } from 'antd/lib/radio';
+import { Breadcrumb, Table, Space, Row, Col, Input, Image } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Button } from "antd/lib/radio";
 
-import React from 'react'
-import { ButtonPayment, CardBottom, CardPayment, CardTop, CardTotal, TextCard, TitleCard } from './cart.element';
+import React from "react";
+import {
+  ButtonPayment,
+  CardBottom,
+  CardPayment,
+  CardTop,
+  CardTotal,
+  TextCard,
+  TitleCard,
+} from "./cart.element";
+import { storage } from "../../comon/storage";
+import { parseMoney } from "../../comon/parseMoney";
+import { decrementCart, incrementCart } from "../../comon/addToCart";
 
 export default function Cart() {
-
-    const columns = [
-        {
-            title: 'Product',
-            dataIndex: 'image',
-            key: 'image',
-        },
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Price',
-            dataIndex: 'price',
-            key: 'price',
-        },
-        {
-            title: 'Quantity',
-            align:'center',
-            dataIndex: 'quantity',
-            key: 'quantity',
-            render:()=>(
-                <div style={{
-                    display: "flex",
-                    justifyContent:'center' 
-                }}>
-                     <Button 
-                     style={{
-                         width:40,
-                        fontSize:16,
-                        marginRight:8
-                    }}>+</Button>   
-                     <Input style={{width:40,textAlign: "center"}} defaultValue="1" disabled />
-                     <Button 
-                     style={{
-                         width:40,
-                        fontSize:16,
-                        marginLeft:8
-
-                    }}>-</Button>
-                </div>
-            )
-        },
-        {
-            title: 'TOTAL',
-            key: 'total',
-            render: (text, record) => (
-                <Space size="middle">
-                </Space>
-            ),
-        },
-        {
-            title: 'Action',
-            align:'center',
-            key: 'action',
-            render: (text, record) => (
-                <div style={{textAlign:'center'}}>
-                    <DeleteOutlined />
-                </div>
-            ),
-        },
-    ];
-
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
-    return (
-        <div >
-            <Breadcrumb separator=">"
-                style={{
-                    fontSize: 15,
-                    padding: '16px 0'
-                }}
+  const cartCurrent = storage.getCartCurrent();
+  const [cart, setCart] = React.useState([]);
+  const columns = [
+    {
+      title: "Product",
+      dataIndex: "product_image",
+      key: "product_image",
+      render: (e, index) => {
+        return <Image key={index} src={e} style={{ width: 200 }} />;
+      },
+    },
+    {
+      title: "Name",
+      dataIndex: "product_name",
+      align: "left",
+      key: "product_name",
+    },
+    {
+      title: "Price",
+      dataIndex: "product_price",
+      key: "product_price",
+      render: (text, index) => {
+        return (
+          <Space size="middle" key={index}>
+            {`${parseMoney(text)} VNĐ`}
+          </Space>
+        );
+      },
+    },
+    {
+      title: "Quantity",
+      align: "center",
+      dataIndex: "product_quantity",
+      key: "product_quantity",
+      render: (e, record, index) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+            key={index}
+          >
+            <Button
+              style={{
+                width: 40,
+                fontSize: 16,
+                marginRight: 8,
+              }}
+              onClick={() => incrementCart(record.id)}
             >
-                <Breadcrumb.Item>Home</Breadcrumb.Item>
-
-                <Breadcrumb.Item>Shopping Cart</Breadcrumb.Item>
-            </Breadcrumb>
-            <Row
+              +
+            </Button>
+            <Input
+              style={{ width: 40, textAlign: "center" }}
+              defaultValue={e}
+              disabled
+            />
+            <Button
+              style={{
+                width: 40,
+                fontSize: 16,
+                marginLeft: 8,
+              }}
+              onClick={() => decrementCart(record.id)}
             >
-                <Col
-                    span={24}
-                >
-                    <Table
-                        columns={columns}
-                        dataSource={data}
-                    />
-                </Col>
-            </Row>
-            <Row
-            >
-                <Col
-                    span={24}
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                    }}
-                >
-                    <div style={{ display: 'flex', }}>
-                        <Input
-                            placeholder="Enter Your Coupo"
-                            style={{
-                                width: "220px",
-                                height: "48px",
-                                color: " #333",
-                                padding: "0px 20px",
-                                fontSize: 16,
-                                boxShadow: "0px 0px 5px #0000000a",
-                            }}
-                        />
-                        <Button
-                            style={{
-                                fontSize: 16,
-                                marginLeft: 10,
-                                height: "48px",
-                                padding: "0px 20px",
-                                background: "#fff",
-                                boxShadow: "0px 0px 5px #0000000a",
-                                display: 'flex',
-                                alignItems: 'center'
-                            }}
-                        >
-                            APPLY
-                        </Button>
-                    </div>
-                    <CardPayment>
-                        <CardTop>
-                            <CardTotal>
-                                <TitleCard>Card Subtotal</TitleCard>
-                                <TextCard>$330.00</TextCard>
-                            </CardTotal>
-                            <CardTotal>
-                                <TitleCard>ShippingFree</TitleCard>
-                                <TextCard>Free</TextCard>
-                            </CardTotal>
-                            <CardTotal>
-                                <TitleCard>You Save</TitleCard>
-                                <TextCard>$20.00</TextCard>
-                            </CardTotal>
-                        </CardTop>
-                        <CardBottom>
-                            <CardTotal>
-                                <TitleCard>You Pay</TitleCard>
-                                <TextCard>$310.00</TextCard>
-                            </CardTotal>
-                            <CardTotal>
-                                <ButtonPayment >
-                                        CHECKOUT
-                                </ButtonPayment>
-                            </CardTotal>
-                        </CardBottom>
-                    </CardPayment>
-                </Col>
-            </Row>
+              -
+            </Button>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Total",
+      key: "total",
+      render: (text, index) => {
+        const totalProduct = text?.product_price * text?.product_quantity;
+        return (
+          <Space size="middle" key={index}>
+            {`${parseMoney(totalProduct)} VNĐ`}
+          </Space>
+        );
+      },
+    },
+    {
+      title: "Action",
+      align: "center",
+      key: "action",
+      render: (index) => (
+        <div style={{ textAlign: "center" }} key={index}>
+          <DeleteOutlined />
         </div>
-    )
+      ),
+    },
+  ];
+  React.useEffect(() => {
+    if (cartCurrent.length > 0) {
+      setCart(cartCurrent);
+    }
+  }, []);
+
+  console.log(cart);
+  return (
+    <div>
+      <Breadcrumb
+        separator=">"
+        style={{
+          fontSize: 15,
+          padding: "16px 0",
+        }}
+      >
+        <Breadcrumb.Item>Home</Breadcrumb.Item>
+
+        <Breadcrumb.Item>Shopping Cart</Breadcrumb.Item>
+      </Breadcrumb>
+      <Row>
+        <Col span={24}>
+          <Table columns={columns} dataSource={cart} />
+        </Col>
+      </Row>
+      <Row>
+        <Col
+          span={24}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            paddingTop: 20,
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            <Input
+              placeholder="Enter Your Coupo"
+              style={{
+                width: "220px",
+                height: "48px",
+                color: " #333",
+                padding: "0px 20px",
+                fontSize: 16,
+                boxShadow: "0px 0px 5px #0000000a",
+              }}
+            />
+            <Button
+              style={{
+                fontSize: 16,
+                marginLeft: 10,
+                height: "48px",
+                padding: "0px 20px",
+                background: "#fff",
+                boxShadow: "0px 0px 5px #0000000a",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              APPLY
+            </Button>
+          </div>
+          <CardPayment>
+            <CardTop>
+              <CardTotal>
+                <TitleCard>Card Subtotal</TitleCard>
+                <TextCard>$330.00</TextCard>
+              </CardTotal>
+              <CardTotal>
+                <TitleCard>ShippingFree</TitleCard>
+                <TextCard>Free</TextCard>
+              </CardTotal>
+              <CardTotal>
+                <TitleCard>You Save</TitleCard>
+                <TextCard>$20.00</TextCard>
+              </CardTotal>
+            </CardTop>
+            <CardBottom>
+              <CardTotal>
+                <TitleCard>You Pay</TitleCard>
+                <TextCard>$310.00</TextCard>
+              </CardTotal>
+              <CardTotal>
+                <ButtonPayment>CHECKOUT</ButtonPayment>
+              </CardTotal>
+            </CardBottom>
+          </CardPayment>
+        </Col>
+      </Row>
+    </div>
+  );
 }
