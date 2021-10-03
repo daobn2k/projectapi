@@ -102,11 +102,12 @@
   display: flex;
   align-items: center;
   padding: 10px 0;
+  justify-content: center;
 }
 
-.ant-image {
-  width: 50px;
-  height: 50px;
+.Logo .ant-image {
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   display: flex;
   justify-content: center;

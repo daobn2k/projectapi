@@ -1,87 +1,230 @@
-.HeaderComponent{
-    background: #fff !important;
-    height: 64px !important;
-    width: 100%;
-    display:flex;
-    align-items: center;
-    padding-left: 18px;
-    padding-right: 20px;
-    position: sticky;
+.HeaderComponent {
+  background: #fff !important;
+  height: 64px !important;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 18px;
+  padding-right: 20px;
+  position: sticky;
 }
-.NavBar{
-    height: 64px !important;
-    width: 100%;
-    display:flex;
-    align-items: center;
+.NavBar {
+  height: 64px !important;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
-.NavList{
-    width: 100%;
-    height: 64px;
-    display: flex;
-    margin: 0;
-    padding: 10px;
-    
+.NavList {
+  width: 100%;
+  height: 64px;
+  display: flex;
+  margin: 0;
+  padding: 10px;
 }
-.NavItem{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    list-style: none;
-    padding: 12px 15px;
-    border-radius: 50%;
-    cursor: pointer;
-    
+.NavItem {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 12px 15px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-.NavItem:hover{
-    transition: rgba(0, 0, 0, 0.04) 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    background-color: rgba(0, 0, 0, 0.04); 
+.NavItem:hover {
+  transition: rgba(0, 0, 0, 0.04) 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
-.NavIcon{
-    width: 1em;
-    height: 1em;
-    overflow: hidden;
-    font-size: 1.25rem;
+.NavIcon {
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  font-size: 1.25rem;
 }
-.NavText{
-    font-size: 1rem;
-    line-height: 1.25rem;
-    margin-left: 10px;
-    margin-right: 10px;
+.NavText {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  margin-left: 10px;
+  margin-right: 10px;
 }
-.NavTitle{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin: 0 !important;
-    font-size: 1.25rem;
-    line-height: 1.5rem;
+.NavTitle {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0 !important;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
 }
 
-.NavImageUser{
-    margin-left:10px;
-    cursor: pointer;
+.NavImageUser {
+  margin-left: 10px;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 12px 15px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .Modal {
-    border-radius: 8px;
-    top: 35% !important;
+  border-radius: 8px;
+  top: 35% !important;
 }
- .TextModal {
-    width: 100%;
-    font-size: 14px;
-    line-height: 22px;
-    text-align: center;
-    padding-left:10px ;
+.TextModal {
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  padding-left: 10px;
 }
-.ButtonModal{
-    flex-basis: 50%;
-    height: 40px;
-    width: 100%;
-    border-radius: 4px;
-    font-size: 16px;
-    line-height: 20px;      
+.ButtonModal {
+  flex-basis: 50%;
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 20px;
+}
+.space-item {
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.space-item .ant-space-item:last-child {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.menu-dropdown {
+  width: 150px;
+}
+.menu-dropdown .ant-dropdown-menu-title-content {
+  display: flex;
+}
+.item-menu {
+  height: 42px;
+  padding: 10px;
+}
+
+.ModalProfile {
+  top: 0;
+}
+
+.ModalProfile .ant-modal-header {
+  background: #ffffff;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 30px 24px;
+}
+
+.ModalProfile .ant-modal-body {
+  background: #e5e5e5;
+  display: flex;
+  padding: 24px;
+  height: 600px;
+}
+.ModalProfile .ant-modal-body .col-6 {
+  background: #ffffff;
+  padding: 24px;
+}
+.space-profile {
+  width: 100%;
+}
+.btn_profile {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 14px;
+  line-height: 22px;
+  align-items: center;
+  height: 40px;
+  border-radius: 4px;
+}
+.btn_profile .ant-image {
+  margin-right: 10px;
+}
+
+.col-6 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.col-6 .title {
+  font-size: 18px;
+  line-height: 26px;
+  text-align: right;
+  color: #100f0f;
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+.col-18 {
+  background: #ffffff;
+  padding: 24px;
+}
+
+.col-18 .ant-form-item-label label {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.165px;
+  color: #000000;
+}
+
+.date-dropdown {
+  width: 408px;
+}
+
+.date-dropdown .ant-picker-panel {
+  width: 100%;
+}
+
+.date-dropdown .ant-picker-date-panel {
+  width: 100%;
+}
+
+.date-dropdown .ant-picker-body {
+  display: flex;
+  justify-content: center;
+}
+
+.header-model {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-model .header-title {
+  font-size: 22px;
+  line-height: 26px;
+  text-align: right;
+  color: #100f0f;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-model .header-button {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #036b59;
+  border: 1px solid #036b59;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  letter-spacing: -0.165px;
+  color: #ffffff;
 }

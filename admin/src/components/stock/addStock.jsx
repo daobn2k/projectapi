@@ -32,7 +32,9 @@ export default function AddStock() {
       .catch((err) => {});
   }, []);
 
-  const onFinish = () => {};
+  const onFinish = (value) => {
+    console.log(value);
+  };
 
   return (
     <div>
@@ -62,7 +64,7 @@ export default function AddStock() {
               },
             ]}
             hasFeedback
-            name="name"
+            name="stock_product"
             label="Name"
           >
             <Input
@@ -77,7 +79,7 @@ export default function AddStock() {
           </Form.Item>
 
           <Form.Item
-            name="category"
+            name="stock_category_id"
             label="Category"
             rules={[
               {
@@ -104,7 +106,7 @@ export default function AddStock() {
           </Form.Item>
 
           <Form.Item
-            name="quantity"
+            name="stock_quantity"
             label="Quantity"
             rules={[
               {
@@ -117,7 +119,7 @@ export default function AddStock() {
           </Form.Item>
 
           <Form.Item
-            name="price"
+            name="stock_purchaseprice"
             rules={[
               {
                 required: true,
@@ -152,7 +154,7 @@ export default function AddStock() {
               })}
             />
           </Form.Item>
-          <Form.Item name="datepicker" label="Date of Birth">
+          <Form.Item name="stock_date" label="Date Import ">
             <DatePicker format="MM-DD-YYYY" />
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 4 }}>
