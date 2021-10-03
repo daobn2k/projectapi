@@ -11,7 +11,7 @@ export default function ModalLogin({ handleLogin }) {
   };
   return (
     <div>
-      <Title className="TitleLogin">Welcome to Login </Title>
+      <Title className="TitleLogin">Welcome</Title>
       <Form onFinish={onFinish}>
         <Form.Item
           span={12}
@@ -23,7 +23,6 @@ export default function ModalLogin({ handleLogin }) {
               message: "Please input your username",
             },
           ]}
-          hasFeedback
         >
           <Input className="input" placeholder="Username" />
         </Form.Item>
@@ -37,7 +36,6 @@ export default function ModalLogin({ handleLogin }) {
               message: "Please input your password ",
             },
           ]}
-          hasFeedback
         >
           <Input.Password className="input" placeholder="Username" />
         </Form.Item>

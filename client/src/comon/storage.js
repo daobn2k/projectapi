@@ -1,22 +1,21 @@
-
 const storage = {
   getCartCurrent: () => {
-    return JSON.parse(window.localStorage.getItem('cartCurrent'));
+    return JSON.parse(window.localStorage.getItem("cartCurrent"));
   },
-  setCartCurrent:(data) =>{
+  setCartCurrent: (data) => {
     window.localStorage.setItem(`cartCurrent`, JSON.stringify(data));
   },
-  
+
   clearCartCurrent: () => {
     window.localStorage.removeItem(`cartCurrent`);
   },
 
   getCurrentUser: () => {
-    return JSON.parse(window.localStorage.getItem('currentUser'));
+    return JSON.parse(window.localStorage.getItem("currentUser"));
   },
-  setCurrentUser:(data) =>{
+  setCurrentUser: (data) => {
     window.localStorage.setItem(`currentUser`, JSON.stringify(data));
   },
 };
 
-export {storage};
+export { storage };

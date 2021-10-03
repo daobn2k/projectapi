@@ -19,6 +19,7 @@
 }
 .ant-tabs-nav-wrap {
   justify-content: center;
+  padding-right: 23px;
 }
 .ant-tabs-tab-btn {
   font-size: 17px;

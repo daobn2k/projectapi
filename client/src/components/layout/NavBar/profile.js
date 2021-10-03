@@ -1,21 +1,12 @@
-import {
-  Avatar,
-  Button,
-  Col,
-  Image,
-  Modal,
-  notification,
-  Space,
-  Typography,
-} from "antd";
+import { Avatar, Button, Col, Image, Modal, Space, Typography } from "antd";
 import React, { useState } from "react";
-import { LocalStorage } from "../../storage";
-import DeatailProfile from "./deatail";
+
 import { EditOutlined } from "@ant-design/icons";
 
 import "./header.css";
-import ChangePassword from "./password";
-import { UpdateAccount } from "../../axios/account";
+import DeatailProfile from "./detail";
+import ChangePassword from "./passwork";
+
 const TYPECHANGE = [
   { type: "INFO", title: "Detail Profile", image: "/image/User.png" },
   {
@@ -25,59 +16,59 @@ const TYPECHANGE = [
   },
   { type: "CONTACT", title: "Contact", image: "/image/Phone.png" },
 ];
-export default function Profile({ isProfileVisible }) {
+export default function ModalProfileForm({
+  userInfo,
+  visibleProfile,
+  onCancel,
+}) {
+  const [isEditDetail, setIsEditDetail] = useState(true);
   const [type, setType] = useState("INFO");
-  const [isEdit, setIsEdit] = useState(true);
 
-  const userInfo = LocalStorage.getCurentUser();
-
-  const editProfile = (values) => {
-    UpdateAccount(userInfo.id, values)
-      .then((res) => {
-        notification.success({
-          message: `Notification`,
-          description: " Update Info SuccessFully",
-          placement: "topRight",
-        });
-      })
-      .catch((err) => {
-        notification.error({
-          message: `Notification`,
-          description: " Error Can't Update Data",
-          placement: "topRight",
-        });
-      });
-  };
-
-  const onCancel = () => {
-    setIsEdit(true);
-  };
   return (
     <Modal
-      width={1265}
-      zIndex={700}
-      visible={isProfileVisible}
+      width={1200}
+      zIndex={10000}
+      visible={visibleProfile}
       footer={null}
       closable={false}
+      onCancel={onCancel}
       className="ModalProfile"
       title={
         <div className="header-model">
           <Typography.Title className="header-title">Profile</Typography.Title>
-          {isEdit && (
+          {isEditDetail ? (
             <Button
               className="header-button"
               icon={<EditOutlined />}
-              onClick={() => setIsEdit(false)}
+              onClick={() => setIsEditDetail(false)}
             >
               Edit
             </Button>
+          ) : (
+            <div className="Edit-button">
+              <Button
+                className="header-button left"
+                icon={<EditOutlined />}
+                onClick={() => setIsEditDetail(true)}
+              >
+                Save
+              </Button>
+              <Button
+                className="header-button"
+                onClick={() => setIsEditDetail(true)}
+              >
+                Cancel
+              </Button>
+            </div>
           )}
         </div>
       }
     >
       <Col span={6} style={{ marginRight: 24 }} className="col-6">
-        <Avatar size={88} src={userInfo.image} />
-        <Typography.Title className="title">{userInfo.name}</Typography.Title>
+        <Avatar size={88} src={userInfo ? userInfo.image : ""} />
+        <Typography.Title className="title">
+          {userInfo ? userInfo.name : ""}
+        </Typography.Title>
         <Space size={16} direction="vertical" className="space-profile">
           {TYPECHANGE.map((e, index) => {
             return (
@@ -91,7 +82,11 @@ export default function Profile({ isProfileVisible }) {
                   key={index}
                   onClick={() => setType(e.type)}
                 >
-                  <Image src={e.image} preview={false} />
+                  <Image
+                    src={e.image}
+                    style={{ height: 24, width: 24 }}
+                    preview={false}
+                  />
                   {e.title}
                 </Button>
               </React.Fragment>
@@ -101,15 +96,10 @@ export default function Profile({ isProfileVisible }) {
       </Col>
       <Col span={18} style={{ flex: 1 }} className="col-18">
         {type === "INFO" && (
-          <DeatailProfile
-            userInfo={userInfo}
-            isEdit={isEdit}
-            editProfile={editProfile}
-            onCancel={onCancel}
-          />
+          <DeatailProfile userInfo={userInfo} isEditDetail={isEditDetail} />
         )}
         {type === "PASSWORD" && (
-          <ChangePassword userInfo={userInfo} isEdit={isEdit} />
+          <ChangePassword userInfo={userInfo} isEditDetail={isEditDetail} />
         )}
         {/* {type === "CONTACT" && <DeatailProfile />} */}
       </Col>

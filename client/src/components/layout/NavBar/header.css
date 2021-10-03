@@ -1,0 +1,123 @@
+.ModalProfile {
+  top: 5px;
+}
+
+.ModalProfile .ant-modal-header {
+  background: #ffffff;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px 24px;
+}
+
+.ModalProfile .ant-modal-body {
+  background: #e5e5e5;
+  display: flex;
+  padding: 24px;
+  height: 540px;
+}
+.ModalProfile .ant-modal-body .col-6 {
+  background: #ffffff;
+  padding: 24px;
+}
+.space-profile {
+  width: 100%;
+}
+.btn_profile {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 14px;
+  line-height: 22px;
+  align-items: center;
+  height: 40px;
+  border-radius: 4px;
+}
+.btn_profile .ant-image {
+  margin-right: 10px;
+}
+
+.col-6 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.col-6 .title {
+  font-size: 18px;
+  line-height: 26px;
+  text-align: right;
+  color: #100f0f;
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+.col-18 {
+  background: #ffffff;
+  padding: 24px;
+}
+
+.col-18 .ant-form-item-label label {
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.165px;
+  color: #000000;
+}
+
+.date-dropdown {
+  width: 408px;
+}
+
+.date-dropdown .ant-picker-panel {
+  width: 100%;
+}
+
+.date-dropdown .ant-picker-date-panel {
+  width: 100%;
+}
+
+.date-dropdown .ant-picker-body {
+  display: flex;
+  justify-content: center;
+}
+
+.header-model {
+  display: flex;
+  justify-content: space-between;
+}
+.Edit-button {
+  display: flex;
+}
+
+.left {
+  margin-right: 10px;
+}
+
+.header-model .header-title {
+  font-size: 22px;
+  line-height: 26px;
+  text-align: right;
+  color: #100f0f;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-model .header-button {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #036b59;
+  border: 1px solid #036b59;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  letter-spacing: -0.165px;
+  color: #ffffff;
+}

@@ -10,17 +10,14 @@ import "./cart.css";
 import { parseMoney } from "../../comon/parseMoney";
 export default function MiniCart({ onClose, visible, cartCurrent }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [totalMoney, setTotalMoney] = useState(0);
+  const result =
+    cartCurrent && cartCurrent.length
+      ? cartCurrent
+          ?.map((e) => e.product_price * e.product_quantity)
+          .reduce((previousValue, r) => previousValue + r)
+      : [];
 
-  React.useEffect(() => {
-    if (cartCurrent.length > 0) {
-      const listTotal = cartCurrent?.map(
-        (e) => e.product_price * e.product_quantity
-      );
-      const result = listTotal?.reduce((previousValue, r) => previousValue + r);
-      setTotalMoney(result);
-    }
-  }, []);
+  React.useEffect(() => {}, []);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -66,7 +63,7 @@ export default function MiniCart({ onClose, visible, cartCurrent }) {
               );
             })}
           <TitleCart style={{ marginTop: 20 }}>
-            Total: {`${parseMoney(totalMoney)} VNĐ`}
+            Total: {`${parseMoney(result)} VNĐ`}
           </TitleCart>
           <div style={{ display: "flex", width: "100%" }}>
             <ButtonPayment style={{ marginRight: 20 }}>View Cart</ButtonPayment>

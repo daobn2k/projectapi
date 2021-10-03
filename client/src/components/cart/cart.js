@@ -12,13 +12,10 @@ import {
   TextCard,
   TitleCard,
 } from "./cart.element";
-import { storage } from "../../comon/storage";
 import { parseMoney } from "../../comon/parseMoney";
 import { decrementCart, incrementCart } from "../../comon/addToCart";
 
-export default function Cart() {
-  const cartCurrent = storage.getCartCurrent();
-  const [cart, setCart] = React.useState([]);
+export default function Cart({ cartCurrent, getListCart }) {
   const columns = [
     {
       title: "Product",
@@ -52,6 +49,7 @@ export default function Cart() {
       dataIndex: "product_quantity",
       key: "product_quantity",
       render: (e, record, index) => {
+        console.log(record);
         return (
           <div
             style={{
@@ -66,13 +64,16 @@ export default function Cart() {
                 fontSize: 16,
                 marginRight: 8,
               }}
-              onClick={() => incrementCart(record.id)}
+              onClick={() => {
+                incrementCart(record.id);
+                getListCart();
+              }}
             >
               +
             </Button>
             <Input
               style={{ width: 40, textAlign: "center" }}
-              defaultValue={e}
+              value={record.product_quantity}
               disabled
             />
             <Button
@@ -81,7 +82,10 @@ export default function Cart() {
                 fontSize: 16,
                 marginLeft: 8,
               }}
-              onClick={() => decrementCart(record.id)}
+              onClick={() => {
+                decrementCart(record.id);
+                getListCart();
+              }}
             >
               -
             </Button>
@@ -112,13 +116,6 @@ export default function Cart() {
       ),
     },
   ];
-  React.useEffect(() => {
-    if (cartCurrent.length > 0) {
-      setCart(cartCurrent);
-    }
-  }, []);
-
-  console.log(cart);
   return (
     <div>
       <Breadcrumb
@@ -134,7 +131,7 @@ export default function Cart() {
       </Breadcrumb>
       <Row>
         <Col span={24}>
-          <Table columns={columns} dataSource={cart} />
+          <Table columns={columns} dataSource={cartCurrent} />
         </Col>
       </Row>
       <Row>

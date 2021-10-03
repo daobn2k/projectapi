@@ -113,20 +113,20 @@
 }
 
 .ModalProfile {
-  top: 0;
+  top: 10px;
 }
 
 .ModalProfile .ant-modal-header {
   background: #ffffff;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 30px 24px;
+  padding: 20px 24px;
 }
 
 .ModalProfile .ant-modal-body {
   background: #e5e5e5;
   display: flex;
   padding: 24px;
-  height: 600px;
+  height: 550px;
 }
 .ModalProfile .ant-modal-body .col-6 {
   background: #ffffff;
@@ -227,4 +227,35 @@
   text-align: center;
   letter-spacing: -0.165px;
   color: #ffffff;
+}
+
+.button-container {
+  display: flex;
+}
+.button_save,
+.button_cancel {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #036b59;
+  border: 1px solid #036b59;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  letter-spacing: -0.165px;
+  color: #ffffff;
+}
+.button_save {
+  margin-right: 10px;
+}
+.col-24 {
+  display: flex;
+  justify-content: flex-end;
 }

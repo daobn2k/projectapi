@@ -1,5 +1,5 @@
-import { Badge, Button, notification } from "antd";
-import React, { useEffect, useState } from "react";
+import { Avatar, Badge, Button, notification } from "antd";
+import React, { useState } from "react";
 import MiniCart from "../../cart/miniCart";
 import ModalClientForm from "../../Modal";
 import { addNewAccount, Login } from "../../../api";
@@ -19,6 +19,7 @@ import {
 } from "./NavBar.element";
 import moment from "moment";
 import { showError, showSuccess } from "../Message/showMessage";
+import ModalProfileForm from "./profile";
 
 const listMenu = [
   { id: 1, to: "/", title: "Home" },
@@ -28,13 +29,12 @@ const listMenu = [
   { id: 5, to: "/contact", title: "Contact" },
 ];
 
-const NavBar = () => {
+const NavBar = ({ cartCurrent }) => {
   const [visible, setVisible] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [visibleProfile, setvisibleProfile] = useState(false);
   const [navbar, setNavbar] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
-  const [cartIndex, setCartIndex] = useState(0);
-  const cartCurrent = storage.getCartCurrent();
 
   const ChangeBackground = () => {
     if (window.scrollY >= 40) {
@@ -59,6 +59,12 @@ const NavBar = () => {
   const handleClickModal = () => {
     setVisibleModal(true);
   };
+
+  const showInfo = () => {
+    setvisibleProfile(true);
+  };
+
+  const userInfo = storage.getCurrentUser();
 
   const handleSignin = (valuesForm) => {
     if (valuesForm.accept) {
@@ -98,18 +104,18 @@ const NavBar = () => {
     setVisibleModal(false);
   };
 
-  useEffect(() => {
-    if (cartCurrent.length > 0) {
-      const CartQuantity = cartCurrent
-        ?.map((e) => e.product_quantity)
-        .reduce(
-          (previousTotal = 0, currentQuantity) =>
-            previousTotal + currentQuantity
-        );
-      setCartIndex(CartQuantity);
-    }
-  }, []);
-
+  const onCancelProfile = () => setvisibleProfile(false);
+  const CartQuantity =
+    cartCurrent && cartCurrent.length
+      ? cartCurrent
+          ?.map((e) => {
+            return e.product_quantity;
+          })
+          .reduce(
+            (previousTotal = 0, currentQuantity) =>
+              previousTotal + currentQuantity
+          )
+      : 0;
   return (
     <>
       <Nav
@@ -148,7 +154,7 @@ const NavBar = () => {
               <NavLinks to="/">
                 <Badge
                   size="large"
-                  count={cartIndex}
+                  count={CartQuantity}
                   style={{ top: "-2px", right: "-5px" }}
                 >
                   <IconShoppingCart onClick={showDrawer} />
@@ -165,9 +171,15 @@ const NavBar = () => {
                 <IconSettingUser style={{ color: "#404040" }} />
               </NavLinks>
             </NavItem>
+
             <NavItem>
               {storage.getCurrentUser() ? (
-                ""
+                // Avatar
+                <Avatar
+                  size={40}
+                  src={storage.getCurrentUser().image}
+                  onClick={showInfo}
+                />
               ) : (
                 <Button
                   style={{
@@ -202,6 +214,11 @@ const NavBar = () => {
         handleLogin={handleLogin}
         onCancel={onCancel}
         handleSignin={handleSignin}
+      />
+      <ModalProfileForm
+        visibleProfile={visibleProfile}
+        userInfo={userInfo}
+        onCancel={onCancelProfile}
       />
     </>
   );

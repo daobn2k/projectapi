@@ -8,7 +8,11 @@ import Search from "antd/lib/input/Search";
 import { addToCart } from "../../../../comon/addToCart";
 import { Link } from "react-router-dom";
 const { Title } = Typography;
-export default function ProductView({ productData, categoryData }) {
+export default function ProductView({
+  productData,
+  categoryData,
+  getListCart,
+}) {
   const [activeIndex, setActiveIndex] = useState(1);
   const [ellipsis, setEllipsis] = React.useState(true);
   function chooseValue(item) {
@@ -18,6 +22,7 @@ export default function ProductView({ productData, categoryData }) {
 
   const HandleAddToCart = (e) => {
     addToCart(e);
+    getListCart();
   };
   return (
     <div className="site-card-wrapper">

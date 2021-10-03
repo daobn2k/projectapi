@@ -8,7 +8,7 @@ import ProductHot from "../../../components/home/listproduct/productHot/productH
 import ProductView from "../../../components/home/listproduct/productView/productView";
 import { Container } from "../../../globalStyled";
 
-const HomePage = ({ productData, categoryData }) => {
+const HomePage = ({ productData, categoryData, getListCart }) => {
   return (
     <>
       <InfoSection />
@@ -16,7 +16,11 @@ const HomePage = ({ productData, categoryData }) => {
       <Container style={{ paddingTop: 50 }}>
         <ProductFavorite productData={productData} />
         <ProductHot productData={productData} />
-        <ProductView productData={productData} categoryData={categoryData} />
+        <ProductView
+          productData={productData}
+          categoryData={categoryData}
+          getListCart={getListCart}
+        />
       </Container>
       <ListCategory />
     </>
