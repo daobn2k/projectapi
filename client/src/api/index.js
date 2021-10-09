@@ -28,6 +28,11 @@ const Login = async(data) =>{
  const addNewAccount = async(data) =>{
    return await axios.post('/user/adduserfromadmin', data);
  }
+
+
+ const postCheckOut  = async(data) =>{
+   return await axios.post('/cart', data);
+ }
  
 export { 
    GetProduct ,
@@ -35,5 +40,6 @@ export {
    GetCategory,
    getCategorybyId,
    Login,
-   addNewAccount
+   addNewAccount,
+   postCheckOut
 }

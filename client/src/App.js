@@ -12,6 +12,7 @@ import { GetCategory, GetProduct } from "./api";
 import ProductPage from "./features/product/productPage";
 import { storage } from "./comon/storage";
 
+
 function App() {
   const [productData, setProductData] = useState();
   const [categoryData, setCategoryData] = useState();
@@ -48,6 +49,7 @@ function App() {
               />
             </Route>
             <Route path="/cart">
+              
               <CartPage cartCurrent={cartCurrent} getListCart={getListCart} />
             </Route>
             <Route path="/contact" component={ContactPage} />

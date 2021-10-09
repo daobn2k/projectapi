@@ -14,8 +14,15 @@ import {
 } from "./cart.element";
 import { parseMoney } from "../../comon/parseMoney";
 import { decrementCart, incrementCart } from "../../comon/addToCart";
+import { postCheckOut } from "../../api";
+import { storage } from "../../comon/storage";
+import moment from "moment";
 
 export default function Cart({ cartCurrent, getListCart }) {
+
+
+  const user = storage.getCurrentUser()
+  const cart = storage.getCartCurrent()
   const columns = [
     {
       title: "Product",
@@ -49,7 +56,6 @@ export default function Cart({ cartCurrent, getListCart }) {
       dataIndex: "product_quantity",
       key: "product_quantity",
       render: (e, record, index) => {
-        console.log(record);
         return (
           <div
             style={{
@@ -116,6 +122,31 @@ export default function Cart({ cartCurrent, getListCart }) {
       ),
     },
   ];
+
+
+  const submitCheckout = () =>{
+    const order_code = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)+Math.floor(Math.random(1000,100000)*100000)
+    const order_user_id = user.id
+    const order_date =  moment(new Date()).format("YYYY/MM/DD HH:mm");
+    const status = "0"
+    const product_id =cart && cart.length > 0 &&cart.map( e=> e.id)
+    const order_quantity =cart && cart.length > 0 &&cart.map( e=> e.product_quantity)
+
+    const dataSubmit = {
+      order_code:order_code ,
+      order_user_id: order_user_id,
+      order_date: order_date,
+      status:status,
+      product_id:product_id
+        ,
+      order_quantity: order_quantity
+    }
+    postCheckOut(dataSubmit)
+    .then(res=>console.log(res))
+    .catch(error=>console.log(error))
+  }
+  
+
   return (
     <div>
       <Breadcrumb
@@ -191,7 +222,7 @@ export default function Cart({ cartCurrent, getListCart }) {
                 <TextCard>$310.00</TextCard>
               </CardTotal>
               <CardTotal>
-                <ButtonPayment>CHECKOUT</ButtonPayment>
+                <ButtonPayment onClick={submitCheckout}>CHECKOUT</ButtonPayment>
               </CardTotal>
             </CardBottom>
           </CardPayment>
