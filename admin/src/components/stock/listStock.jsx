@@ -32,16 +32,6 @@ export default function Stock() {
       title: "Category Import",
       dataIndex: "stock_category_id",
       key: "stock_category_id",
-      // render: (e) => (
-      //   <a
-      //     style={{ color: "#404040" }}
-      //     key={e.id}
-      //     href={`/product/detail?${e.id}`}
-      //   >
-      //     {" "}
-      //     {e.name}
-      //   </a>
-      // ),
     },
     {
       title: "Price Import",
@@ -51,7 +41,7 @@ export default function Stock() {
     {
       title: "Quantity Import",
       dataIndex: "stock_quantity",
-      key: "quantity",
+      key: "stock_quantity",
     },
     {
       title: "Date Import",

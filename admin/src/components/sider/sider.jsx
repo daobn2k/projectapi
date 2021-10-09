@@ -7,6 +7,7 @@ import {
   AiOutlineAreaChart,
   AiFillShop,
 } from "react-icons/ai";
+import { LocalStorage } from "../../storage";
 import { MdShoppingBasket } from "react-icons/md";
 import { AppstoreOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { BsDot } from "react-icons/bs";
@@ -17,7 +18,8 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SiderComponent({ collapsed }) {
-  console.log(collapsed);
+  const currentUser = LocalStorage.getCurentUser();
+
   return (
     <Sider
       style={{ background: "#222A44" }}
@@ -155,7 +157,9 @@ export default function SiderComponent({ collapsed }) {
               <Link to="/order/detail"> Order Detail</Link>
             </Menu.Item>
           </SubMenu>
-          <SubMenu
+         {
+           currentUser.role === "admin" && (
+            <SubMenu
             className="SubMenu"
             key="sub5"
             icon={<UsergroupAddOutlined />}
@@ -176,6 +180,9 @@ export default function SiderComponent({ collapsed }) {
               <Link to="/member/add"> New Member</Link>
             </Menu.Item>
           </SubMenu>
+           )
+         }
+        
           <SubMenu
             className="SubMenu"
             key="sub6"

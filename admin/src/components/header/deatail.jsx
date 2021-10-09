@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Form, Input, Row, Col, DatePicker, Button } from "antd";
 import { getUserbyId } from "../../axios";
 import moment from "moment";
@@ -116,7 +116,13 @@ export default function DeatailProfile({
           </Form.Item>
         </Col>
         <Col span={24} className="col-24">
-          <Form.Item className="hide-content-multi">
+        {
+
+        } 
+        {
+          !isEdit && (
+            <Fragment>
+            <Form.Item className="hide-content-multi">
             <Button className="button_save" htmlType="submit">
               Save
             </Button>
@@ -126,6 +132,10 @@ export default function DeatailProfile({
               Cancel
             </Button>
           </Form.Item>
+          </Fragment>
+          )
+        }
+        
         </Col>
       </Row>
     </Form>

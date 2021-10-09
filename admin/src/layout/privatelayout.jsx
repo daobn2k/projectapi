@@ -24,7 +24,9 @@ export default function PrivateLayout() {
   };
   const currentUser = LocalStorage.getCurentUser();
   if (!currentUser) {
-    return <Redirect to="/auth/login" />;
+    if(currentUser.role === 'user'){
+      return <Redirect to="/auth/login" />;
+    }
   }
   return (
     <Layout className="App">

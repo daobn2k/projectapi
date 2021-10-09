@@ -18,7 +18,7 @@ import { useHistory } from "react-router";
 import Profile from "./proflie";
 const { Header } = Layout;
 export default function HeaderComponent({ toggle }) {
-  const cart = LocalStorage.getCurentUser();
+  const currentAccount = LocalStorage.getCurentUser();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isProfileVisible, setIsProfileVisible] = useState(false);
@@ -37,6 +37,7 @@ export default function HeaderComponent({ toggle }) {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setIsProfileVisible(false);
   };
 
   const showProfile = () => {
@@ -99,7 +100,7 @@ export default function HeaderComponent({ toggle }) {
               arrow
               trigger={["click"]}
             >
-              <Avatar src={cart.image} size={50} />
+              <Avatar src={currentAccount.image} size={50} />
             </Dropdown>
           </li>
         </ul>
@@ -110,7 +111,7 @@ export default function HeaderComponent({ toggle }) {
         handleCancel={handleCancel}
       />
 
-      <Profile isProfileVisible={isProfileVisible} />
+      <Profile isProfileVisible={isProfileVisible} handleCancel={handleCancel}/>
     </Header>
   );
 }

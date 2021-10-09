@@ -25,7 +25,7 @@ const TYPECHANGE = [
   },
   { type: "CONTACT", title: "Contact", image: "/image/Phone.png" },
 ];
-export default function Profile({ isProfileVisible }) {
+export default function Profile({ isProfileVisible,handleCancel }) {
   const [type, setType] = useState("INFO");
   const [isEdit, setIsEdit] = useState(true);
 
@@ -39,6 +39,7 @@ export default function Profile({ isProfileVisible }) {
           description: " Update Info SuccessFully",
           placement: "topRight",
         });
+        setIsEdit(true)
       })
       .catch((err) => {
         notification.error({
@@ -46,6 +47,7 @@ export default function Profile({ isProfileVisible }) {
           description: " Error Can't Update Data",
           placement: "topRight",
         });
+        setIsEdit(true)
       });
   };
 
@@ -59,6 +61,7 @@ export default function Profile({ isProfileVisible }) {
       visible={isProfileVisible}
       footer={null}
       closable={false}
+      onCancel={handleCancel}
       className="ModalProfile"
       title={
         <div className="header-model">
