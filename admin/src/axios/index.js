@@ -33,6 +33,13 @@ const getCategorybyId = (id) => {
 const getStock = () => {
   return axios.get(`/stock`, config);
 };
+const getStockById = (id) => {
+  return axios.get(`/stock/${id}`, config);
+};
+
+export const getOrder = () => {
+  return axios.get(`/order`, config);
+};
 export {
   getCategory,
   GetProduct,
@@ -42,4 +49,5 @@ export {
   GetCategory,
   getCategorybyId,
   getStock,
+  getStockById,
 };

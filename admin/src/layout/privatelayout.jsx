@@ -13,7 +13,7 @@ import MemberShip from "../pages/membership";
 import StockPage from "../pages/stockpage";
 
 import { LocalStorage } from "../storage";
-
+import OrderPage from "../pages/orderpage";
 const { Content } = Layout;
 
 export default function PrivateLayout() {
@@ -56,6 +56,9 @@ export default function PrivateLayout() {
             </Route>
             <Route path="/customer">
               <Customer />
+            </Route>
+            <Route path="/order">
+              <OrderPage />
             </Route>
           </Content>
         </Switch>

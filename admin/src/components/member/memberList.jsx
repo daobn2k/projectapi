@@ -147,6 +147,7 @@ export default function ListMember() {
         <Table
           columns={columns}
           dataSource={data}
+          pagination={{ pageSize: 5 }}
         />
       </Space>
     )

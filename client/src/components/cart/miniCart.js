@@ -8,7 +8,13 @@ import {
 } from "../layout/NavBar/NavBar.element";
 import "./cart.css";
 import { parseMoney } from "../../comon/parseMoney";
+import { storage } from "../../comon/storage";
+import { postCheckOut } from "../../api";
+import moment from "moment";
+import { showError, showSuccess } from "../layout/Message/showMessage";
 export default function MiniCart({ onClose, visible, cartCurrent }) {
+  const user = storage.getCurrentUser();
+  const cart = storage.getCartCurrent();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const result =
     cartCurrent && cartCurrent.length
@@ -22,12 +28,47 @@ export default function MiniCart({ onClose, visible, cartCurrent }) {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {};
-
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
+  const handleOk = () => {
+    const order_code =
+      Math.random()
+        .toString(36)
+        .replace(/[^a-z]+/g, "")
+        .substr(0, 5) + Math.floor(Math.random(1000, 100000) * 100000);
+    const order_user_id = user.id;
+    const order_date = moment(new Date()).format("YYYY/MM/DD");
+    const status = "0";
+    const product_id = cart && cart.length > 0 && cart.map((e) => e.id);
+    const order_quantity =
+      cart && cart.length > 0 && cart.map((e) => e.product_quantity);
+
+    const dataSubmit = {
+      order_code: order_code,
+      order_user_id: order_user_id,
+      order_date: order_date,
+      status: status,
+      product_id: product_id,
+      order_quantity: order_quantity,
+    };
+    postCheckOut(dataSubmit)
+      .then((res) => {
+        storage.clearCartCurrent();
+
+        showSuccess(
+          "Thank you for your order.Your order will be processed and delivered to your address in the next 3-5 days"
+        );
+        setIsModalVisible(false);
+      })
+      .catch((error) => {
+        if (error)
+          showError(
+            " Sorry for the inconvenience, please double check the information before ordering "
+          );
+      });
+  };
   return (
     <>
       <Drawer

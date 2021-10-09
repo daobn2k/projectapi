@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { DeleteProduct, SearchProduct } from "../../axios/product";
 import { getStock } from "../../axios";
 import { AiFillDelete, AiOutlineEdit } from "react-icons/ai";
 import { Space, Spin, Input, Button, notification, Tag, Table } from "antd";
 
 import { useHistory } from "react-router";
 import "./stock.css";
+import { DeleteStock, SearchStock } from "../../axios/stock";
 const { Search } = Input;
 
 export default function Stock() {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const columns = [
+    {
+      title: "Employee Create",
+      dataIndex: "employee",
+      align: "center",
+      render: (e) => {
+        return e.name;
+      },
+    },
     {
       title: "Title Import",
       dataIndex: "stock_product",
@@ -50,19 +58,11 @@ export default function Stock() {
     },
     {
       title: "Status",
-      key: "product_hot",
-      dataIndex: "product_hot",
-      render: (product_hot) => (
-        <Tag
-          color={
-            product_hot === 0 ? "cyan" : product_hot === 1 ? " magenta" : "blue"
-          }
-        >
-          {product_hot === 0
-            ? "Normal"
-            : product_hot === 1
-            ? " Normal"
-            : "Normal"}
+      key: "status",
+      dataIndex: "status",
+      render: (status) => (
+        <Tag color={status === 0 ? "cyan" : status === 1 ? " magenta" : "blue"}>
+          {status === 0 ? "Active" : status === 1 ? " InActive" : "Inventory"}
         </Tag>
       ),
     },
@@ -71,8 +71,14 @@ export default function Stock() {
       key: "action",
       render: (e) => (
         <Space size="middle">
-          <AiOutlineEdit key={e.id} onClick={() => handleEdit(e.id)} />
-          <AiFillDelete key={e.id} onClick={() => handleDelete(e.id)} />
+          <AiOutlineEdit
+            key={e.stock_id}
+            onClick={() => handleEdit(e.stock_id)}
+          />
+          <AiFillDelete
+            key={e.stock_id}
+            onClick={() => handleDelete(e.stock_id)}
+          />
         </Space>
       ),
     },
@@ -92,15 +98,15 @@ export default function Stock() {
 
   const handleDelete = (id) => {
     setLoading(true);
-    DeleteProduct(id)
+    DeleteStock(id)
       .then((res) => {
         notification.success({
           message: `Notification Delete`,
           description: "Delete Product SuccessFully !",
           placement: "topRight ",
         });
+        setTimeout(LoadingStock(), 3000);
         setLoading(false);
-        // setTimeout(LoadingProduct(), 3000);
       })
       .catch((err) => {
         notification.error({
@@ -113,19 +119,15 @@ export default function Stock() {
   };
 
   const handleEdit = (id) => {
-    history.push({
-      pathname: `/product/add`,
-      search: "?" + new URLSearchParams({ product_id: id }).toString(),
-    });
+    history.push(`/storage/edit/${id}`);
   };
 
   const handleSearch = (e) => {
-    SearchProduct({ key: e })
+    SearchStock({ key: e })
       .then((res) => setCurrentData(res.data))
       .catch((err) => console.log(err));
   };
 
-  console.log(currentData);
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   return (
     <Spin indicator={antIcon} spinning={loading}>
@@ -145,7 +147,11 @@ export default function Stock() {
             </Button>
           </Link>
         </div>
-        <Table columns={columns} dataSource={currentData} />
+        <Table
+          columns={columns}
+          dataSource={currentData}
+          pagination={{ pageSize: 5 }}
+        />
       </Space>
     </Spin>
   );

@@ -152,9 +152,9 @@ export default function SiderComponent({ collapsed }) {
             <Menu.Item
               key="11"
               icon={<BsDot />}
-              style={{ color: "#fff", paddingLeft: 20 }}
+              style={{ color: "#fff", paddingLeft: 20,display:'none' }}
             >
-              <Link to="/order/detail"> Order Detail</Link>
+              <Link to="/order/:id"> Order Detail</Link>
             </Menu.Item>
           </SubMenu>
          {

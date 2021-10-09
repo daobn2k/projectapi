@@ -164,7 +164,7 @@ export default function ListProduct() {
         </Button>
         </Link>
       </div>
-      <Table columns={columns} dataSource={currentData} />
+      <Table columns={columns} dataSource={currentData}  pagination={{ pageSize: 5 }}/>
     </Space>
    </Spin>
   );

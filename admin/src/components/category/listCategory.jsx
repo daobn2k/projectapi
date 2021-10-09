@@ -127,6 +127,7 @@ export default function ListCategory() {
         <Table
           columns={columns}
           dataSource={currentData}
+          pagination={{ pageSize: 5 }}
         />
       </Space>
       </Spin>

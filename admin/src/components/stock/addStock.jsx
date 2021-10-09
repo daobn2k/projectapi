@@ -7,18 +7,29 @@ import {
   Select,
   InputNumber,
   DatePicker,
+  notification,
 } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
-import { getCategory } from "../../axios";
+import { getCategory, getStockById, GetUser } from "../../axios";
 import "./stock.css";
+import { useParams } from "react-router";
+import { SearchAccount } from "../../axios/account";
+import { debounce } from "lodash";
+import moment from "moment";
+import { addNewStock, UpdateNewStock } from "../../axios/stock";
+
+const { Option } = Select;
 
 export default function AddStock() {
   const Status = [
     { id: 0, name: "Active" },
-    { id: 1, name: "InActive" },
+    { id: 1, name: "In Active" },
     { id: 2, name: "Inventory" },
   ];
-
+  const stock_id = useParams();
+  const [listEmployee, setListEmployee] = useState();
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
   const [category, setCategory] = useState();
 
   const layout = {
@@ -30,10 +41,96 @@ export default function AddStock() {
     getCategory()
       .then((res) => setCategory(res.data))
       .catch((err) => {});
+    GetListEmployee();
+    if (stock_id) {
+      GetListStockWithId(stock_id.id);
+    }
   }, []);
+  const GetListEmployee = () => {
+    GetUser()
+      .then((res) => {
+        const ListUserData = res.data.filter((e) => e.role !== "user");
+        setListEmployee(ListUserData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const GetListStockWithId = (id) => {
+    getStockById(id).then((res) => {
+      form.setFieldsValue({
+        stock_product: res.data.stock_product || "",
+        stock_category_id: res.data.stock_category_id || "",
+        stock_quantity: res.data.stock_quantity || "",
+        stock_purchaseprice: res.data.stock_purchaseprice || "",
+        stock_date: moment(res.data.stock_date),
+        status: res.data.status || "",
+        employee_id: res.data.employee_id || "",
+      });
+    });
+  };
+
+  const searchTargets = (value) => {
+    setLoading(true);
+    SearchAccount({ key: value })
+      .then((res) => {
+        const listEmployee = res.data.filter((e) => e.role !== "user");
+        setListEmployee(listEmployee);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+
+        console.log(err);
+      });
+  };
+
+  const handleSearchTargets = debounce(searchTargets, 800);
 
   const onFinish = (value) => {
-    console.log(value);
+    if (stock_id.id) {
+      const dataUpdate = {
+        ...value,
+        stock_date: moment(value.stock_date).format("YYYY/MM/DD"),
+      };
+      UpdateNewStock(stock_id.id, dataUpdate)
+        .then((res) => {
+          notification.success({
+            description: "updatee success fully",
+            placement: "topRight",
+            duration: 2,
+          });
+        })
+        .catch((error) =>
+          notification.error({
+            description: "import failed ",
+            placement: "topRight",
+            duration: 2,
+          })
+        );
+    } else {
+      const data = {
+        ...value,
+        status: "1",
+        stock_date: moment(value.stock_date).format("YYYY/MM/DD"),
+      };
+      addNewStock(data)
+        .then((res) => {
+          notification.success({
+            description: "import success fully",
+            placement: "topRight",
+            duration: 2,
+          });
+        })
+        .catch((error) =>
+          notification.error({
+            description: "import failed ",
+            placement: "topRight",
+            duration: 2,
+          })
+        );
+    }
   };
 
   return (
@@ -42,13 +139,14 @@ export default function AddStock() {
         <Breadcrumb.Item href="">
           <HomeOutlined />
         </Breadcrumb.Item>
-        <Breadcrumb.Item>Product</Breadcrumb.Item>
+        <Breadcrumb.Item>Import</Breadcrumb.Item>
         <Breadcrumb.Item>
-          {/* {query.product_id ? "Edit Product" : "Add Product"} */}
+          {stock_id.id ? "Edit Import" : "Add New Import"}
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className="FormAddProduct" style={{ display: "flex" }}>
         <Form
+          form={form}
           {...layout}
           style={{
             width: "50%",
@@ -63,7 +161,44 @@ export default function AddStock() {
                 message: "Please input your name!",
               },
             ]}
-            hasFeedback
+            hasFeedback={!stock_id.id ? true : false}
+            name="employee_id"
+            label="Employee"
+          >
+            <Select
+              placeholder="Select Employee Create"
+              size="large"
+              className="select-item"
+              showSearch
+              onSearch={handleSearchTargets}
+              filterOption={false}
+              autoClearSearchValue
+              dropdownClassName="select-dropdown"
+              loading={loading}
+            >
+              {listEmployee &&
+                listEmployee.length > 0 &&
+                listEmployee.map((item, index) => {
+                  return (
+                    <Option
+                      value={item.id}
+                      key={index}
+                      className="multile-item"
+                    >
+                      {item.name}
+                    </Option>
+                  );
+                })}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please input your name!",
+              },
+            ]}
+            hasFeedback={!stock_id.id ? true : false}
             name="stock_product"
             label="Name"
           >
@@ -126,7 +261,7 @@ export default function AddStock() {
                 message: "Please input your price!",
               },
             ]}
-            hasFeedback
+            hasFeedback={!stock_id.id ? true : false}
             label="Price"
           >
             <Input
@@ -140,22 +275,24 @@ export default function AddStock() {
             />
           </Form.Item>
 
-          <Form.Item name="status" label="Status">
-            <Select
-              style={{
-                height: "40px",
-                borderRadius: "4px",
-                fontSize: 14,
-                lineHeight: 22,
-                cursor: "pointer",
-              }}
-              options={Status.map((o) => {
-                return { id: o.id, value: o.id, label: o.name };
-              })}
-            />
-          </Form.Item>
+          {stock_id.id && (
+            <Form.Item name="status" label="Status">
+              <Select
+                style={{
+                  height: "40px",
+                  borderRadius: "4px",
+                  fontSize: 14,
+                  lineHeight: 22,
+                  cursor: "pointer",
+                }}
+                options={Status.map((o) => {
+                  return { id: o.id, value: o.id, label: o.name };
+                })}
+              />
+            </Form.Item>
+          )}
           <Form.Item name="stock_date" label="Date Import ">
-            <DatePicker format="MM-DD-YYYY" />
+            <DatePicker format="DD-MM-YYYY" />
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 4 }}>
             <Button

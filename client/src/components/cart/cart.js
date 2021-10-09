@@ -17,12 +17,13 @@ import { decrementCart, incrementCart } from "../../comon/addToCart";
 import { postCheckOut } from "../../api";
 import { storage } from "../../comon/storage";
 import moment from "moment";
+import { showError, showSuccess } from "../layout/Message/showMessage";
+import { useHistory } from "react-router";
 
 export default function Cart({ cartCurrent, getListCart }) {
-
-
-  const user = storage.getCurrentUser()
-  const cart = storage.getCartCurrent()
+  const history = useHistory();
+  const user = storage.getCurrentUser();
+  const cart = storage.getCartCurrent();
   const columns = [
     {
       title: "Product",
@@ -123,29 +124,41 @@ export default function Cart({ cartCurrent, getListCart }) {
     },
   ];
 
-
-  const submitCheckout = () =>{
-    const order_code = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)+Math.floor(Math.random(1000,100000)*100000)
-    const order_user_id = user.id
-    const order_date =  moment(new Date()).format("YYYY/MM/DD HH:mm");
-    const status = "0"
-    const product_id =cart && cart.length > 0 &&cart.map( e=> e.id)
-    const order_quantity =cart && cart.length > 0 &&cart.map( e=> e.product_quantity)
+  const submitCheckout = () => {
+    const order_code =
+      Math.random()
+        .toString(36)
+        .replace(/[^a-z]+/g, "")
+        .substr(0, 5) + Math.floor(Math.random(1000, 100000) * 100000);
+    const order_user_id = user.id;
+    const order_date = moment(new Date()).format("YYYY/MM/DD HH:mm");
+    const status = "0";
+    const product_id = cart && cart.length > 0 && cart.map((e) => e.id);
+    const order_quantity =
+      cart && cart.length > 0 && cart.map((e) => e.product_quantity);
 
     const dataSubmit = {
-      order_code:order_code ,
+      order_code: order_code,
       order_user_id: order_user_id,
       order_date: order_date,
-      status:status,
-      product_id:product_id
-        ,
-      order_quantity: order_quantity
-    }
+      status: status,
+      product_id: product_id,
+      order_quantity: order_quantity,
+    };
     postCheckOut(dataSubmit)
-    .then(res=>console.log(res))
-    .catch(error=>console.log(error))
-  }
-  
+      .then((res) => {
+        storage.clearCartCurrent();
+        showSuccess(
+          "Thank you for your order.Your order will be processed and delivered to your address in the next 3-5 days"
+        );
+      })
+      .catch((error) => {
+        if (error)
+          showError(
+            " Sorry for the inconvenience, please double check the information before ordering "
+          );
+      });
+  };
 
   return (
     <div>
