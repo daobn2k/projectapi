@@ -62,7 +62,7 @@ export default function AddStock() {
       form.setFieldsValue({
         stock_product: res.data.stock_product || "",
         stock_category_id: res.data.stock_category_id || "",
-        stock_quantity: res.data.stock_quantity || "",
+        stock_quantity: res.data.product_quantity || "",
         stock_purchaseprice: res.data.stock_purchaseprice || "",
         stock_date: moment(res.data.stock_date),
         status: res.data.status || "",

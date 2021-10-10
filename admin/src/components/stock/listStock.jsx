@@ -48,8 +48,8 @@ export default function Stock() {
     },
     {
       title: "Quantity Import",
-      dataIndex: "stock_quantity",
-      key: "stock_quantity",
+      dataIndex: "product_quantity",
+      key: "product_quantity",
     },
     {
       title: "Date Import",
@@ -62,7 +62,7 @@ export default function Stock() {
       dataIndex: "status",
       render: (status) => (
         <Tag color={status === 0 ? "cyan" : status === 1 ? " magenta" : "blue"}>
-          {status === 0 ? "Active" : status === 1 ? " InActive" : "Inventory"}
+          {status === 0 ? "Active" : status === 1 ? " In Active" : "Inventory"}
         </Tag>
       ),
     },

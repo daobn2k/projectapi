@@ -1,20 +1,19 @@
-import { notification, Space, Table, Tag, Input, Spin } from "antd";
+import { notification, Space, Table, Tag, Input, Spin, DatePicker } from "antd";
 import React, { useEffect, useState } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
 import { getOrder } from "../../axios";
-import { DeleteProduct, SearchProduct } from "../../axios/product";
-import { useHistory } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
 import Detail from "./detail";
 import moment from "moment";
-
+import { DeleteOrder, SearchOrder } from "../../axios/order";
+import "./order.css";
 const { Search } = Input;
 export default function OrderList() {
-  const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [isProfileVisible, setIsProfileVisible] = useState(false);
+  const [isOrderVisible, setIsOrderVisible] = useState(false);
+  const [editData, setEditData] = useState();
   const handleCancel = () => {
-    setIsProfileVisible(false);
+    setIsOrderVisible(false);
   };
 
   const columns = [
@@ -25,16 +24,32 @@ export default function OrderList() {
     },
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: "user_id",
+      key: "user_id",
+      render: (e) => {
+        return e.name;
+      },
     },
     {
       title: "Phone",
-      dataIndex: "product_image",
+      dataIndex: "user_id",
+      key: "user_id",
+      render: (e) => {
+        return e.phone;
+      },
     },
     {
       title: "Address",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "user_id",
+      key: "user_id",
+      render: (e) => {
+        return e.address;
+      },
+    },
+    {
+      title: "Code",
+      dataIndex: "order_code",
+      key: "order_code",
     },
     {
       title: "Date",
@@ -43,11 +58,6 @@ export default function OrderList() {
       render: (e) => {
         return moment(e).format("DD/MM/YYYY");
       },
-    },
-    {
-      title: "Quantity",
-      dataIndex: "product_quantity",
-      key: "quantity",
     },
     {
       title: "Status",
@@ -68,17 +78,20 @@ export default function OrderList() {
     {
       title: "Action",
       key: "action",
-      render: (e, index) => (
-        <Space size="middle" key={index}>
-          <AiOutlineEdit onClick={() => handleEdit(e.order_code)} />
-          <AiFillDelete onClick={() => handleDelete(e.order_code)} />
-        </Space>
-      ),
+      render: (e, index) => {
+        console.log(e);
+        return (
+          <Space size="middle" key={index}>
+            <AiOutlineEdit onClick={() => handleEdit(e)} />
+            <AiFillDelete onClick={() => handleDelete(e.id)} />
+          </Space>
+        );
+      },
     },
   ];
   const [currentData, setCurrentData] = useState([]);
 
-  const LoadingProduct = () => {
+  const LoadingOrder = () => {
     setLoading(true);
     getOrder()
       .then((res) => {
@@ -91,57 +104,58 @@ export default function OrderList() {
   };
 
   useEffect(() => {
-    LoadingProduct();
+    LoadingOrder();
   }, []);
 
   const handleDelete = (id) => {
     setLoading(true);
-    DeleteProduct(id)
+    DeleteOrder(id)
       .then((res) => {
         notification.success({
-          message: `Notification Delete`,
-          description: "Delete Product SuccessFully !",
+          description: "Delete Order SuccessFully !",
           placement: "topRight ",
         });
         setLoading(false);
-        setTimeout(LoadingProduct(), 3000);
+        setTimeout(LoadingOrder(), 3000);
       })
       .catch((err) => {
-        notification.error({
-          message: `Notification Delete`,
-          description: "Delete Product Failed !",
+        notification.warning({
+          description: "Delete Order Failed !",
           placement: "topRight ",
         });
         setLoading(false);
       });
   };
 
-  const handleEdit = (id) => {
-    history.push({
-      pathname: `/product/add`,
-      search: "?" + new URLSearchParams({ product_id: id }).toString(),
-    });
+  const handleEdit = (e) => {
+    setEditData(e);
+    setIsOrderVisible(true);
   };
 
   const handleSearch = (e) => {
-    SearchProduct({ key: e })
+    console.log(e);
+    SearchOrder({ key: e })
       .then((res) => setCurrentData(res.data))
       .catch((err) => console.log(err));
   };
 
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   return (
-    <Spin indicator={antIcon} spinning={loading}>
+    <Spin indicator={antIcon} spinning={loading} delay={2}>
       <Space size={14} className="Space">
         <div className="top-table">
           <Search
             allowClear
-            placeholder="Search to Select"
+            placeholder="Search Order By Name"
             optionFilterProp="children"
             className="input-search"
-            onSearch={handleSearch}
+            // onSearch={handleSearch}
             enterButton
           ></Search>
+          <DatePicker
+            placeholder="Search By Date"
+            onChange={(_, dateString) => handleSearch(dateString)}
+          />
         </div>
         <Table
           columns={columns}
@@ -149,7 +163,11 @@ export default function OrderList() {
           pagination={{ pageSize: 5 }}
         />
       </Space>
-      <Detail isProfileVisible={isProfileVisible} handleCancel={handleCancel} />
+      <Detail
+        isOrderVisible={isOrderVisible}
+        handleCancel={handleCancel}
+        editData={editData}
+      />
     </Spin>
   );
 }
