@@ -15,12 +15,16 @@ export default function OrderList() {
   const handleCancel = () => {
     setIsOrderVisible(false);
   };
+  let i = 1;
 
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
       key: "id",
+      render: () => {
+        return i++;
+      },
     },
     {
       title: "Name",
@@ -79,7 +83,6 @@ export default function OrderList() {
       title: "Action",
       key: "action",
       render: (e, index) => {
-        console.log(e);
         return (
           <Space size="middle" key={index}>
             <AiOutlineEdit onClick={() => handleEdit(e)} />
@@ -133,10 +136,13 @@ export default function OrderList() {
   };
 
   const handleSearch = (e) => {
-    console.log(e);
-    SearchOrder({ key: e })
-      .then((res) => setCurrentData(res.data))
-      .catch((err) => console.log(err));
+    if (e === "") {
+      LoadingOrder();
+    } else {
+      SearchOrder({ key: e })
+        .then((res) => setCurrentData(res.data))
+        .catch((err) => console.log(err));
+    }
   };
 
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;

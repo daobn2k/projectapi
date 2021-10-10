@@ -12,10 +12,11 @@ import React, { useState } from "react";
 import { LocalStorage } from "../../storage";
 import DeatailProfile from "./deatail";
 import { EditOutlined } from "@ant-design/icons";
-
 import "./header.css";
 import ChangePassword from "./password";
-import { UpdateAccount } from "../../axios/account";
+import { UpdateAccount, changePassword } from "../../axios/account";
+import { getUserbyId } from "../../axios";
+
 const TYPECHANGE = [
   { type: "INFO", title: "Detail Profile", image: "/image/User.png" },
   {
@@ -25,21 +26,32 @@ const TYPECHANGE = [
   },
   { type: "CONTACT", title: "Contact", image: "/image/Phone.png" },
 ];
-export default function Profile({ isProfileVisible,handleCancel }) {
+export default function Profile({ isProfileVisible, handleCancel }) {
   const [type, setType] = useState("INFO");
   const [isEdit, setIsEdit] = useState(true);
+  const user = LocalStorage.getCurentUser();
 
-  const userInfo = LocalStorage.getCurentUser();
+  const [userInfo, setUserInfo] = useState();
 
+  React.useEffect(() => {
+    if (user) {
+      loadingInfo(user.id);
+    }
+  }, []);
+
+  const loadingInfo = (id) => {
+    getUserbyId(id).then((res) => setUserInfo(res.data));
+  };
   const editProfile = (values) => {
-    UpdateAccount(userInfo.id, values)
+    UpdateAccount(user.id, values)
       .then((res) => {
         notification.success({
           message: `Notification`,
           description: " Update Info SuccessFully",
           placement: "topRight",
         });
-        setIsEdit(true)
+        loadingInfo(user.id);
+        setIsEdit(true);
       })
       .catch((err) => {
         notification.error({
@@ -47,10 +59,31 @@ export default function Profile({ isProfileVisible,handleCancel }) {
           description: " Error Can't Update Data",
           placement: "topRight",
         });
-        setIsEdit(true)
+        setIsEdit(true);
       });
   };
 
+  const editPassword = (data) => {
+    console.log(data);
+    changePassword(user.id, data)
+      .then((res) => {
+        notification.success({
+          message: `Notification`,
+          description: " Change Password Success",
+          placement: "topRight",
+        });
+        loadingInfo(user.id);
+        setIsEdit(true);
+      })
+      .catch((err) => {
+        notification.error({
+          message: `Notification`,
+          description: " Error Can't Change Pass",
+          placement: "topRight",
+        });
+        setIsEdit(true);
+      });
+  };
   const onCancel = () => {
     setIsEdit(true);
   };
@@ -79,8 +112,11 @@ export default function Profile({ isProfileVisible,handleCancel }) {
       }
     >
       <Col span={6} style={{ marginRight: 24 }} className="col-6">
-        <Avatar size={88} src={userInfo.image} />
-        <Typography.Title className="title">{userInfo.name}</Typography.Title>
+        <Avatar size={88} src={userInfo && userInfo.image} />
+        <EditOutlined />
+        <Typography.Title className="title">
+          {userInfo && userInfo.name}
+        </Typography.Title>
         <Space size={16} direction="vertical" className="space-profile">
           {TYPECHANGE.map((e, index) => {
             return (
@@ -112,7 +148,12 @@ export default function Profile({ isProfileVisible,handleCancel }) {
           />
         )}
         {type === "PASSWORD" && (
-          <ChangePassword userInfo={userInfo} isEdit={isEdit} />
+          <ChangePassword
+            userInfo={userInfo}
+            isEdit={isEdit}
+            onCancel={onCancel}
+            editPassword={editPassword}
+          />
         )}
         {/* {type === "CONTACT" && <DeatailProfile />} */}
       </Col>

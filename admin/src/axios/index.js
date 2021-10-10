@@ -40,6 +40,10 @@ const getStockById = (id) => {
 export const getOrder = () => {
   return axios.get(`/order`, config);
 };
+
+export const getOrderDetail = (id) => {
+  return axios.get(`/detail_code/${id}`, config);
+};
 export {
   getCategory,
   GetProduct,

@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { Form, Input, Row, Col, DatePicker, Button } from "antd";
-import { getUserbyId } from "../../axios";
+
 import moment from "moment";
 export default function DeatailProfile({
   userInfo,
@@ -8,20 +8,14 @@ export default function DeatailProfile({
   editProfile,
   onCancel,
 }) {
-  const [info, setInfo] = React.useState({});
-  useEffect(() => {
-    getUserbyId(userInfo.id)
-      .then((res) => {
-        setInfo(res.data);
-      })
-      .catch();
-  }, []);
-
   const onFinish = (values) => {
-    const date = moment(values.dob).format("DD/MM/YYYY");
+    const date = moment(values.dob).format("YYYY/MM/DD");
     const data = {
       ...values,
       dob: date,
+      image: userInfo.image,
+      password: userInfo.password,
+      username: userInfo.username,
     };
     editProfile(data);
   };
@@ -34,31 +28,31 @@ export default function DeatailProfile({
       fields={[
         {
           name: ["name"],
-          value: info ? info.name : "",
-        },
-        {
-          name: ["username"],
-          value: info ? info.username : "",
-        },
-        {
-          name: ["dob"],
-          value: info ? moment(info.dob) : "",
+          value: userInfo ? userInfo.name : "",
         },
         {
           name: ["email"],
-          value: info ? info.email : "",
+          value: userInfo ? userInfo.email : "",
+        },
+        {
+          name: ["dob"],
+          value: userInfo && moment(userInfo.dob),
+        },
+        {
+          name: ["email"],
+          value: userInfo ? userInfo.email : "",
         },
         {
           name: ["phone"],
-          value: info ? info.phone : "",
+          value: userInfo ? userInfo.phone : "",
         },
         {
           name: ["address"],
-          value: info ? info.address : "",
+          value: userInfo ? userInfo.address : "",
         },
         {
           name: ["role"],
-          value: info ? info.role : "",
+          value: userInfo ? userInfo.role : "",
         },
       ]}
     >
@@ -102,40 +96,35 @@ export default function DeatailProfile({
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            name="username"
-            label="User Name"
-            className="hide-content-multi"
-          >
+          <Form.Item name="email" label="Email" className="hide-content-multi">
             <Input size="large" disabled={isEdit} />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item name="role" label="Role" className="hide-content-multi">
-            <Input size="large" disabled={isEdit} />
+            <Input
+              size="large"
+              disabled={true}
+              style={{ textTransform: "uppercase" }}
+            />
           </Form.Item>
         </Col>
         <Col span={24} className="col-24">
-        {
-
-        } 
-        {
-          !isEdit && (
+          {}
+          {!isEdit && (
             <Fragment>
-            <Form.Item className="hide-content-multi">
-            <Button className="button_save" htmlType="submit">
-              Save
-            </Button>
-          </Form.Item>
-          <Form.Item className="hide-content-multi">
-            <Button className="button_cancel" onClick={onCancel}>
-              Cancel
-            </Button>
-          </Form.Item>
-          </Fragment>
-          )
-        }
-        
+              <Form.Item className="hide-content-multi">
+                <Button className="button_save" htmlType="submit">
+                  Save
+                </Button>
+              </Form.Item>
+              <Form.Item className="hide-content-multi">
+                <Button className="button_cancel" onClick={onCancel}>
+                  Cancel
+                </Button>
+              </Form.Item>
+            </Fragment>
+          )}
         </Col>
       </Row>
     </Form>

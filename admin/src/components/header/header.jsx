@@ -111,7 +111,10 @@ export default function HeaderComponent({ toggle }) {
         handleCancel={handleCancel}
       />
 
-      <Profile isProfileVisible={isProfileVisible} handleCancel={handleCancel}/>
+      <Profile
+        isProfileVisible={isProfileVisible}
+        handleCancel={handleCancel}
+      />
     </Header>
   );
 }
