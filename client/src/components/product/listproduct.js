@@ -7,18 +7,23 @@ import { NavItem, NavLinks, NavMenu } from "./product.element";
 import Search from "antd/lib/input/Search";
 import { Link } from "react-router-dom";
 import { addToCart } from "../../comon/addToCart";
-export default function ListProduct({
-  productData,
-  getListCart,
-  categoryData,
-}) {
+import { GetProduct, SearchProduct } from "../../api";
+export default function ListProduct({ getListCart }) {
+  const [productData, setProductData] = useState();
   const [ellipsis, setEllipsis] = React.useState(true);
   const [activeIndex, setActiveIndex] = useState(1);
   function chooseValue(item) {
     setActiveIndex(item.id);
   }
-
-  const onSearch = (value) => console.log(value);
+  React.useEffect(() => {
+    getData();
+  }, []);
+  const getData = () => {
+    GetProduct().then((res) => setProductData(res.data));
+  };
+  const onSearch = (value) => {
+    SearchProduct({ key: value }).then((res) => setProductData(res.data));
+  };
 
   const HandleAddToCart = (e) => {
     addToCart(e);
@@ -35,11 +40,12 @@ export default function ListProduct({
       >
         <Breadcrumb.Item>Home</Breadcrumb.Item>
 
-        <Breadcrumb.Item>Shopping Cart</Breadcrumb.Item>
+        <Breadcrumb.Item>List Product</Breadcrumb.Item>
       </Breadcrumb>
       <div className="filter-product">
         <NavMenu>
-          {productData &&
+          {Array.isArray(productData) &&
+            productData.length > 0 &&
             productData.map((e, index) => {
               return (
                 <NavItem key={index} onClick={() => chooseValue(e)}>
@@ -73,6 +79,7 @@ export default function ListProduct({
             return (
               <Col key={index} span={6}>
                 <Card
+                  style={{ marginBottom: 30, background: "#F7F7F7" }}
                   cover={
                     <Image
                       preview={false}
@@ -117,7 +124,7 @@ export default function ListProduct({
                         >
                           {" "}
                           <ShoppingCartOutlined />
-                          Add To Cart
+                          Save To Cart
                         </Button>
                       </>
                     }

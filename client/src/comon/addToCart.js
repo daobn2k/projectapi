@@ -18,6 +18,7 @@ export const addToCart = (data) => {
         product_image: data.product_image,
         product_price: data.product_price,
         product_quantity: 1,
+        product_description: data.product_description,
       };
       storage.setCartCurrent([...cart, dataSet]);
     }
@@ -29,6 +30,7 @@ export const addToCart = (data) => {
         product_image: data.product_image,
         product_price: data.product_price,
         product_quantity: 1,
+        product_description: data.product_description,
       },
     ];
     storage.setCartCurrent(dataSet);

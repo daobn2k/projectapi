@@ -85,12 +85,12 @@ export default function ListCustomer() {
     setLoading(true);
     DeleteAccount(id)
       .then((res) => {
-        GetInfoUser();
         notification.success({
           message: `Notification Delete`,
           description: "Delete Product SuccessFully !",
           placement: "topRight ",
         });
+        GetInfoUser();
         setLoading(false);
       })
       .catch((err) => {

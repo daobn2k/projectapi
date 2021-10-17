@@ -152,37 +152,35 @@ export default function SiderComponent({ collapsed }) {
             <Menu.Item
               key="11"
               icon={<BsDot />}
-              style={{ color: "#fff", paddingLeft: 20,display:'none' }}
+              style={{ color: "#fff", paddingLeft: 20, display: "none" }}
             >
               <Link to="/order/:id"> Order Detail</Link>
             </Menu.Item>
           </SubMenu>
-         {
-           currentUser.role === "admin" && (
+          {currentUser.role === "admin" && (
             <SubMenu
-            className="SubMenu"
-            key="sub5"
-            icon={<UsergroupAddOutlined />}
-            title="Membership"
-          >
-            <Menu.Item
-              key="12"
-              icon={<BsDot />}
-              style={{ color: "#fff", paddingLeft: 20 }}
+              className="SubMenu"
+              key="sub5"
+              icon={<UsergroupAddOutlined />}
+              title="Membership"
             >
-              <Link to="/member/list"> List Member</Link>
-            </Menu.Item>
-            <Menu.Item
-              key="13"
-              icon={<BsDot />}
-              style={{ color: "#fff", paddingLeft: 20 }}
-            >
-              <Link to="/member/add"> New Member</Link>
-            </Menu.Item>
-          </SubMenu>
-           )
-         }
-        
+              <Menu.Item
+                key="12"
+                icon={<BsDot />}
+                style={{ color: "#fff", paddingLeft: 20 }}
+              >
+                <Link to="/member/list"> List Member</Link>
+              </Menu.Item>
+              <Menu.Item
+                key="13"
+                icon={<BsDot />}
+                style={{ color: "#fff", paddingLeft: 20 }}
+              >
+                <Link to="/member/add"> New Member</Link>
+              </Menu.Item>
+            </SubMenu>
+          )}
+
           <SubMenu
             className="SubMenu"
             key="sub6"
@@ -194,14 +192,14 @@ export default function SiderComponent({ collapsed }) {
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/storage/list"> Warehouse</Link>
+              <Link to="/storage/list"> Import</Link>
             </Menu.Item>
             <Menu.Item
               key="15"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/storage/add"> New Warehouse</Link>
+              <Link to="/storage/add"> New Import</Link>
             </Menu.Item>
           </SubMenu>
         </Menu>

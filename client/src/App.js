@@ -8,15 +8,15 @@ import NavBar from "./components/layout/NavBar/NavBar";
 import CartPage from "./features/Cart";
 import ContactPage from "./features/Contact";
 import AboutPage from "./features/About";
-import { GetCategory, GetProduct } from "./api";
+import { GetCategory, getListFavorite, GetProduct } from "./api";
 import ProductPage from "./features/product/productPage";
 import { storage } from "./comon/storage";
-
 
 function App() {
   const [productData, setProductData] = useState();
   const [categoryData, setCategoryData] = useState();
   const [cartCurrent, setCartCurrent] = useState();
+  const user = storage.getCurrentUser();
 
   useEffect(() => {
     GetProduct().then((res) => setProductData(res.data));
@@ -27,17 +27,34 @@ function App() {
   const getListCart = () => {
     setCartCurrent(storage.getCartCurrent());
   };
+
+  const [currentListFavorite, setCurrentListFavorite] = useState();
+
+  useEffect(() => {
+    if (user && user.id) {
+      getFavorite(user.id);
+    }
+  }, []);
+  const getFavorite = (id) => {
+    getListFavorite(id).then((res) => setCurrentListFavorite(res.data));
+  };
+
   return (
     <Router>
       <div style={{ position: "relative" }}>
         <GlobalStyle />
-        <NavBar cartCurrent={cartCurrent} />
+        <NavBar
+          cartCurrent={cartCurrent}
+          currentListFavorite={currentListFavorite}
+        />
         <Switch>
           <Route path="/" exact>
             <HomePage
               productData={productData}
               categoryData={categoryData}
               getListCart={getListCart}
+              getFavorite={getFavorite}
+              currentListFavorite={currentListFavorite}
             />
           </Route>
           <Container>
@@ -49,7 +66,6 @@ function App() {
               />
             </Route>
             <Route path="/cart">
-              
               <CartPage cartCurrent={cartCurrent} getListCart={getListCart} />
             </Route>
             <Route path="/contact" component={ContactPage} />

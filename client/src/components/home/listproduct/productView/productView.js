@@ -1,29 +1,80 @@
-import { Button, Card, Col, Image, Row, Typography } from "antd";
+import { Button, Card, Col, Image, Rate, Row, Typography } from "antd";
 import Meta from "antd/lib/card/Meta";
 import React, { useState } from "react";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  ShoppingCartOutlined,
+  HeartOutlined,
+  HeartTwoTone,
+} from "@ant-design/icons";
 import "./productView.css";
 import { NavItem, NavLinks, NavMenu } from "./product.element";
 import Search from "antd/lib/input/Search";
 import { addToCart } from "../../../../comon/addToCart";
 import { Link } from "react-router-dom";
+import {
+  changeStatus,
+  getListFavorite,
+  GetProduct,
+  getProductByCategoryId,
+  SearchProduct,
+} from "../../../../api";
+import { storage } from "../../../../comon/storage";
+import { showError } from "../../../layout/Message/showMessage";
+
 const { Title } = Typography;
 export default function ProductView({
-  productData,
   categoryData,
   getListCart,
+  currentListFavorite,
+  getFavorite,
 }) {
+  const [productData, setProductData] = useState();
   const [activeIndex, setActiveIndex] = useState(1);
   const [ellipsis, setEllipsis] = React.useState(true);
+  const user = storage.getCurrentUser();
   function chooseValue(item) {
     setActiveIndex(item.id);
+    getProductByCategoryId(item.id)
+      .then((res) => setProductData(res.data))
+      .catch((err) => showError("sai roi"));
   }
-  const onSearch = (value) => console.log(value);
+
+  React.useEffect(() => {
+    getData();
+  }, []);
+  const getData = () => {
+    GetProduct().then((res) => setProductData(res.data));
+  };
+  const onSearch = (value) => {
+    SearchProduct({ key: value }).then((res) => setProductData(res.data));
+  };
 
   const HandleAddToCart = (e) => {
     addToCart(e);
     getListCart();
   };
+
+  const handleSubmitChangeStatus = (e) => {
+    if (user) {
+      const submitData = {
+        user_id: user.id,
+        product_id: e.id,
+        status: "1",
+      };
+      changeStatus(submitData)
+        .then((res) => getListFavorite(user.id))
+        .catch((err) => console.log(err));
+    } else {
+      showError("Please login add this car to favorite");
+    }
+  };
+
+  const handleDelete = () => {
+    if (user) {
+      getFavorite(user.id);
+    }
+  };
+
   return (
     <div className="site-card-wrapper">
       <Title
@@ -43,6 +94,7 @@ export default function ProductView({
               <NavItem key={index} onClick={() => chooseValue(e)}>
                 <NavLinks
                   className={activeIndex === e.id ? "filter active" : "filter"}
+                  style={{ textTransform: "uppercase" }}
                 >
                   {e.name}
                 </NavLinks>
@@ -70,6 +122,7 @@ export default function ProductView({
             return (
               <Col key={index} span={6}>
                 <Card
+                  style={{ marginBottom: 30, background: "#F7F7F7" }}
                   cover={
                     <Image
                       preview={false}
@@ -93,11 +146,7 @@ export default function ProductView({
                             {e.product_name}{" "}
                           </Typography.Title>
                           <Typography.Paragraph
-                            ellipsis={
-                              ellipsis
-                                ? { rows: 2, expandable: true, symbol: "more" }
-                                : false
-                            }
+                            ellipsis={{ rows: 2 }}
                             style={{
                               fontSize: 14,
                               marginBottom: 8,
@@ -107,6 +156,24 @@ export default function ProductView({
                             {e.product_description}
                           </Typography.Paragraph>
                         </Link>
+                        <Rate allowClear={false} defaultValue={4} />
+                        {Array.isArray(currentListFavorite) &&
+                        currentListFavorite.length > 0 &&
+                        currentListFavorite.map(
+                          (item) => item.product_id === e.id
+                        ) ? (
+                          <HeartTwoTone
+                            className="heart"
+                            twoToneColor="#eb2f96"
+                            onClick={handleDelete}
+                          />
+                        ) : (
+                          <HeartOutlined
+                            className="heart"
+                            onClick={() => handleSubmitChangeStatus(e)}
+                          />
+                        )}
+
                         <Button
                           type="primary"
                           className="BTN"
@@ -114,7 +181,7 @@ export default function ProductView({
                         >
                           {" "}
                           <ShoppingCartOutlined />
-                          Add To Cart
+                          Save To Cart
                         </Button>
                       </>
                     }

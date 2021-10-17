@@ -1,4 +1,13 @@
-import { Avatar, Button, Col, Image, Modal, Space, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Col,
+  Image,
+  Modal,
+  notification,
+  Space,
+  Typography,
+} from "antd";
 import React, { useState } from "react";
 
 import { EditOutlined } from "@ant-design/icons";
@@ -6,6 +15,10 @@ import { EditOutlined } from "@ant-design/icons";
 import "./header.css";
 import DeatailProfile from "./detail";
 import ChangePassword from "./passwork";
+import List from "./List";
+import { storage } from "../../../comon/storage";
+import { changePassword, UpdateAccount } from "../../../api/account";
+import { getUserbyId } from "../../../api";
 
 const TYPECHANGE = [
   { type: "INFO", title: "Detail Profile", image: "/image/User.png" },
@@ -14,16 +27,68 @@ const TYPECHANGE = [
     title: "Change Password",
     image: "/image/LockSimple.png",
   },
-  { type: "CONTACT", title: "Contact", image: "/image/Phone.png" },
+  { type: "ORDER", title: "Order", image: "/image/Phone.png" },
 ];
-export default function ModalProfileForm({
-  userInfo,
-  visibleProfile,
-  onCancel,
-}) {
+export default function ModalProfileForm({ visibleProfile, onCancel }) {
   const [isEditDetail, setIsEditDetail] = useState(true);
   const [type, setType] = useState("INFO");
+  const [userInfo, setUserInfo] = useState();
+  const user = storage.getCurrentUser();
 
+  React.useEffect(() => {
+    if (user && user.id !== "") {
+      loadingInfo(user.id);
+    }
+  }, []);
+
+  const loadingInfo = (id) => {
+    getUserbyId(id).then((res) => setUserInfo(res.data));
+  };
+
+  const editProfile = (values) => {
+    UpdateAccount(user.id, values)
+      .then((res) => {
+        notification.success({
+          message: `Notification`,
+          description: " Update Info SuccessFully",
+          placement: "topRight",
+        });
+        loadingInfo(user.id);
+        setIsEditDetail(true);
+      })
+      .catch((err) => {
+        notification.error({
+          message: `Notification`,
+          description: " Error Can't Update Data",
+          placement: "topRight",
+        });
+        setIsEditDetail(true);
+      });
+  };
+
+  const editPassword = (data) => {
+    changePassword(user.id, data)
+      .then((res) => {
+        notification.success({
+          message: `Notification`,
+          description: " Change Password Success",
+          placement: "topRight",
+        });
+        loadingInfo(user.id);
+        setIsEditDetail(true);
+      })
+      .catch((err) => {
+        notification.error({
+          message: `Notification`,
+          description: " Error Can't Change Pass",
+          placement: "topRight",
+        });
+        setIsEditDetail(true);
+      });
+  };
+  const onEditCancel = () => {
+    setIsEditDetail(true);
+  };
   return (
     <Modal
       width={1200}
@@ -36,7 +101,7 @@ export default function ModalProfileForm({
       title={
         <div className="header-model">
           <Typography.Title className="header-title">Profile</Typography.Title>
-          {isEditDetail ? (
+          {isEditDetail && (
             <Button
               className="header-button"
               icon={<EditOutlined />}
@@ -44,22 +109,6 @@ export default function ModalProfileForm({
             >
               Edit
             </Button>
-          ) : (
-            <div className="Edit-button">
-              <Button
-                className="header-button left"
-                icon={<EditOutlined />}
-                onClick={() => setIsEditDetail(true)}
-              >
-                Save
-              </Button>
-              <Button
-                className="header-button"
-                onClick={() => setIsEditDetail(true)}
-              >
-                Cancel
-              </Button>
-            </div>
           )}
         </div>
       }
@@ -96,12 +145,24 @@ export default function ModalProfileForm({
       </Col>
       <Col span={18} style={{ flex: 1 }} className="col-18">
         {type === "INFO" && (
-          <DeatailProfile userInfo={userInfo} isEditDetail={isEditDetail} />
+          <DeatailProfile
+            userInfo={userInfo}
+            isEditDetail={isEditDetail}
+            editProfile={editProfile}
+            onEditCancel={onEditCancel}
+          />
         )}
+
         {type === "PASSWORD" && (
-          <ChangePassword userInfo={userInfo} isEditDetail={isEditDetail} />
+          <ChangePassword
+            userInfo={userInfo}
+            isEditDetail={isEditDetail}
+            editPassword={editPassword}
+            onEditCancel={onEditCancel}
+          />
         )}
-        {/* {type === "CONTACT" && <DeatailProfile />} */}
+
+        {type === "ORDER" && <List />}
       </Col>
     </Modal>
   );

@@ -4,6 +4,7 @@ import { getOrderDetail } from "../../axios";
 import "./order.css";
 
 export default function Detail({ isOrderVisible, handleCancel, editData }) {
+  const [currentData, setCurrentData] = useState();
   let i = 1;
   const columns = [
     {
@@ -46,7 +47,6 @@ export default function Detail({ isOrderVisible, handleCancel, editData }) {
     },
   ];
 
-  const [currentData, setCurrentData] = useState();
   useEffect(() => {
     if (editData) {
       loadingDataOrderDetail(editData.order_code);
@@ -80,6 +80,13 @@ export default function Detail({ isOrderVisible, handleCancel, editData }) {
           columns={columns}
           dataSource={currentData}
           pagination={{ pageSize: 5 }}
+          footer={() => {
+            return (
+              <Typography.Title style={{ fontSize: "18px" }}>
+                Total:
+              </Typography.Title>
+            );
+          }}
         />
       </Col>
     </Modal>

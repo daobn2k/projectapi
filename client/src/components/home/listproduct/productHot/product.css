@@ -1,23 +1,24 @@
-.ant-card{
-    box-shadow: 0px 4px 8px #F3F3F3;
+.ant-card {
+  box-shadow: 0px 4px 8px #f3f3f3;
 }
-.ant-card-body{
-    padding:10px 0;
-    
+.ant-card-body {
+  padding: 10px 0;
 }
-
-.ant-card-meta-title{
-    font-size:18px;
-    line-height: 22px;
-    font-weight: 700;
+.ant-image-mask {
+  object-fit: cover;
 }
-
-.BTN{
-    height: 40px;
-    font-size: 18px;
-    line-height: 22px;
+.ant-card-meta-title {
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 700;
 }
 
-.site-card-wrapper{
-    margin-bottom: 3rem;
+.BTN {
+  height: 40px;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.site-card-wrapper {
+  margin-bottom: 3rem;
 }

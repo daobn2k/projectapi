@@ -1,3 +1,5 @@
+// eslint-disable-next-line react-hooks/exhaustive-deps
+
 import { Avatar, Badge, Button, notification } from "antd";
 import React, { useState } from "react";
 import MiniCart from "../../cart/miniCart";
@@ -20,6 +22,7 @@ import {
 import moment from "moment";
 import { showError, showSuccess } from "../Message/showMessage";
 import ModalProfileForm from "./profile";
+import ListFavorite from "./ListFavorite";
 
 const listMenu = [
   { id: 1, to: "/", title: "Home" },
@@ -29,12 +32,13 @@ const listMenu = [
   { id: 5, to: "/contact", title: "Contact" },
 ];
 
-const NavBar = ({ cartCurrent }) => {
+const NavBar = ({ cartCurrent, currentListFavorite }) => {
   const [visible, setVisible] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [visibleProfile, setvisibleProfile] = useState(false);
   const [navbar, setNavbar] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
+  const [isModalFavorite, setIsModalFavorite] = useState(false);
 
   const ChangeBackground = () => {
     if (window.scrollY >= 40) {
@@ -64,6 +68,14 @@ const NavBar = ({ cartCurrent }) => {
     setvisibleProfile(true);
   };
 
+  const showFavoriteList = () => {
+    setIsModalFavorite(true);
+  };
+
+  const onCancelFavorite = () => {
+    setIsModalFavorite(false);
+  };
+
   const userInfo = storage.getCurrentUser();
 
   const handleSignin = (valuesForm) => {
@@ -77,6 +89,7 @@ const NavBar = ({ cartCurrent }) => {
         dob: moment(valuesForm.dob).format("DD/MM/YYYY"),
         role: "user",
         image: "",
+        address: "",
       };
       addNewAccount(dataSubmit)
         .then((res) => {
@@ -163,7 +176,16 @@ const NavBar = ({ cartCurrent }) => {
             </NavItem>
             <NavItem>
               <NavLinks to="/">
-                <IconHeart style={{ color: "#404040" }} />
+                <Badge
+                  size="large"
+                  count={currentListFavorite?.product?.length}
+                  style={{ top: "-2px", right: "-5px" }}
+                >
+                  <IconHeart
+                    style={{ color: "#404040" }}
+                    onClick={showFavoriteList}
+                  />
+                </Badge>
               </NavLinks>
             </NavItem>
             <NavItem>
@@ -219,6 +241,11 @@ const NavBar = ({ cartCurrent }) => {
         visibleProfile={visibleProfile}
         userInfo={userInfo}
         onCancel={onCancelProfile}
+      />
+      <ListFavorite
+        currentListFavorite={currentListFavorite}
+        isModalFavorite={isModalFavorite}
+        onCancelFavorite={onCancelFavorite}
       />
     </>
   );

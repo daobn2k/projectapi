@@ -1,11 +1,24 @@
 import React, { useEffect } from "react";
-import { Form, Input, Row, Col, DatePicker } from "antd";
+import { Form, Input, Row, Col, DatePicker, Button } from "antd";
 import moment from "moment";
-export default function DeatailProfile({ userInfo, isEditDetail }) {
+export default function DeatailProfile({
+  userInfo,
+  isEditDetail,
+  editProfile,
+  onEditCancel,
+}) {
   useEffect(() => {}, []);
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    const date = moment(values.dob).format("YYYY/MM/DD");
+    const data = {
+      ...values,
+      dob: date,
+      image: userInfo.image,
+      password: userInfo.password,
+      username: userInfo.username,
+    };
+    editProfile(data);
   };
 
   return (
@@ -97,11 +110,7 @@ export default function DeatailProfile({ userInfo, isEditDetail }) {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            name="username"
-            label="User Name"
-            className="hide-content-multi"
-          >
+          <Form.Item name="email" label="Email" className="hide-content-multi">
             <Input size="large" disabled={isEditDetail} />
           </Form.Item>
         </Col>
@@ -109,6 +118,22 @@ export default function DeatailProfile({ userInfo, isEditDetail }) {
           <Form.Item name="role" label="Role" className="hide-content-multi">
             <Input size="large" disabled={isEditDetail} />
           </Form.Item>
+        </Col>
+        <Col span={24} className="col-24">
+          {!isEditDetail && (
+            <React.Fragment>
+              <Form.Item className="hide-content-multi">
+                <Button className="button_save" htmlType="submit">
+                  Save
+                </Button>
+              </Form.Item>
+              <Form.Item className="hide-content-multi">
+                <Button className="button_cancel" onClick={onEditCancel}>
+                  Cancel
+                </Button>
+              </Form.Item>
+            </React.Fragment>
+          )}
         </Col>
       </Row>
     </Form>

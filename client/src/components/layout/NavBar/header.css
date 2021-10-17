@@ -121,3 +121,41 @@
   letter-spacing: -0.165px;
   color: #ffffff;
 }
+.ModalProfile .ant-table-wrapper {
+  width: 100%;
+}
+
+.ant-notification {
+  z-index: 10000000000000000000;
+}
+
+.button_save,
+.button_cancel {
+  width: 100px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #036b59;
+  border: 1px solid #036b59;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  letter-spacing: -0.165px;
+  color: #ffffff;
+}
+.button_save {
+  margin-right: 10px;
+}
+
+.col-24 {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}

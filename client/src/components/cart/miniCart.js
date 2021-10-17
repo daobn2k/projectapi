@@ -33,41 +33,46 @@ export default function MiniCart({ onClose, visible, cartCurrent }) {
   };
 
   const handleOk = () => {
-    const order_code =
-      Math.random()
-        .toString(36)
-        .replace(/[^a-z]+/g, "")
-        .substr(0, 5) + Math.floor(Math.random(1000, 100000) * 100000);
-    const order_user_id = user.id;
-    const order_date = moment(new Date()).format("YYYY/MM/DD");
-    const status = "0";
-    const product_id = cart && cart.length > 0 && cart.map((e) => e.id);
-    const order_quantity =
-      cart && cart.length > 0 && cart.map((e) => e.product_quantity);
+    if (user) {
+      const order_code =
+        Math.random()
+          .toString(36)
+          .replace(/[^a-z]+/g, "")
+          .substr(0, 5) + Math.floor(Math.random(1000, 100000) * 100000);
+      const order_user_id = user.id;
+      const order_date = moment(new Date()).format("YYYY/MM/DD");
+      const status = "0";
+      const product_id = cart && cart.length > 0 && cart.map((e) => e.id);
+      const order_quantity =
+        cart && cart.length > 0 && cart.map((e) => e.product_quantity);
 
-    const dataSubmit = {
-      order_code: order_code,
-      order_user_id: order_user_id,
-      order_date: order_date,
-      status: status,
-      product_id: product_id,
-      order_quantity: order_quantity,
-    };
-    postCheckOut(dataSubmit)
-      .then((res) => {
-        storage.clearCartCurrent();
+      const dataSubmit = {
+        order_code: order_code,
+        order_user_id: order_user_id,
+        order_date: order_date,
+        status: status,
+        product_id: product_id,
+        order_quantity: order_quantity,
+      };
+      postCheckOut(dataSubmit)
+        .then((res) => {
+          storage.clearCartCurrent();
 
-        showSuccess(
-          "Thank you for your order.Your order will be processed and delivered to your address in the next 3-5 days"
-        );
-        setIsModalVisible(false);
-      })
-      .catch((error) => {
-        if (error)
-          showError(
-            " Sorry for the inconvenience, please double check the information before ordering "
+          showSuccess(
+            "Thank you for your order.Your order will be processed and delivered to your address in the next 3-5 days"
           );
-      });
+          setIsModalVisible(false);
+        })
+        .catch((error) => {
+          if (error)
+            showError(
+              " Sorry for the inconvenience, please double check the information before ordering "
+            );
+        });
+    } else {
+      showError(" Please Login To Order ");
+      setIsModalVisible(false);
+    }
   };
   return (
     <>
@@ -90,6 +95,7 @@ export default function MiniCart({ onClose, visible, cartCurrent }) {
                       height: 100,
                       marginRight: 12,
                       cursor: "pointer",
+                      objectFit: "contain",
                     }}
                     src={item.product_image}
                   />

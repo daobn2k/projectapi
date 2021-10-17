@@ -1,16 +1,24 @@
-import { Image, notification, Space, Table,  Button, Tag ,Input, Spin} from "antd";
+import {
+  Image,
+  notification,
+  Space,
+  Table,
+  Button,
+  Tag,
+  Input,
+  Spin,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
 import { GetProduct } from "../../axios";
 import { DeleteProduct, SearchProduct } from "../../axios/product";
 import { Link, useHistory } from "react-router-dom";
-import { PlusOutlined ,LoadingOutlined} from "@ant-design/icons";
-
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 export default function ListProduct() {
   const history = useHistory();
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const columns = [
     {
       title: "Name",
@@ -75,8 +83,8 @@ export default function ListProduct() {
           {product_hot === 0
             ? "Normal"
             : product_hot === 1
-            ? " Favorite"
-            : "Hot"}
+            ? "Hot"
+            : "Favorite"}
         </Tag>
       ),
     },
@@ -93,21 +101,21 @@ export default function ListProduct() {
   ];
   const [currentData, setCurrentData] = useState([]);
 
-  const LoadingProduct = () =>{
+  const LoadingProduct = () => {
     GetProduct()
-    .then((res) => {
-      setCurrentData(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+      .then((res) => {
+        setCurrentData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
-    LoadingProduct()
+    LoadingProduct();
   }, []);
 
   const handleDelete = (id) => {
-    setLoading(true)
+    setLoading(true);
     DeleteProduct(id)
       .then((res) => {
         notification.success({
@@ -115,10 +123,8 @@ export default function ListProduct() {
           description: "Delete Product SuccessFully !",
           placement: "topRight ",
         });
-        setLoading(false)
-        setTimeout(
-          LoadingProduct()
-        ,3000)
+        setLoading(false);
+        setTimeout(LoadingProduct(), 3000);
       })
       .catch((err) => {
         notification.error({
@@ -126,7 +132,7 @@ export default function ListProduct() {
           description: "Delete Product Failed !",
           placement: "topRight ",
         });
-        setLoading(false)
+        setLoading(false);
       });
   };
 
@@ -137,35 +143,37 @@ export default function ListProduct() {
     });
   };
 
-
   const handleSearch = (e) => {
-    SearchProduct({key:e})
-    .then(res => setCurrentData(res.data))
-    .catch(err => console.log(err))
-  }
+    SearchProduct({ key: e })
+      .then((res) => setCurrentData(res.data))
+      .catch((err) => console.log(err));
+  };
 
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   return (
     <Spin indicator={antIcon} spinning={loading}>
-    <Space size={14} className="Space">
-      <div className="top-table">
-        <Search
-          allowClear 
-          placeholder="Search to Select"
-          optionFilterProp="children"
-          className="input-search"
-          onSearch={handleSearch}
-          enterButton 
-        >
-        </Search>
-        <Link to="/product/add">
-        <Button  className="btn-add" icon={<PlusOutlined />}>
-         New Product
-        </Button>
-        </Link>
-      </div>
-      <Table columns={columns} dataSource={currentData}  pagination={{ pageSize: 5 }}/>
-    </Space>
-   </Spin>
+      <Space size={14} className="Space">
+        <div className="top-table">
+          <Search
+            allowClear
+            placeholder="Search to Select"
+            optionFilterProp="children"
+            className="input-search"
+            onSearch={handleSearch}
+            enterButton
+          ></Search>
+          <Link to="/product/add">
+            <Button className="btn-add" icon={<PlusOutlined />}>
+              New Product
+            </Button>
+          </Link>
+        </div>
+        <Table
+          columns={columns}
+          dataSource={currentData}
+          pagination={{ pageSize: 5 }}
+        />
+      </Space>
+    </Spin>
   );
 }
