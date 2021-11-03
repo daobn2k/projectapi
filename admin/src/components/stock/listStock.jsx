@@ -17,10 +17,8 @@ export default function Stock() {
     {
       title: "Employee Create",
       dataIndex: "employee",
+      key: "employee",
       align: "center",
-      render: (e) => {
-        return e.name;
-      },
     },
     {
       title: "Title Import",

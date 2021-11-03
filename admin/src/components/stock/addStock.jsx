@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Breadcrumb,
   Button,
@@ -27,6 +27,7 @@ export default function AddStock() {
     { id: 2, name: "Inventory" },
   ];
   const stock_id = useParams();
+  const ref = useRef();
   const [listEmployee, setListEmployee] = useState();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -96,6 +97,7 @@ export default function AddStock() {
       };
       UpdateNewStock(stock_id.id, dataUpdate)
         .then((res) => {
+          form.resetFields();
           notification.success({
             description: "updatee success fully",
             placement: "topRight",
@@ -117,6 +119,7 @@ export default function AddStock() {
       };
       addNewStock(data)
         .then((res) => {
+          form.resetFields();
           notification.success({
             description: "import success fully",
             placement: "topRight",
@@ -153,6 +156,7 @@ export default function AddStock() {
           }}
           name="nest-messages"
           onFinish={onFinish}
+          ref={ref}
         >
           <Form.Item
             rules={[

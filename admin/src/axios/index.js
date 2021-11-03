@@ -44,6 +44,7 @@ export const getOrder = () => {
 export const getOrderDetail = (id) => {
   return axios.get(`/detail_code/${id}`, config);
 };
+
 export {
   getCategory,
   GetProduct,

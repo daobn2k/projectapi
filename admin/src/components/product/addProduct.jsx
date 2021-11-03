@@ -11,7 +11,7 @@ import {
 import queryString from "query-string";
 import "./product.css";
 import React, { useEffect, useState } from "react";
-import { getCategory, getProductbyId } from "../../axios";
+import { getCategory, getProductbyId, getStock } from "../../axios";
 import { addNewProduct, UpdateNewProduct } from "../../axios/product";
 import { storage } from "../../firebase";
 import { useLocation, useHistory } from "react-router-dom";
@@ -19,8 +19,10 @@ import { HomeOutlined } from "@ant-design/icons";
 
 export default function AddProduct() {
   const history = useHistory();
+  const [stock, setListStock] = useState();
+  const [form] = Form.useForm();
   const [category, setCategory] = useState();
-  const [currentData, setcurrentData] = useState({});
+  const [currentData, setCurrentData] = useState({});
   const location = useLocation();
   const query = queryString.parse(location.search);
   const layout = {
@@ -28,13 +30,14 @@ export default function AddProduct() {
     wrapperCol: { span: 16 },
   };
   useEffect(() => {
+    LoadingStock();
     getCategory()
       .then((res) => setCategory(res.data))
       .catch((err) => {});
     if (query.product_id) {
       getProductbyId(query.product_id)
         .then((res) => {
-          setcurrentData(res.data);
+          setCurrentData(res.data);
         })
         .catch((err) => {});
     }
@@ -65,7 +68,7 @@ export default function AddProduct() {
             .child(e.target.files[0].name)
             .getDownloadURL()
             .then((url) => {
-              setcurrentData({ ...currentData, product_image: url });
+              setCurrentData({ ...currentData, product_image: url });
             });
         }
       );
@@ -107,6 +110,18 @@ export default function AddProduct() {
     }
   };
 
+  const LoadingStock = () => {
+    getStock()
+      .then((res) => {
+        console.log(res.data);
+        setListStock(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  console.log(stock);
   return (
     <div>
       <Breadcrumb separator=">" style={{ paddingBottom: 20 }}>
@@ -126,6 +141,7 @@ export default function AddProduct() {
           }}
           name="nest-messages"
           onFinish={onFinish}
+          form={form}
           fields={[
             {
               name: ["name"],
@@ -163,11 +179,10 @@ export default function AddProduct() {
             hasFeedback
             name="name"
             label="Name"
-            onChange={(e) =>
-              setcurrentData({ ...currentData, product_name: e.target.value })
-            }
           >
-            <Input
+            <Select
+              allowClear
+              filterOption={false}
               style={{
                 height: "40px",
                 borderRadius: "4px",
@@ -175,6 +190,20 @@ export default function AddProduct() {
                 lineHeight: 22,
                 cursor: "pointer",
               }}
+              options={
+                Array.isArray(stock) &&
+                stock.length > 0 &&
+                stock.map((o) => {
+                  return {
+                    id: o.stock_id,
+                    value: o.stock_product,
+                    label: o.stock_product,
+                  };
+                })
+              }
+              onChange={(e) =>
+                setCurrentData({ ...currentData, product_name: e })
+              }
             />
           </Form.Item>
           <Form.Item name="category" label="Category">
@@ -193,14 +222,14 @@ export default function AddProduct() {
                 })
               }
               onChange={(e) =>
-                setcurrentData({ ...currentData, category_id: e })
+                setCurrentData({ ...currentData, category_id: e })
               }
             ></Select>
           </Form.Item>
           <Form.Item name="quantity" label="Quantity">
             <InputNumber
               onChange={(e) =>
-                setcurrentData({ ...currentData, product_quantity: e })
+                setCurrentData({ ...currentData, product_quantity: e })
               }
               style={{ borderRadius: "4px", cursor: "pointer" }}
             />
@@ -208,7 +237,7 @@ export default function AddProduct() {
           <Form.Item
             name="price"
             onChange={(e) =>
-              setcurrentData({ ...currentData, product_price: e.target.value })
+              setCurrentData({ ...currentData, product_price: e.target.value })
             }
             rules={[
               {
@@ -233,7 +262,7 @@ export default function AddProduct() {
             name="description"
             label="Description"
             onChange={(e) =>
-              setcurrentData({
+              setCurrentData({
                 ...currentData,
                 product_description: e.target.value,
               })
@@ -254,7 +283,7 @@ export default function AddProduct() {
             name="hot"
             label="Favorite"
             onChange={(e) =>
-              setcurrentData({ ...currentData, product_hot: e.target.value })
+              setCurrentData({ ...currentData, product_hot: e.target.value })
             }
           >
             <Select
@@ -269,7 +298,7 @@ export default function AddProduct() {
                 return { id: o.id, value: o.id, label: o.name };
               })}
               onChange={(e) =>
-                setcurrentData({ ...currentData, product_hot: e })
+                setCurrentData({ ...currentData, product_hot: e })
               }
             ></Select>
           </Form.Item>
