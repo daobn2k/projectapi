@@ -28,7 +28,7 @@ const listMenu = [
   { id: 1, to: "/", title: "Home" },
   { id: 2, to: "/product", title: "Product" },
   { id: 3, to: "/cart", title: "Cart" },
-  { id: 4, to: "/about", title: "About" },
+  { id: 4, to: "/checkout", title: "Check Out" },
   { id: 5, to: "/contact", title: "Contact" },
 ];
 

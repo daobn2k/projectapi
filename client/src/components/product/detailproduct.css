@@ -48,3 +48,16 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.detail_title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  color: #404040;
+  font-weight: bold;
+}
+.card-image {
+  flex: 1;
+}
+.content-detail {
+  width: 50%;
+}

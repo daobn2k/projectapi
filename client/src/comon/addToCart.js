@@ -70,3 +70,12 @@ export const decrementCart = (id) => {
     }
   }
 };
+
+export const deleteCart = (data) => {
+  const cart = storage.getCartCurrent();
+  if (cart) {
+    const index = cart?.findIndex((e) => e.id === data.id);
+    cart.splice(index, 1);
+    storage.setCartCurrent(cart);
+  }
+};

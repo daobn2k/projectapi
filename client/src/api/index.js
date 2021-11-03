@@ -17,6 +17,9 @@ const GetCategory = () => {
 const getProductHot = () => {
   return axios.get(`/producthot`, config);
 };
+const getRandom = () => {
+  return axios.get(`/product/random`, config);
+};
 const getProductFavorite = () => {
   return axios.get(`/productfavorite`, config);
 };
@@ -63,6 +66,10 @@ export const changeStatus = async (data) => {
 export const getOrderDetail = (id) => {
   return axios.get(`/detail_code/${id}`, config);
 };
+
+export const getFavoriteRandom = (id) => {
+  return axios.get(`/favoriterandom/${id}`, config);
+};
 export {
   GetProduct,
   getProductbyId,
@@ -75,4 +82,5 @@ export {
   getProductFavorite,
   getOrderById,
   getProductByCategoryId,
+  getRandom,
 };

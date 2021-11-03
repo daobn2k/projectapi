@@ -17,7 +17,7 @@ export default function ProductPage({
         />
       </Route>
       <Route path="/product/:id" exact>
-        <DetailProduct getListCart={getListCart} />
+        <DetailProduct getListCart={getListCart} productData={productData} />
       </Route>
     </>
   );

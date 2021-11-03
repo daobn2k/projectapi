@@ -16,11 +16,17 @@ function App() {
   const [productData, setProductData] = useState();
   const [categoryData, setCategoryData] = useState();
   const [cartCurrent, setCartCurrent] = useState();
+  const [currentListFavorite, setCurrentListFavorite] = useState();
+
   const user = storage.getCurrentUser();
 
   useEffect(() => {
-    GetProduct().then((res) => setProductData(res.data));
-    GetCategory().then((res) => setCategoryData(res.data));
+    GetProduct()
+      .then((res) => setProductData(res.data))
+      .catch((err) => console.log(err));
+    GetCategory()
+      .then((res) => setCategoryData(res.data))
+      .catch((err) => console.log(err));
     getListCart();
   }, []);
 
@@ -28,15 +34,15 @@ function App() {
     setCartCurrent(storage.getCartCurrent());
   };
 
-  const [currentListFavorite, setCurrentListFavorite] = useState();
-
   useEffect(() => {
     if (user && user.id) {
       getFavorite(user.id);
     }
   }, []);
   const getFavorite = (id) => {
-    getListFavorite(id).then((res) => setCurrentListFavorite(res.data));
+    getListFavorite(id).then((res) => {
+      setCurrentListFavorite(res.data);
+    });
   };
 
   return (
@@ -69,7 +75,7 @@ function App() {
               <CartPage cartCurrent={cartCurrent} getListCart={getListCart} />
             </Route>
             <Route path="/contact" component={ContactPage} />
-            <Route path="/about" component={AboutPage} />
+            <Route path="/checkout" component={AboutPage} />
           </Container>
         </Switch>
         <FooterClient />

@@ -13,7 +13,6 @@ import { addToCart } from "../../../../comon/addToCart";
 import { Link } from "react-router-dom";
 import {
   changeStatus,
-  getListFavorite,
   GetProduct,
   getProductByCategoryId,
   SearchProduct,
@@ -29,14 +28,18 @@ export default function ProductView({
   getFavorite,
 }) {
   const [productData, setProductData] = useState();
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(999);
   const [ellipsis, setEllipsis] = React.useState(true);
   const user = storage.getCurrentUser();
   function chooseValue(item) {
     setActiveIndex(item.id);
-    getProductByCategoryId(item.id)
-      .then((res) => setProductData(res.data))
-      .catch((err) => showError("sai roi"));
+    if (item?.name === "All Product") {
+      getData();
+    } else {
+      getProductByCategoryId(item.id)
+        .then((res) => setProductData(res.data))
+        .catch((err) => showError("sai roi"));
+    }
   }
 
   React.useEffect(() => {
@@ -62,7 +65,7 @@ export default function ProductView({
         status: "1",
       };
       changeStatus(submitData)
-        .then((res) => getListFavorite(user.id))
+        .then((res) => getFavorite(user.id))
         .catch((err) => console.log(err));
     } else {
       showError("Please login add this car to favorite");
@@ -75,6 +78,7 @@ export default function ProductView({
     }
   };
 
+  const array = [{ id: 999, name: "All Product" }];
   return (
     <div className="site-card-wrapper">
       <Title
@@ -89,14 +93,14 @@ export default function ProductView({
       </Title>
       <div className="Fitler_List">
         <NavMenu>
-          {categoryData?.map((e, index) => {
+          {array?.concat(categoryData)?.map((e, index) => {
             return (
               <NavItem key={index} onClick={() => chooseValue(e)}>
                 <NavLinks
-                  className={activeIndex === e.id ? "filter active" : "filter"}
+                  className={activeIndex === e?.id ? "filter active" : "filter"}
                   style={{ textTransform: "uppercase" }}
                 >
-                  {e.name}
+                  {e?.name}
                 </NavLinks>
               </NavItem>
             );

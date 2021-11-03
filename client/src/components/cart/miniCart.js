@@ -17,7 +17,7 @@ export default function MiniCart({ onClose, visible, cartCurrent }) {
   const cart = storage.getCartCurrent();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const result =
-    cartCurrent && cartCurrent.length
+    cartCurrent && cartCurrent?.length > 0
       ? cartCurrent
           ?.map((e) => e.product_price * e.product_quantity)
           .reduce((previousValue, r) => previousValue + r)
@@ -110,7 +110,7 @@ export default function MiniCart({ onClose, visible, cartCurrent }) {
               );
             })}
           <TitleCart style={{ marginTop: 20 }}>
-            Total: {`${parseMoney(result)} VNĐ`}
+            {cart?.length > 0 && <> Total: {`${parseMoney(result)} VNĐ`} </>}
           </TitleCart>
           <div style={{ display: "flex", width: "100%" }}>
             <ButtonPayment style={{ marginRight: 20 }}>View Cart</ButtonPayment>
