@@ -52,6 +52,7 @@ function App() {
         <NavBar
           cartCurrent={cartCurrent}
           currentListFavorite={currentListFavorite}
+          getFavorite={getFavorite}
         />
         <Switch>
           <Route path="/" exact>

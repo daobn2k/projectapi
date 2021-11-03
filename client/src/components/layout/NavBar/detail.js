@@ -14,9 +14,10 @@ export default function DeatailProfile({
     const data = {
       ...values,
       dob: date,
-      image: userInfo.image,
-      password: userInfo.password,
-      username: userInfo.username,
+      image: userInfo?.image,
+      password: userInfo?.password,
+      username: userInfo?.username,
+      role: userInfo?.role,
     };
     editProfile(data);
   };
@@ -50,10 +51,6 @@ export default function DeatailProfile({
         {
           name: ["address"],
           value: userInfo ? userInfo.address : "",
-        },
-        {
-          name: ["role"],
-          value: userInfo ? userInfo.role : "",
         },
       ]}
     >
@@ -112,11 +109,6 @@ export default function DeatailProfile({
         <Col span={12}>
           <Form.Item name="email" label="Email" className="hide-content-multi">
             <Input size="large" disabled={isEditDetail} />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item name="role" label="Role" className="hide-content-multi">
-            <Input size="large" disabled={true} />
           </Form.Item>
         </Col>
         <Col span={24} className="col-24">

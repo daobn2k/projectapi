@@ -32,7 +32,7 @@ const listMenu = [
   { id: 5, to: "/contact", title: "Contact" },
 ];
 
-const NavBar = ({ cartCurrent, currentListFavorite }) => {
+const NavBar = ({ cartCurrent, currentListFavorite, getFavorite }) => {
   const [visible, setVisible] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [visibleProfile, setvisibleProfile] = useState(false);
@@ -246,6 +246,7 @@ const NavBar = ({ cartCurrent, currentListFavorite }) => {
         currentListFavorite={currentListFavorite}
         isModalFavorite={isModalFavorite}
         onCancelFavorite={onCancelFavorite}
+        getFavorite={getFavorite}
       />
     </>
   );

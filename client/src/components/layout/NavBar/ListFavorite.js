@@ -1,12 +1,18 @@
-import { Image, Modal, Space, Table, Typography } from "antd";
+import { Image, message, Modal, Space, Spin, Table, Typography } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { parseMoney } from "../../../comon/parseMoney";
+import { storage } from "../../../comon/storage";
+import { deleteFavorite } from "../../../api/profile";
+import { useState } from "react";
 
 const ListFavorite = ({
   currentListFavorite,
   isModalFavorite,
   onCancelFavorite,
+  getFavorite,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const user = storage.getCurrentUser();
   const columns = [
     {
       title: "Name",
@@ -65,14 +71,26 @@ const ListFavorite = ({
       title: "Action",
       align: "center",
       key: "action",
-      render: (index) => (
+      render: (index, record) => (
         <div style={{ textAlign: "center" }} key={index}>
-          <DeleteOutlined />
+          <DeleteOutlined onClick={() => showConfirm(record)} />
         </div>
       ),
     },
   ];
-
+  function showConfirm(e) {
+    setLoading(true);
+    deleteFavorite(e?.id)
+      .then((res) => {
+        getFavorite(user?.id);
+        setLoading(false);
+        message.error("delete success");
+      })
+      .catch((err) => {
+        setLoading(false);
+        message.error("err");
+      });
+  }
   return (
     <Modal
       width={1200}
@@ -84,11 +102,13 @@ const ListFavorite = ({
       style={{ background: "#fff" }}
       footer={null}
     >
-      <Table
-        columns={columns}
-        dataSource={currentListFavorite?.product}
-        pagination={{ pageSize: 3 }}
-      />
+      <Spin spinning={loading}>
+        <Table
+          columns={columns}
+          dataSource={currentListFavorite?.product}
+          pagination={{ pageSize: 3 }}
+        />
+      </Spin>
     </Modal>
   );
 };
