@@ -1,10 +1,10 @@
-import React from 'react'
-import About from '../../components/about/about'
+import React from "react";
+import About from "../../components/about/about";
 
-export default function AboutPage() {
-    return (
-        <>
-        <About />
-        </>
-    )
+export default function AboutPage({ getListCart }) {
+  return (
+    <>
+      <About getListCart={getListCart} />
+    </>
+  );
 }

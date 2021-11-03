@@ -75,7 +75,9 @@ function App() {
               <CartPage cartCurrent={cartCurrent} getListCart={getListCart} />
             </Route>
             <Route path="/contact" component={ContactPage} />
-            <Route path="/checkout" component={AboutPage} />
+            <Route path="/checkout">
+              <AboutPage getListCart={getListCart} />
+            </Route>
           </Container>
         </Switch>
         <FooterClient />

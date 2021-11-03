@@ -134,7 +134,7 @@ export default function ProductFavorite({ getListCart, getFavorite }) {
                         <Button
                           type="primary"
                           className="BTN"
-                          onClick={() => HandleAddToCart(e)}
+                          onClick={() => HandleAddToCart(e?.product)}
                         >
                           <ShoppingCartOutlined />
                           Save To Cart

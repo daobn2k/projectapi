@@ -116,7 +116,7 @@ export default function DeatailProfile({
         </Col>
         <Col span={12}>
           <Form.Item name="role" label="Role" className="hide-content-multi">
-            <Input size="large" disabled={isEditDetail} />
+            <Input size="large" disabled={true} />
           </Form.Item>
         </Col>
         <Col span={24} className="col-24">
