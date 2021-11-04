@@ -16,8 +16,8 @@ export default function Stock() {
   const columns = [
     {
       title: "Employee Create",
-      dataIndex: "employee",
-      key: "employee",
+      dataIndex: "employee_create",
+      key: "employee_create",
       align: "center",
     },
     {
