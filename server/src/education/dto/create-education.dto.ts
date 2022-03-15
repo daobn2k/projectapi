@@ -1,19 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
 
-export class CreateUserDto {
+export class CreateEducationDto {
+  _id:string;
   name: string;
-  dob: Date;
-  address:string;
-  email:string;
   create_date:Date;
-  education:string;
   status:boolean;
-  department_id:string;
-  role:string;
-  avatar:string;
+  update_date:Date;
+  create_by_id:ObjectId;
+  user_edit:ObjectId;
+  edit_by_id:ObjectId;
 }
 
-export class QueryListUsers {
+export class QueryListEducation {
   @ApiProperty({ default: 1, description: 'Page number' })
   page: number;
 

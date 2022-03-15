@@ -11,23 +11,31 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
-    createdUser.save();
-    return;
+    
+    const result = await createdUser.save();
+    return result;
   }
 
-  findAll(query: QueryListUsers): Promise<User[]> {
+  async findAll(query: QueryListUsers){
     const { page = 1, perPage = 5 } = query;
     const skip: number = (page - 1) * perPage;
-    return this.userModel
-      .find({})
-      .limit(+perPage)
-      .skip(skip)
-      .populate('OwnerId')
-      .exec();
+
+    const result = await this.userModel
+    .find({})
+    .limit(+perPage)
+    .skip(skip)
+    .populate('department_id')
+    .exec();
+    const totalRecord = await this.userModel.find().count().exec()
+    return {
+      message:'SUCCESS',
+      data:result,
+      total:totalRecord,
+    }
   }
 
   findOne(id: string) {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id).populate('department_id').exec();
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
@@ -36,7 +44,17 @@ export class UsersService {
 
   async remove(id: string) {
     const result = await this.userModel.deleteOne({ id });
-
-    return 'success';
+    return result;
   }
+
+  async search(params){
+    const { keyword ,create_date}  = params
+    console.log(params,'params');
+    const result = await this.userModel.find({name:keyword,create_date:create_date}).populate('department_id').exec();
+    return {
+      message:'SUCCESS',
+      data:result
+    }
+  }
+
 }
