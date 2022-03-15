@@ -80,4 +80,12 @@ export class UsersController {
   search(@Body() body){
     return this.usersService.search(body)
   }
+  @Post('/login')
+  login(@Body() body){
+    return this.usersService.login(body)
+  }
+  @Post('/logout')
+  logout(@Body() id:string){
+    return this.usersService.logout(id)
+  }
 }

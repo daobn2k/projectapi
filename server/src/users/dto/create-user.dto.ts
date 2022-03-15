@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
+  username:string;
+  password:string;
   name: string;
   dob: Date;
   address:string;
@@ -19,4 +21,7 @@ export class QueryListUsers {
 
   @ApiProperty({ default: 5, description: 'Limit number' })
   perPage: number;
+
+  @ApiProperty({type:String})
+  keyword:string;
 }

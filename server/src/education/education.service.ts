@@ -40,22 +40,37 @@ export class EducationService {
     };
   }
 
-  findOne(id: string) {
-    return this.EducationModel.findById(id)
-      .populate('create_by_id')
-      .populate('edit_by_id')
-      .exec();
+  async findOne(id: string) {
+    const result = await this.EducationModel.findById(id)
+    .populate('create_by_id')
+    .populate('edit_by_id')
+    .exec();
+    return {
+      message:'SUCCESS',
+      data:result
+    }
   }
 
-  update(id: string, updateDepartmentDto: UpdateEducationDto) {
-    return this.EducationModel.findByIdAndUpdate(id, updateDepartmentDto, {
-      new: true,
-    });
+  async update(id: string, updateDepartmentDto: UpdateEducationDto) {
+    const result = await this.EducationModel.findByIdAndUpdate(
+      id,
+      updateDepartmentDto,
+      {
+        new: true,
+      },
+    );
+    return {
+      message: 'SUCCESS',
+      data: result,
+    };
   }
 
   async remove(id: string) {
     const result = await this.EducationModel.deleteOne({ id });
-    return result;
+    return {
+      message: 'SUCCESS',
+      data: result,
+    };
   }
   async search(params) {
     const { keyword, create_date } = params;

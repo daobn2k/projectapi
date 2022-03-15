@@ -2,37 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
 import {
-  CreateTimeSheetsDto,
-  QueryListTimeSheets,
-} from './dto/create-time-sheets.dto';
-import { UpdateTimeSheetsDto } from './dto/update-time-sheets.dto';
-import { TimeSheets } from './entities/timesheets.entity';
+  CreatePayRollDto,
+  QueryListPayRoll,
+} from './dto/create-payroll.dto';
+import { UpdatePayRollDto } from './dto/update-payroll.dto';
+import { PayRoll } from './entities/payroll.entity';
 
 @Injectable()
-export class TimeSheetsService {
+export class PayRollService {
   constructor(
-    @InjectModel(TimeSheets.name) private TimeSheetsModel: Model<TimeSheets>,
+    @InjectModel(PayRoll.name) private PayRollModule: Model<PayRoll>,
   ) {}
 
-  create(createTimeSheetsDto: CreateTimeSheetsDto) {
-    const newDepartment = new this.TimeSheetsModel(createTimeSheetsDto);
+  create(createPayRollDto: CreatePayRollDto) {
+    const newDepartment = new this.PayRollModule(createPayRollDto);
     newDepartment.save();
     return 'success';
   }
 
-  async findAll(query: QueryListTimeSheets) {
+  async findAll(query: QueryListPayRoll) {
     const { page, perPage } = query;
 
     const skip: number = (page - 1) * perPage;
 
-    const result = await this.TimeSheetsModel.find()
+    const result = await this.PayRollModule.find()
       .limit(+perPage)
       .skip(skip)
       .populate('create_by_id')
       .populate('edit_by_id')
       .exec();
 
-    const totalRecord = await this.TimeSheetsModel.find().count().exec();
+    const totalRecord = await this.PayRollModule.find().count().exec();
     return {
       message: 'SUCCESS',
       data: result,
@@ -41,7 +41,7 @@ export class TimeSheetsService {
   }
 
   async findOne(id: string) {
-    const result = await this.TimeSheetsModel.findById(id)
+    const result = await this.PayRollModule.findById(id)
       .populate('create_by_id')
       .populate('edit_by_id')
       .exec();
@@ -52,10 +52,10 @@ export class TimeSheetsService {
     };
   }
 
-  async update(id: string, updateTimeSheetsDto: UpdateTimeSheetsDto) {
-    const result = await this.TimeSheetsModel.findByIdAndUpdate(
+  async update(id: string, updatePayRollDto: UpdatePayRollDto) {
+    const result = await this.PayRollModule.findByIdAndUpdate(
       id,
-      updateTimeSheetsDto,
+      updatePayRollDto,
       {
         new: true,
       },
@@ -68,7 +68,7 @@ export class TimeSheetsService {
   }
 
   async remove(id: string) {
-    const result = await this.TimeSheetsModel.deleteOne({ id });
+    const result = await this.PayRollModule.deleteOne({ id });
     return {
       message: 'SUCCESS',
       data: result,
@@ -76,7 +76,7 @@ export class TimeSheetsService {
   }
   async search(params) {
     const { keyword, create_date } = params;
-    const result = await this.TimeSheetsModel.find({
+    const result = await this.PayRollModule.find({
       name: keyword,
     }).exec();
     return {

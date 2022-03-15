@@ -14,42 +14,61 @@ export class DepartmentService {
     @InjectModel(Department.name) private DepartmentModel: Model<Department>,
   ) {}
 
-  create(createDepartmentDto: CreateDepartmentDto) {
+  async create(createDepartmentDto: CreateDepartmentDto) {
     const newDepartment = new this.DepartmentModel(createDepartmentDto);
-    newDepartment.save();
-    return 'success';
+    const result = await newDepartment.save();
+    return {
+      message:'SUCCESS',
+      data:result,
+    };
   }
 
-  findAll(query: QueryListDepartment) {
+  async findAll(query: QueryListDepartment) {
     const { page, perPage } = query;
 
     const skip: number = (page - 1) * perPage;
-    return this.DepartmentModel.find()
+    const result = await this.DepartmentModel.find()
       .limit(+perPage)
       .skip(skip)
       .populate('create_by_id')
       .populate('edit_by_id')
       .exec();
+    const totalRecord = await this.DepartmentModel.find().count().exec();
+    return {
+        message:'SUCCESS',
+        data:result,
+        total:totalRecord
+    };
   }
 
-  findOne(id: string) {
-    return this.DepartmentModel.findById(id)
+  async findOne(id: string) {
+    const result  = await this.DepartmentModel.findById(id)
       .populate('create_by_id')
       .populate('edit_by_id')
       .exec();
+    return {
+      message:'SUCCESS',
+      data: result
+    }
   }
 
-  update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
-    return this.DepartmentModel.findByIdAndUpdate(id, updateDepartmentDto, {
+  async update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
+    const result = await this.DepartmentModel.findByIdAndUpdate(id, updateDepartmentDto, {
       new: true,
     });
+    return {
+      message:'SUCCESS',
+      data:result
+    }
   }
 
   async remove(id: string) {
     const result = await this.DepartmentModel.deleteOne({ id });
 
-    console.log('result',result)
-    return result;
+    return {
+      message:'SUCCESS',
+      data:result
+    };
   }
 
 }

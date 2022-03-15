@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DepartmentModule } from './department/department.module';
 import { EducationModule } from './education/education.module';
 import { TimeSheetsModule } from './timesheets/timesheets.module';
+import { PayRollModule } from './payroll/payroll.module';
 
 
 
@@ -15,6 +16,7 @@ import { TimeSheetsModule } from './timesheets/timesheets.module';
     DepartmentModule,
     EducationModule,
     TimeSheetsModule,
+    PayRollModule,
     MongooseModule.forRoot('mongodb://127.0.0.1/nest'),
   ],
   controllers: [AppController],
