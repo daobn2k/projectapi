@@ -14,17 +14,10 @@ export default function LoginPage() {
         }
         Login(data)
         .then(res=>{
-            if(res.data.role === 'membership' || res.data.role === 'admin') {  
-                LocalStorage.setCurrentUser(res.data)
+            if(res.data.message === 'SUCCESS') {  
+                LocalStorage.setCurrentUser(res.data.data)
                 history.push({
                     pathname:'/'
-                })
-              
-            }else{
-                notification.error({
-                    duration:2,
-                    message: `Error`,  
-                    description:"Account Can't Sign In Admin Page "
                 })
             }
         }).catch(err=>
@@ -46,9 +39,7 @@ export default function LoginPage() {
                 sm={12}
                 xl={8}
             >
-                <h1 className="CardTitle">Super Admin Login</h1>
-                <p className="CardText">Sign in by entering the information below</p>
-
+                <h1 className="CardTitle"> Login</h1>
                 <Form
                     name="basic"
                     initialValues={{
