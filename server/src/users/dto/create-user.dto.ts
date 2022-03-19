@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
 
 export class CreateUserDto {
   username:string;
@@ -8,11 +9,14 @@ export class CreateUserDto {
   address:string;
   email:string;
   create_date:Date;
-  education:string;
+  education_id:ObjectId;
   status:boolean;
-  department_id:string;
+  department_id:ObjectId;
   role:string;
   avatar:string;
+  certificate:string;
+  phone:number;
+  description:string;
 }
 
 export class QueryListUsers {
@@ -22,6 +26,4 @@ export class QueryListUsers {
   @ApiProperty({ default: 5, description: 'Limit number' })
   perPage: number;
 
-  @ApiProperty({type:String})
-  keyword:string;
 }

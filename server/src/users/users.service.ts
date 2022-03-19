@@ -24,6 +24,8 @@ export class UsersService {
       .find({})
       .limit(+perPage)
       .skip(skip)
+      .sort({create_date:-1})
+      .populate('education_id')
       .populate('department_id')
       .exec();
     const totalRecord = await this.userModel.find().count().exec();
