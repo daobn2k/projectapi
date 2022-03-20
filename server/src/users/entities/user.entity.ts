@@ -11,9 +11,10 @@ export class User {
   education_id:ObjectId;
   status:boolean;
   department_id:ObjectId;
-  role:string;
+  role_id:ObjectId;
   certificate:String;
-  phone:number;
+  phone:String;
   description:string;
-  avatar:string;
+  avatar:String;
+  sex:String;
 }

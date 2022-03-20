@@ -20,11 +20,14 @@ export class User {
   @Prop({default:Date.now()})
   dob: Date;
 
+  @Prop({required:true,type:String})
+  sex:string
+
   @Prop({required:true,type:String,maxlength:256})
   address:string;
 
-  @Prop({required:true,type:'number',maxlength:11})
-  phone:number;
+  @Prop({required:true,type:String,maxlength:11})
+  phone:string;
 
   @Prop()
   avatar:string;
@@ -42,7 +45,7 @@ export class User {
   certificate:string;
 
   @Prop({required:true,type:String,maxlength:256})
-  role:String;
+  role_id:String;
   
   @Prop({default:false})
   status:boolean;

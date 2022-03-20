@@ -11,7 +11,8 @@ import {
 import { EducationService } from './education.service';
 import { CreateEducationDto, QueryListEducation } from './dto/create-education.dto';
 import { UpdateEducationDto } from './dto/update-education.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Education')
 @Controller('education')
 export class EducationController {
   constructor(private readonly educationService: EducationService) {}

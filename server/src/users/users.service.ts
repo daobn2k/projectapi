@@ -27,6 +27,7 @@ export class UsersService {
       .sort({create_date:-1})
       .populate('education_id')
       .populate('department_id')
+      .populate('role_id')
       .exec();
     const totalRecord = await this.userModel.find().count().exec();
     return {

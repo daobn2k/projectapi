@@ -12,11 +12,12 @@ export class CreateUserDto {
   education_id:ObjectId;
   status:boolean;
   department_id:ObjectId;
-  role:string;
+  role_id:ObjectId;
   avatar:string;
   certificate:string;
-  phone:number;
+  phone:string;
   description:string;
+  sex:String;
 }
 
 export class QueryListUsers {
