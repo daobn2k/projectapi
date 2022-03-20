@@ -1,103 +1,152 @@
-import { Image, notification, Space, Table, Input, Button, Spin } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import {notification, Space, Table, Input, Button, Spin, Typography, Avatar } from "antd";
+import React, { useEffect, useState } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
 import { Link, useHistory } from "react-router-dom";
 import { GetUser } from "../../axios";
 import { DeleteAccount, SearchAccount } from "../../axios/account";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
-
+import { convertTimeStampUTCToLocal, listCheckRoleUser } from "../../shared";
 const { Search } = Input;
 export default function ListCustomer() {
   const [loading, setLoading] = useState(false);
 
   const columns = [
     {
-      title: "Name",
+      title: "Họ và tên",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "BirthDay",
-      dataIndex: "dob",
-      key: "dob",
+      title:"Giới tính",
+      dataIndex:'sex',
+      key:'sex',
+      render:(item,re,index) =>{
+        return(
+          <Typography key={index}>{item.name || ''}</Typography>
+        )
+      }
     },
     {
-      title: "Avatar",
-      dataIndex: "image",
-      render: (e, index) => {
-        return <Image key={index} width={50} src={e} />;
+      title: "Ngày sinh",
+      dataIndex: "dob",
+      key: "dob",
+      render:(date,re,index)=>{
+        return(
+          <Typography key={index}>{convertTimeStampUTCToLocal(date)}</Typography>
+        )
+      }
+    },
+    {
+      title: "Ảnh đại diện",
+      dataIndex: "avatar",
+      key:'avatar',
+      align:'center',
+      render: (e) => {
+        return <Avatar key={e} width={50} src={e} />;
       },
     },
     {
-      title: "Username",
-      dataIndex: "username",
-      key: "username",
+      title: "Phòng ban",
+      dataIndex: "department_id",
+      key: "department_id",
+      render:(item,re,index)=>{
+        return(
+          <Typography key={`${index}`}>{item.name}</Typography>
+        )
+      }
     },
     {
-      title: "Password",
-      dataIndex: "password",
-      key: "password",
+      title: "Trình độ học vấn",
+      dataIndex: "education_id",
+      key: "education_id",
+      render:(item,re,index)=>{
+        console.log("item",item)
+        return(
+          <Typography key={`${index}`}>{item && item.name ? item.name : ''}</Typography>
+        )
+      }
     },
     {
-      title: "Email",
+      title: "Địa chỉ email",
       dataIndex: "email",
       key: "email",
     },
     {
-      title: "Address",
+      title: "Địa chỉ cư trú",
       dataIndex: "address",
       key: "address",
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phone",
       key: "phone",
     },
     {
-      title: "Action",
+      title:'Chức vụ',
+      dataIndex:'role_id',
+      key:'role_id',
+      render:(item,record,index)=>{
+        return(
+          <Typography key={index} >{item && item.name ? item.name : ''}</Typography>
+        )
+      }
+    },
+    {
+      title: "Thao tác",
       key: "action",
       render: (e) => (
         <Space size="middle">
-          <AiOutlineEdit key={e.id} onClick={() => handleEdit(e.id)} />
-          <AiFillDelete key={e.id} onClick={() => handleDelete(e.id)} />
+          <AiOutlineEdit key={e.id} onClick={() => handleEdit(e._id)} />
+          <AiFillDelete key={e.id} onClick={() => handleDelete(e._id)} />
         </Space>
       ),
     },
   ];
   const history = useHistory();
   const [data, setData] = useState();
-  const GetInfoUser = useCallback(() => {
-    GetUser()
+  const [totalPage,setTotalPage] = useState()
+  const [params,setParams] = useState({
+    page:1,
+    perPage:5,
+    keyword:''
+  })
+  const GetInfoUser = (payload) => {
+    setLoading(true);
+    GetUser(payload)
       .then((res) => {
-        const ListUserData = res.data.filter((e) => e.role === "user");
-        setData(ListUserData);
+        const { data,status } = res
+        if(status === 200) {
+          setData(data.data);
+          setTotalPage(data.total)
+        }
       })
       .catch((err) => {
         console.log(err);
-      });
-  }, []);
+      })
+      .finally(()=>{
+         setLoading(false);
+      })
+  }
 
   useEffect(() => {
-    GetInfoUser();
-  }, [GetInfoUser]);
+    GetInfoUser(params);
+  }, [params]);
 
   const handleDelete = (id) => {
     setLoading(true);
     DeleteAccount(id)
       .then((res) => {
         notification.success({
-          message: `Notification Delete`,
-          description: "Delete Product SuccessFully !",
-          placement: "topRight ",
+          description: "Xóa nhân viên thành công",
+          placement: "topRight",
         });
         GetInfoUser();
         setLoading(false);
       })
       .catch((err) => {
         notification.error({
-          message: `Notification Delete`,
-          description: "Delete Product Failed !",
-          placement: "topRight ",
+          description: "Xóa nhân viên thất bại",
+          placement: "topRight",
         });
         setLoading(false);
       });
@@ -106,7 +155,7 @@ export default function ListCustomer() {
   const handleEdit = (id) => {
     history.push({
       pathname: `/customer/add`,
-      search: "?" + new URLSearchParams({ customer_id: id }).toString(),
+    state:{id:id},
     });
   };
 
@@ -114,12 +163,15 @@ export default function ListCustomer() {
     SearchAccount({ key: e })
       .then((res) => {
         const ListCustomer = res.data.filter((e) => e.role === "user");
-        console.log(ListCustomer);
         setData(ListCustomer);
       })
       .catch((err) => console.log(err));
   };
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+
+  const onChangePage = (page)  =>{
+   setParams({...params,page:page})
+  }
 
   return (
     <Spin indicator={antIcon} spinning={loading}>
@@ -127,7 +179,7 @@ export default function ListCustomer() {
         <div className="top-table">
           <Search
             allowClear
-            placeholder="Search to name"
+            placeholder="Tìm kiếm"
             optionFilterProp="children"
             className="input-search"
             onSearch={handleSearch}
@@ -135,14 +187,19 @@ export default function ListCustomer() {
           ></Search>
           <Link to="/customer/add">
             <Button className="btn-add" icon={<PlusOutlined />}>
-              New Account Customer
+              Thêm mới nhân viên
             </Button>
           </Link>
         </div>
         <Table
           columns={columns}
+          loading={loading}
           dataSource={data}
-          pagination={{ pageSize: 5 }}
+          pagination={{
+            total: totalPage|| 0,
+            pageSize: 5,
+            onChange: onChangePage,
+          }}
         />
       </Space>
     </Spin>

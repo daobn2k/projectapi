@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_END_POINT } from "../lib/axios";
 
 const config = {
   headers: {
@@ -14,8 +15,8 @@ const getCategory = () => {
 const GetProduct = () => {
   return axios.get("/product", config);
 };
-const GetUser = () => {
-  return axios.get("/user", config);
+const GetUser = (data) => {
+  return axios.get(`${API_END_POINT}/users`,{params:data}, config);
 };
 const GetCategory = () => {
   return axios.get("/category", config);
@@ -24,7 +25,7 @@ const getProductbyId = (id) => {
   return axios.get(`/product/${id}`, config);
 };
 const getUserbyId = (id) => {
-  return axios.get(`/user/searchID=${id}`, config);
+  return axios.get(`${API_END_POINT}/users/${id}`, config);
 };
 const getCategorybyId = (id) => {
   return axios.get(`/category/${id}`, config);

@@ -5,97 +5,115 @@ import {
   Form,
   DatePicker,
   notification,
-  Image,
-  Breadcrumb,
+  Select
 } from "antd";
-import queryString from "query-string";
 import React, { useEffect, useState } from "react";
 import { getUserbyId } from "../../axios";
-import { storage } from "../../firebase";
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { addNewAccount, UpdateAccount } from "../../axios/account";
-import { HomeOutlined } from "@ant-design/icons";
-
 import "./customer.css";
 import moment from "moment";
+import BreadcrumbComponent from "../BreadcrumbComponent";
+import * as _ from 'lodash'
+import { listCertiFicate, listGender } from "../../shared";
+import { getDataDeaprtment } from "../../axios/department";
+import { getDataEducation } from "../../axios/education";
+const { Option } = Select;
+const { TextArea } = Input;
 
 export default function AddCustomer() {
-  const [currentData, setcurrentData] = useState({
-    name: "",
-    dob: "",
-    email: "",
-    phone: "",
-    username: "",
-    password: "",
-    address: "",
-    role: "user",
-    image: "",
-  });
-  const location = useLocation();
-  const query = queryString.parse(location.search);
+  const [listDepartment, setListDepartment] = useState([])
+  const [listEducation, setListEducation] = useState([])
   const history = useHistory();
-  const layout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 16 },
-  };
+  const location =useLocation();
+
+  const { state} = location
+
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (query.customer_id) {
-      getUserbyId(query.customer_id)
+    if (state && state.id) {
+      getUserbyId(state.id)
         .then((res) => {
-          setcurrentData(res.data);
-          form.setFieldsValue({
-            datepicker: res.data ? moment(res.data.dob) : "",
-          });
+          const { data ,status} = res
+          if(status === 200){
+            const listKey = Object.keys(data.data)
+            handleSetData(listKey,res.data.data)
+          }
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
-  }, [query.customer_id]);
+  }, [state]);
 
-  const handleChange = (e) => {
-    if (e.target.files[0]) {
-      const upLoadTask = storage
-        .ref(`images/${e.target.files[0].name}`)
-        .put(e.target.files[0]);
-      upLoadTask.on(
-        "state_changed",
-        (snapshot) => {},
-        (error) => {},
-        () => {
-          storage
-            .ref("images")
-            .child(e.target.files[0].name)
-            .getDownloadURL()
-            .then((url) => {
-              setcurrentData({ ...currentData, image: url });
-            });
+  const handleSetData = (listKey,data) => {
+    
+    listKey.forEach(item => {
+
+      if(typeof data[item] === 'object'){
+        const valueSet = {
+          [item]: data[item] && data[item]._id ? data[item]._id : "",
         }
-      );
-    }
-  };
+      return  form.setFieldsValue(valueSet);
+      }
+      if(item === 'dob'){
+        const valueSet = {
+          [item]: data && data[item]   ?  moment(data[item]) : "",
+        }
+      return  form.setFieldsValue(valueSet)
+      }
+      if(typeof data[item] !== 'object' && item !== 'create_date' && item !== 'dob'){
+        const valueSet = {
+          [item]: data && data[item] ? data[item] : "",
+        }
+      return  form.setFieldsValue(valueSet);
+      }
+    });
+  }
+  useEffect(() => {
+    getDataListDeaprtment()
+    getDataListEducation()
+  }, [])
 
-  const onFinish = () => {
-    if (query.customer_id) {
-      UpdateAccount(query.customer_id, currentData)
+  const getDataListDeaprtment = async () => {
+    const result = await getDataDeaprtment()
+    if (result.status === 200) {
+      setListDepartment(result.data.data)
+    }
+  }
+  const getDataListEducation = async () => {
+    const result = await getDataEducation()
+    if (result.status === 200) {
+      setListEducation(result.data.data)
+    }
+  }
+  const onFinish = (data) => {
+    // const { avatar } = currentData
+    const dataSubmit = { ...data, role: '1' }
+    if (state && state.id) {
+      UpdateAccount(state.id, dataSubmit)
         .then((res) => {
           notification.success({
-            message: `Notification`,
-            description: " Update Info SuccessFully",
+            message: `Thông báo cật nhập`,
+            description: " Cập nhật thông tin thành công",
             placement: "topRight",
           });
         })
         .catch((err) => {
           notification.error({
-            message: `Notification`,
-            description: " Error Can't Update Data",
+            message: `Thông báo cật nhập`,
+            description: "Có lỗi xảy ra khi cập nhật thông tin",
             placement: "topRight",
           });
         });
     } else {
-      addNewAccount(currentData)
+      addNewAccount(dataSubmit)
         .then((res) => {
-          if (res) {
+          if (res.status === 200) {
+            notification.success({
+              message: `Thông báo tạo mới`,
+              description: "Tạo mới nhân viên thành công",
+              placement: "topRight",
+            });
             history.push({
               pathname: "/customer/list",
             });
@@ -103,193 +121,259 @@ export default function AddCustomer() {
         })
         .catch((err) => {
           notification.error({
-            message: `Notification`,
-            description: " Accout Or Email Is Currently Inactive",
+            message: `Thông báo tạo mới`,
+            description: "Vui lòng kiểm tra lại thông tin",
             placement: "topRight",
           });
         });
     }
   };
+
+  const onSearch = (event) => {
+    console.log("event", event)
+  }
+
+  const handleSearch = _.debounce(onSearch, 700)
   return (
     <div>
-      <Breadcrumb separator=">" style={{ paddingBottom: 20, paddingLeft: 40 }}>
-        <Breadcrumb.Item href="">
-          <HomeOutlined />
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>Customer</Breadcrumb.Item>
-        <Breadcrumb.Item>
-          {query.customer_id ? "Edit Customer" : "Add Customer"}
-        </Breadcrumb.Item>
-      </Breadcrumb>
+      <BreadcrumbComponent title="Nhân viên" descriptionTitle=
+        {state && state.id ? "Chỉnh sửa thông tin nhân viên" : "Tạo mới nhân viên"}
+      />
       <div className="FormAddCustomer" style={{ display: "flex" }}>
         <Form
           form={form}
           style={{
-            width: "50%",
+            width: "100%",
             height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
           }}
-          {...layout}
           name="nest-messages"
           onFinish={onFinish}
-          fields={[
-            {
-              name: ["name"],
-              value: currentData ? currentData.name : "",
-            },
-            {
-              name: ["username"],
-              value: currentData ? currentData.username : "",
-            },
-            {
-              name: ["email"],
-              value: currentData ? currentData.email : "",
-            },
-            {
-              name: ["phone"],
-              value: currentData ? currentData.phone : "",
-            },
-            {
-              name: ["address"],
-              value: currentData ? currentData.address : "",
-            },
-            {
-              name: ["image"],
-              value: currentData ? currentData.image : "",
-            },
-          ]}
         >
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                message: "Please input your name!",
-              },
-            ]}
-            hasFeedback
-            name="name"
-            label="Full Name"
-            onChange={(e) =>
-              setcurrentData({ ...currentData, name: e.target.value })
-            }
-          >
-            <Input />
-          </Form.Item>
-          {!query.customer_id && (
+          <Form.Item name='filed' className="group-form--item">
             <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền thông tin tài khoản",
+                },
+                {
+                  maxLength: 256,
+                  message: "Điền thông tin dưới 256 kí tự"
+                }
+              ]}
+              hasFeedback
               name="username"
-              label="UserName"
-              onChange={(e) =>
-                setcurrentData({ ...currentData, username: e.target.value })
-              }
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your name!",
-                },
-              ]}
-              hasFeedback
+              label="Tài khoản"
             >
-              <Input style={{ borderRadius: "4px", cursor: "pointer" }} />
+              <Input size="large" placeholder="Điền tài khoản tạo mới" maxLength={256} />
             </Form.Item>
-          )}
-
-          {!query.customer_id && (
             <Form.Item
-              name="password"
-              hasFeedback
-              label="Password"
-              onChange={(e) =>
-                setcurrentData({ ...currentData, password: e.target.value })
-              }
               rules={[
                 {
                   required: true,
-                  message: "Please confirm your password!",
+                  message: "Vui lòng thông tin mật khẩu",
+                },
+                {
+                  maxLength: 256,
+                  message: "Điền thông tin dưới 256 kí tự"
+                }
+              ]}
+              hasFeedback
+              name="password"
+              label="Mật khẩu"
+            >
+              <Input.Password size="large" placeholder="Điền mật khẩu tạo mới" maxLength={256} allowClear />
+            </Form.Item>
+          </Form.Item>
+          <Form.Item name='filed' className="group-form--item">
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền đầy đủ họ và tên",
+                },
+                {
+                  maxLength: 256,
+                  message: "Điền thông tin dưới 256 kí tự"
+                }
+              ]}
+              hasFeedback
+              name="name"
+              label="Họ và tên"
+            >
+              <Input size="large" placeholder="Điền đầy đủ họ và tên" maxLength={256} />
+            </Form.Item>
+            <Form.Item name="dob" label="Ngày sinh" rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}>
+              <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Chọn ngày sinh" size="large" />
+            </Form.Item>
+          </Form.Item>
+          <Form.Item name='filed' className="group-form--item">
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền đầy đủ họ và tên",
+                },
+                {
+                  maxLength: 256,
+                  message: "Điền thông tin dưới 256 kí tự"
+                }
+              ]}
+              hasFeedback
+              name="sex"
+              label="Giới tính"
+            >
+              <Select
+                showSearch
+                placeholder="Chọn loại bằng cấp"
+                onSearch={handleSearch}
+                allowClear
+              >
+                {
+                  listGender.map((item, index) => {
+                    return (
+                      <Option value={item.label} key={index}>{item.label}</Option>
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name="phone"
+              label="Số điện thoại"
+              rules={[
+                { required: true, message: "Vui lòng điền số điện thoại" },
+                { max: 11, message: 'Số điẹn thoại không được vượt quá 11 kí tự' }
+              ]}
+            >
+              <Input size="large" style={{ borderRadius: "4px", cursor: "pointer" }} placeholder="Điền số điện thoại" />
+            </Form.Item>
+          </Form.Item>
+          <Form.Item name='filed' className="group-form--item">
+            <Form.Item
+              name="email"
+              label="E-mail"
+              rules={[
+                {
+                  type: "email",
+                  message: "Vui lòng nhập lại không đúng định dạng email",
+                },
+                {
+                  required: true,
+                  message: "Vui lòng nhập email",
+                },
+              ]}
+
+            >
+              <Input size="large" style={{ borderRadius: "4px", cursor: "pointer" }} maxLength={256} placeholder="Điền thông tin email" />
+            </Form.Item>
+            <Form.Item
+              name="address"
+              label="Địa chỉ"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập địa chỉ",
                 },
               ]}
             >
-              <Input.Password
-                style={{ borderRadius: "4px", cursor: "pointer" }}
-              />
+              <Input size="large" style={{ borderRadius: "4px", cursor: "pointer" }} placeholder="Điền thông tin địa chỉ" />
             </Form.Item>
-          )}
-          <Form.Item name="datepicker" label="Date of Birth">
-            <DatePicker
-              onChange={(date, dateString) =>
-                setcurrentData({ ...currentData, dob: dateString })
-              }
-            />
+          </Form.Item>
+          <Form.Item name='filed' className="group-form--item">
+            <Form.Item label="Phòng ban" rules={[{ required: true, message: 'Vui lòng chọn phòng ban' }]} name="department_id">
+              <Select
+                showSearch
+                placeholder="Chọn phòng ban"
+                onSearch={handleSearch}
+                allowClear
+              >
+                {
+                  !_.isEmpty(listDepartment) && listDepartment.map((item, index) => {
+                    return (
+                      <Option value={item._id} key={index}>{item.name}</Option>
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
+            <Form.Item label="Chức vụ" rules={[{ required: true, message: 'Vui lòng chọn chức vụ' }]} name="role_id">
+              <Select
+                showSearch
+                placeholder="Chọn chức vụ"
+                onSearch={handleSearch}
+                allowClear
+              >
+                {
+                  !_.isEmpty(listEducation) && listEducation.map((item, index) => {
+                    return (
+                      <Option value={item._id} key={index}>{item.name}</Option>
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
+          </Form.Item>
+          <Form.Item name='filed' className="group-form--item">
+          <Form.Item label="Trình độ học vấn" rules={[{ required: true, message: 'Vui lòng chọn trình độ học vấn' }]} name="education_id">
+              <Select
+                showSearch
+                placeholder="Chọn trình độ học vấn"
+                onSearch={handleSearch}
+                allowClear
+              >
+                {
+                  !_.isEmpty(listEducation) && listEducation.map((item, index) => {
+                    return (
+                      <Option value={item._id} key={index}>{item.name}</Option>
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
+            <Form.Item label="Loại bằng cấp" rules={[{ required: true, message: 'Vui lòng chọn loại bằng cấp' }]} name="certificate">
+              <Select
+                showSearch
+                placeholder="Chọn loại bằng cấp"
+                onSearch={handleSearch}
+                allowClear
+              >
+                {
+                  listCertiFicate.map((item, index) => {
+                    return (
+                      <Option value={item.label} key={index}>{item.label}</Option>
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
           </Form.Item>
           <Form.Item
-            name="email"
-            label="E-mail"
-            rules={[
-              {
-                type: "email",
-                message: "The input is not valid E-mail!",
-              },
-              {
-                required: true,
-                message: "Please input your E-mail!",
-              },
-            ]}
-            onChange={(e) =>
-              setcurrentData({ ...currentData, email: e.target.value })
-            }
+            name="description"
+            label="Thông tin mô tả"
+            className="item-area"
           >
-            <Input style={{ borderRadius: "4px", cursor: "pointer" }} />
+            <TextArea style={{ borderRadius: "4px", cursor: "pointer" }} placeholder="Điền thông tin mô tả" maxLength={4000} autoSize={{ minRows: 5, maxRows: 5 }} />
           </Form.Item>
-          <Form.Item
-            name="address"
-            label="Address"
-            onChange={(e) =>
-              setcurrentData({ ...currentData, address: e.target.value })
-            }
-          >
-            <Input style={{ borderRadius: "4px", cursor: "pointer" }} />
-          </Form.Item>
-          <Form.Item
-            name="phone"
-            label="Phone"
-            rules={[
-              { required: true, message: "Please input your phone number!" },
-            ]}
-            onChange={(e) =>
-              setcurrentData({ ...currentData, phone: e.target.value })
-            }
-          >
-            <Input style={{ borderRadius: "4px", cursor: "pointer" }} />
-          </Form.Item>
-          <Form.Item name="image" label="Avatar" valuePropName="image">
-            <input name="upload" type="file" onChange={handleChange}></input>
-          </Form.Item>
-          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+          <Form.Item className="item-button">
             <Button
               type="primary"
               htmlType="submit"
               style={{
-                width: "100%",
+                width: "50%",
                 height: "40px",
                 borderRadius: "4px",
                 fontSize: "16px",
+                maxWidth:256,
               }}
             >
-              Submit
+              {state && state.id ? 'Chỉnh sửa' : 'Tạo mới'}
             </Button>
           </Form.Item>
         </Form>
-        {currentData.image ? (
-          <Image
-            style={{
-              width: "100%",
-              height: "300px",
-            }}
-            src={currentData.image}
-          />
-        ) : null}
       </div>
     </div>
   );

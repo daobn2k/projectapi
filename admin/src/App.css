@@ -5,3 +5,8 @@
 .ant-image-mask-info {
   display: none;
 }
+
+.ant-select-selector ,.ant-select-selection-search{
+  display: flex;
+  align-items: center;
+}

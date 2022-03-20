@@ -7,6 +7,35 @@
     border-radius: 0;
 }
 
+.FormAddCustomer .ant-form-item {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .ant-image{
     border-radius: none;
+}
+.group-form--item .ant-form-item-control-input-content{
+    display: flex;
+    gap: 25px;
+}
+
+.group-form--item .ant-form-item-control-input-content .ant-form-item{
+    width: 50%;
+}
+.group-form--item .ant-form-item-control-input-content .ant-form-item .ant-form-item-control{
+    width: 100%;
+}
+.item-area .ant-form-item-control{
+    width: 100%;
+}
+.item-button {
+    margin-top: 12px;
+}
+.item-button .ant-form-item-control-input-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

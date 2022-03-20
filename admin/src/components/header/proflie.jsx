@@ -35,7 +35,7 @@ export default function Profile({ isProfileVisible, handleCancel }) {
 
   React.useEffect(() => {
     if (user) {
-      loadingInfo(user.id);
+      loadingInfo(user._id);
     }
   }, []);
 
@@ -64,7 +64,6 @@ export default function Profile({ isProfileVisible, handleCancel }) {
   };
 
   const editPassword = (data) => {
-    console.log(data);
     changePassword(user.id, data)
       .then((res) => {
         notification.success({
