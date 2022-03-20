@@ -1,54 +1,67 @@
-import {notification, Space, Table, Input, Button, Spin, Typography, Avatar } from "antd";
+import {notification, Space, Table, Input, Button, Spin, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
 import { Link, useHistory } from "react-router-dom";
 import { GetUser } from "../../axios";
-import { DeleteAccount, SearchAccount } from "../../axios/account";
+import { DeleteAccount } from "../../axios/account";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
-import { convertTimeStampUTCToLocal, listCheckRoleUser } from "../../shared";
+import { convertTimeStampUTCToLocal } from "../../shared";
 const { Search } = Input;
 export default function ListCustomer() {
   const [loading, setLoading] = useState(false);
 
   const columns = [
     {
+      title:'Số thứ tự',
+      dataIndex:"_id",
+      key:"_id",
+      width:'80px',
+      align:'center',
+      fixed:'left',
+      render:(i,re,index)=>{
+       return <Typography key={`${i}-${index}`}>{index + 1}</Typography>
+      }
+    },
+    {
       title: "Họ và tên",
       dataIndex: "name",
       key: "name",
+      width:'125px',
+      fixed:'left',
     },
     {
       title:"Giới tính",
       dataIndex:'sex',
       key:'sex',
-      render:(item,re,index) =>{
-        return(
-          <Typography key={index}>{item.name || ''}</Typography>
-        )
-      }
+      align:'center',
+      width:'100px'
     },
     {
       title: "Ngày sinh",
       dataIndex: "dob",
       key: "dob",
+      width:'125px',
       render:(date,re,index)=>{
         return(
           <Typography key={index}>{convertTimeStampUTCToLocal(date)}</Typography>
         )
       }
     },
-    {
-      title: "Ảnh đại diện",
-      dataIndex: "avatar",
-      key:'avatar',
-      align:'center',
-      render: (e) => {
-        return <Avatar key={e} width={50} src={e} />;
-      },
-    },
+    // {
+    //   title: "Ảnh đại diện",
+    //   dataIndex: "avatar",
+    //   key:'avatar',
+    //   align:'center',
+    //   width:'150px',
+    //   render: (e) => {
+    //     return <Avatar key={e} width={50} src={e} />;
+    //   },
+    // },
     {
       title: "Phòng ban",
       dataIndex: "department_id",
       key: "department_id",
+      width:'150px',
       render:(item,re,index)=>{
         return(
           <Typography key={`${index}`}>{item.name}</Typography>
@@ -59,8 +72,8 @@ export default function ListCustomer() {
       title: "Trình độ học vấn",
       dataIndex: "education_id",
       key: "education_id",
+      width:'175px',      
       render:(item,re,index)=>{
-        console.log("item",item)
         return(
           <Typography key={`${index}`}>{item && item.name ? item.name : ''}</Typography>
         )
@@ -70,21 +83,25 @@ export default function ListCustomer() {
       title: "Địa chỉ email",
       dataIndex: "email",
       key: "email",
+      width:'200px',      
     },
     {
       title: "Địa chỉ cư trú",
       dataIndex: "address",
       key: "address",
+      width:'250px',      
     },
     {
       title: "Số điện thoại",
       dataIndex: "phone",
       key: "phone",
+      width:'150px',      
     },
     {
       title:'Chức vụ',
       dataIndex:'role_id',
       key:'role_id',
+      width:'200px',
       render:(item,record,index)=>{
         return(
           <Typography key={index} >{item && item.name ? item.name : ''}</Typography>
@@ -94,6 +111,8 @@ export default function ListCustomer() {
     {
       title: "Thao tác",
       key: "action",
+      fixed: 'right',
+      width: 75,
       render: (e) => (
         <Space size="middle">
           <AiOutlineEdit key={e.id} onClick={() => handleEdit(e._id)} />
@@ -108,7 +127,7 @@ export default function ListCustomer() {
   const [params,setParams] = useState({
     page:1,
     perPage:5,
-    keyword:''
+    keyword:'',
   })
   const GetInfoUser = (payload) => {
     setLoading(true);
@@ -141,15 +160,16 @@ export default function ListCustomer() {
           placement: "topRight",
         });
         GetInfoUser();
-        setLoading(false);
       })
       .catch((err) => {
         notification.error({
           description: "Xóa nhân viên thất bại",
           placement: "topRight",
         });
+      })
+      .finally(()=>{
         setLoading(false);
-      });
+      })
   };
 
   const handleEdit = (id) => {
@@ -160,12 +180,10 @@ export default function ListCustomer() {
   };
 
   const handleSearch = (e) => {
-    SearchAccount({ key: e })
-      .then((res) => {
-        const ListCustomer = res.data.filter((e) => e.role === "user");
-        setData(ListCustomer);
-      })
-      .catch((err) => console.log(err));
+    setParams({
+      ...params,
+      keyword:e
+    })
   };
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -174,7 +192,7 @@ export default function ListCustomer() {
   }
 
   return (
-    <Spin indicator={antIcon} spinning={loading}>
+    <Spin indicator={antIcon} spinning={false}>
       <Space className="Space" size={14}>
         <div className="top-table">
           <Search
@@ -200,6 +218,7 @@ export default function ListCustomer() {
             pageSize: 5,
             onChange: onChangePage,
           }}
+          scroll={{ x:2000 }}
         />
       </Space>
     </Spin>

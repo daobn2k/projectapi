@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import { getUserbyId } from "../../axios";
 import { useHistory, useLocation } from "react-router-dom";
 import { addNewAccount, UpdateAccount } from "../../axios/account";
-import "./customer.css";
+import "./request.css";
 import moment from "moment";
 import BreadcrumbComponent from "../BreadcrumbComponent";
 import * as _ from 'lodash'
@@ -22,14 +22,14 @@ import { getDataRole } from "../../axios/role";
 const { Option } = Select;
 const { TextArea } = Input;
 
-export default function AddCustomer() {
+export default function AddRequest() {
   const [listDepartment, setListDepartment] = useState([])
   const [listEducation, setListEducation] = useState([])
   const [listRole, setListRole] = useState([])
   const history = useHistory();
-  const location =useLocation();
+  const location = useLocation();
 
-  const { state} = location
+  const { state } = location
 
   const [form] = Form.useForm();
 
@@ -37,37 +37,37 @@ export default function AddCustomer() {
     if (state && state.id) {
       getUserbyId(state.id)
         .then((res) => {
-          const { data ,status} = res
-          if(status === 200){
+          const { data, status } = res
+          if (status === 200) {
             const listKey = Object.keys(data.data)
-            handleSetData(listKey,res.data.data)
+            handleSetData(listKey, res.data.data)
           }
         })
         .catch((err) => { });
     }
   }, [state]);
 
-  const handleSetData = (listKey,data) => {
-    
+  const handleSetData = (listKey, data) => {
+
     listKey.forEach(item => {
 
-      if(typeof data[item] === 'object'){
+      if (typeof data[item] === 'object') {
         const valueSet = {
           [item]: data[item] && data[item]._id ? data[item]._id : "",
         }
-      return  form.setFieldsValue(valueSet);
+        return form.setFieldsValue(valueSet);
       }
-      if(item === 'dob'){
+      if (item === 'dob') {
         const valueSet = {
-          [item]: data && data[item]   ?  moment(data[item]) : "",
+          [item]: data && data[item] ? moment(data[item]) : "",
         }
-      return  form.setFieldsValue(valueSet)
+        return form.setFieldsValue(valueSet)
       }
-      if(typeof data[item] !== 'object' && item !== 'create_date' && item !== 'dob'){
+      if (typeof data[item] !== 'object' && item !== 'create_date' && item !== 'dob') {
         const valueSet = {
           [item]: data && data[item] ? data[item] : "",
         }
-      return  form.setFieldsValue(valueSet);
+        return form.setFieldsValue(valueSet);
       }
     });
   }
@@ -146,7 +146,7 @@ export default function AddCustomer() {
   return (
     <div>
       <BreadcrumbComponent title="Nhân viên" descriptionTitle=
-        {state && state.id ? "Chỉnh sửa thông tin nhân viên" : "Tạo mới nhân viên"}
+        {state && state.id ? "Chỉnh sửa thông tin công việc" : "Tạo mới công việc"}
       />
       <div className="FormAddCustomer" style={{ display: "flex" }}>
         <Form
@@ -327,7 +327,7 @@ export default function AddCustomer() {
             </Form.Item>
           </Form.Item>
           <Form.Item name='filed' className="group-form--item">
-          <Form.Item label="Trình độ học vấn" rules={[{ required: true, message: 'Vui lòng chọn trình độ học vấn' }]} name="education_id">
+            <Form.Item label="Trình độ học vấn" rules={[{ required: true, message: 'Vui lòng chọn trình độ học vấn' }]} name="education_id">
               <Select
                 showSearch
                 placeholder="Chọn trình độ học vấn"
@@ -376,7 +376,7 @@ export default function AddCustomer() {
                 height: "40px",
                 borderRadius: "4px",
                 fontSize: "16px",
-                maxWidth:256,
+                maxWidth: 256,
               }}
             >
               {state && state.id ? 'Chỉnh sửa' : 'Tạo mới'}

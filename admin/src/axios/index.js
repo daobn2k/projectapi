@@ -8,8 +8,8 @@ const config = {
   },
 };
 
-const getCategory = () => {
-  return axios.get("/category", config);
+const getRequest = (data) => {
+  return axios.get(`${API_END_POINT}/category`,{params:data}, config);
 };
 
 const GetProduct = () => {
@@ -17,9 +17,6 @@ const GetProduct = () => {
 };
 const GetUser = (data) => {
   return axios.get(`${API_END_POINT}/users`,{params:data}, config);
-};
-const GetCategory = () => {
-  return axios.get("/category", config);
 };
 const getProductbyId = (id) => {
   return axios.get(`/product/${id}`, config);
@@ -47,12 +44,11 @@ export const getOrderDetail = (id) => {
 };
 
 export {
-  getCategory,
+  getRequest,
   GetProduct,
   getProductbyId,
   GetUser,
   getUserbyId,
-  GetCategory,
   getCategorybyId,
   getStock,
   getStockById,

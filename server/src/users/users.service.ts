@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { rgx } from 'src/ultils';
 import { CreateUserDto, QueryListUsers } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -10,17 +11,31 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+
+    console.log("createUserDto",createUserDto)
     const createdUser = new this.userModel(createUserDto);
 
+    console.log("createUser",createdUser)
     const result = await createdUser.save();
     return result;
   }
 
   async findAll(query: QueryListUsers) {
-    const { page = 1, perPage = 5 } = query;
+    const { page = 1, perPage = 5 ,fileds = 'name' ,keyword = ''} = query;
     const skip: number = (page - 1) * perPage;
-
-    const result = await this.userModel
+    let result;
+    if(keyword !== ''){
+      result = await this.userModel
+      .find({[fileds]:rgx(keyword)})
+      .limit(+perPage)
+      .skip(skip)
+      .sort({create_date:-1})
+      .populate('education_id')
+      .populate('department_id')
+      .populate('role_id')
+      .exec();
+    }else{
+      result = await this.userModel
       .find({})
       .limit(+perPage)
       .skip(skip)
@@ -29,18 +44,20 @@ export class UsersService {
       .populate('department_id')
       .populate('role_id')
       .exec();
-    const totalRecord = await this.userModel.find().count().exec();
+    }
     return {
       message: 'SUCCESS',
       data: result,
-      total: totalRecord,
+      total: result.length,
     };
   }
 
   async findOne(id: string) {
     const result = await this.userModel
       .findById(id)
+      .populate('education_id')
       .populate('department_id')
+      .populate('role_id')
       .exec();
 
     return {
@@ -48,6 +65,7 @@ export class UsersService {
       data: result,
     };
   }
+
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     const result = await this.userModel.findByIdAndUpdate(id, updateUserDto, {
@@ -60,7 +78,7 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    const result = await this.userModel.deleteOne({ id });
+    const result = await this.userModel.findByIdAndDelete(id,{new:true});
     return {
       message: 'SUCCESS',
       data: result,
@@ -83,7 +101,7 @@ export class UsersService {
     const { username, password } = params;
 
     const result = await this.userModel
-      .findOne({ username: username, password: password })
+      .findOneAndUpdate({ username: username, password: password },{status:true})
       .exec();
 
     return {

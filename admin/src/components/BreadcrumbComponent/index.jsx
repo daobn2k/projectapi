@@ -7,7 +7,7 @@ import { Breadcrumb } from 'antd';
 const BreadcrumbComponent = (props) => {
     const { title,descriptionTitle } = props
     return (
-        <Breadcrumb separator=">" style={{ paddingBottom: 20, paddingLeft: 40 }}>
+        <Breadcrumb separator=">" style={{ marginBottom:12}}>
             <Breadcrumb.Item href="">
                 <HomeOutlined />
             </Breadcrumb.Item>

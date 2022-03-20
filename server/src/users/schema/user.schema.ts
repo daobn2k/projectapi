@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { Department } from 'src/department/entities/department.entity';
 import { Education } from 'src/education/entities/education.entity';
+import { Role } from 'src/role/entities/role.entity';
 
 export type UserDocument = User & Document;
 
@@ -44,9 +45,6 @@ export class User {
   @Prop({required:true,type:String,maxlength:256})
   certificate:string;
 
-  @Prop({required:true,type:String,maxlength:256})
-  role_id:String;
-  
   @Prop({default:false})
   status:boolean;
 
@@ -54,7 +52,9 @@ export class User {
   department_id: Department;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Education' })
-
   education_id:Education;
+
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Role'})
+  role_id:Role;
 }
 export const UserSchema = SchemaFactory.createForClass(User);

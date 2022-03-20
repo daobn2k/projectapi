@@ -6,14 +6,12 @@ import { Redirect, Route, Switch } from "react-router";
 import SiderComponent from "../components/sider/sider";
 import HeaderComponent from "../components/header/header";
 import DashBoard from "../pages/homepage";
-import ProductPage from "../pages/productpage";
-import CategoryPage from "../pages/categorypage";
 import Customer from "../pages/customerpage";
 import MemberShip from "../pages/membership";
-import StockPage from "../pages/stockpage";
 
 import { LocalStorage } from "../storage";
 import OrderPage from "../pages/orderpage";
+import RequestPage from "../pages/request";
 const { Content } = Layout;
 
 export default function PrivateLayout() {
@@ -38,23 +36,16 @@ export default function PrivateLayout() {
         <HeaderComponent toggle={toggle} />
         <Switch>
           <Content
-            className="site-layout-background"
             style={{ overflowY: "scroll" }}
           >
             <Route path="/">
               <DashBoard />
             </Route>
-            <Route path="/product">
-              <ProductPage />
-            </Route>
-            <Route path="/category">
-              <CategoryPage />
+            <Route path="/request">
+              <RequestPage />
             </Route>
             <Route path="/member">
               <MemberShip />
-            </Route>
-            <Route path="/storage">
-              <StockPage />
             </Route>
             <Route path="/customer">
               <Customer />

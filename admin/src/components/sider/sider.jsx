@@ -5,7 +5,7 @@ import {
   AiOutlineAreaChart,
   AiFillShop,
 } from "react-icons/ai";
-import { AppstoreOutlined } from "@ant-design/icons";
+import { AppstoreOutlined ,FileWordOutlined} from "@ant-design/icons";
 import { BsDot } from "react-icons/bs";
 import "./sider.css";
 import { Link } from "react-router-dom";
@@ -78,6 +78,20 @@ export default function SiderComponent({ collapsed }) {
               style={{ color: "#fff", paddingLeft: 20 }}
             >
               <Link to="/customer/list">Danh sách nhân viên</Link>
+            </Menu.Item>
+          </SubMenu>
+          <SubMenu
+            className="SubMenu"
+            key="sub2"
+            title="Công việc"
+            icon={<FileWordOutlined />}
+          >
+            <Menu.Item
+              key="5"
+              icon={<BsDot />}
+              style={{ color: "#fff", paddingLeft: 20 }}
+            >
+              <Link to="/request/list">Danh sách công việc</Link>
             </Menu.Item>
           </SubMenu>
         </Menu>
