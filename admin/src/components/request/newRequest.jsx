@@ -1,105 +1,99 @@
 // eslint-disable-next-line
-import {
-  Button,
-  Input,
-  Form,
-  DatePicker,
-  notification,
-  Select
-} from "antd";
+import { Button, Input, Form, DatePicker, notification, Select } from "antd";
 import React, { useEffect, useState } from "react";
-import { getUserbyId } from "../../axios";
+import { getRequestById, GetUser } from "../../axios";
 import { useHistory, useLocation } from "react-router-dom";
-import { addNewAccount, UpdateAccount } from "../../axios/account";
 import "./request.css";
 import moment from "moment";
 import BreadcrumbComponent from "../BreadcrumbComponent";
-import * as _ from 'lodash'
-import { listCertiFicate, listGender } from "../../shared";
+import * as _ from "lodash";
 import { getDataDeaprtment } from "../../axios/department";
-import { getDataEducation } from "../../axios/education";
-import { getDataRole } from "../../axios/role";
+import { store } from "../../storage";
+import { addRequest, updateRequest } from "../../axios/request";
+
 const { Option } = Select;
 const { TextArea } = Input;
 
 export default function AddRequest() {
-  const [listDepartment, setListDepartment] = useState([])
-  const [listEducation, setListEducation] = useState([])
-  const [listRole, setListRole] = useState([])
+  const dataUser = store.getCurentUser();
+  const [listDepartment, setListDepartment] = useState([]);
+  const [listUser, setListUser] = useState([]);
   const history = useHistory();
   const location = useLocation();
 
-  const { state } = location
+  const { state } = location;
 
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (state && state.id) {
-      getUserbyId(state.id)
+      getRequestById(state.id)
         .then((res) => {
-          const { data, status } = res
+          const { data, status } = res;
           if (status === 200) {
-            const listKey = Object.keys(data.data)
-            handleSetData(listKey, res.data.data)
+            const listKey = Object.keys(data.data);
+            handleSetData(listKey, res.data.data);
           }
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
   }, [state]);
 
   const handleSetData = (listKey, data) => {
-
-    listKey.forEach(item => {
-
-      if (typeof data[item] === 'object') {
+    listKey.forEach((item) => {
+      console.log("item", typeof data[item]);
+      if (typeof data[item] === "object") {
         const valueSet = {
           [item]: data[item] && data[item]._id ? data[item]._id : "",
-        }
+        };
         return form.setFieldsValue(valueSet);
       }
-      if (item === 'dob') {
+      if (
+        item === "from_date" ||
+        item === "end_date" ||
+        item === "create_date"
+      ) {
         const valueSet = {
           [item]: data && data[item] ? moment(data[item]) : "",
-        }
-        return form.setFieldsValue(valueSet)
+        };
+        return form.setFieldsValue(valueSet);
       }
-      if (typeof data[item] !== 'object' && item !== 'create_date' && item !== 'dob') {
+      if (
+        typeof data[item] === "string" &&
+        item !== "create_date" &&
+        item !== "end_date" &&
+        item !== "from_date"
+      ) {
         const valueSet = {
           [item]: data && data[item] ? data[item] : "",
-        }
+        };
+        console.log("valueSet", valueSet);
         return form.setFieldsValue(valueSet);
       }
     });
-  }
+  };
   useEffect(() => {
-    getDataListDeaprtment()
-    getDataListEducation()
-    getDataListRole()
-  }, [])
+    getDataListDeaprtment();
+    getDataListUser();
+  }, []);
 
   const getDataListDeaprtment = async () => {
-    const result = await getDataDeaprtment()
+    const result = await getDataDeaprtment();
     if (result.status === 200) {
-      setListDepartment(result.data.data)
+      setListDepartment(result.data.data);
     }
-  }
-  const getDataListEducation = async () => {
-    const result = await getDataEducation()
+  };
+  const getDataListUser = async () => {
+    const result = await GetUser();
     if (result.status === 200) {
-      setListEducation(result.data.data)
+      setListUser(result.data.data);
     }
-  }
-  const getDataListRole = async () => {
-    const result = await getDataRole()
-    if (result.status === 200) {
-      setListRole(result.data.data)
-    }
-  }
+  };
   const onFinish = (data) => {
     // const { avatar } = currentData
-    const dataSubmit = { ...data, role: '1' }
+    const dataSubmit = { ...data, role: "1" };
     if (state && state.id) {
-      UpdateAccount(state.id, dataSubmit)
+      updateRequest(state.id, dataSubmit)
         .then((res) => {
           notification.success({
             message: `Thông báo cật nhập`,
@@ -115,12 +109,12 @@ export default function AddRequest() {
           });
         });
     } else {
-      addNewAccount(dataSubmit)
+      addRequest(dataSubmit)
         .then((res) => {
           if (res.status === 200) {
             notification.success({
               message: `Thông báo tạo mới`,
-              description: "Tạo mới nhân viên thành công",
+              description: "Tạo mới công việc thành công",
               placement: "topRight",
             });
             history.push({
@@ -139,14 +133,19 @@ export default function AddRequest() {
   };
 
   const onSearch = (event) => {
-    console.log("event", event)
-  }
+    console.log("event", event);
+  };
 
-  const handleSearch = _.debounce(onSearch, 700)
+  const handleSearch = _.debounce(onSearch, 700);
   return (
     <div>
-      <BreadcrumbComponent title="Nhân viên" descriptionTitle=
-        {state && state.id ? "Chỉnh sửa thông tin công việc" : "Tạo mới công việc"}
+      <BreadcrumbComponent
+        title="Nhân viên"
+        descriptionTitle={
+          state && state.id
+            ? "Chỉnh sửa thông tin công việc"
+            : "Tạo mới công việc"
+        }
       />
       <div className="FormAddCustomer" style={{ display: "flex" }}>
         <Form
@@ -160,203 +159,140 @@ export default function AddRequest() {
           }}
           name="nest-messages"
           onFinish={onFinish}
+          fields={[
+            {
+              name: ["create_by_id"],
+              value: dataUser ? dataUser._id : "",
+            },
+            {
+              name: ["department_id"],
+              value: dataUser ? dataUser.department_id : "",
+            },
+          ]}
         >
-          <Form.Item name='filed' className="group-form--item">
+          <Form.Item name="filed" className="group-form--item">
             <Form.Item
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng điền thông tin tài khoản",
+                  message: "Vui lòng điền đầy công việc",
                 },
                 {
                   maxLength: 256,
-                  message: "Điền thông tin dưới 256 kí tự"
-                }
-              ]}
-              hasFeedback
-              name="username"
-              label="Tài khoản"
-            >
-              <Input size="large" placeholder="Điền tài khoản tạo mới" maxLength={256} />
-            </Form.Item>
-            <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng thông tin mật khẩu",
+                  message: "Điền thông tin dưới 256 kí tự",
                 },
-                {
-                  maxLength: 256,
-                  message: "Điền thông tin dưới 256 kí tự"
-                }
-              ]}
-              hasFeedback
-              name="password"
-              label="Mật khẩu"
-            >
-              <Input.Password size="large" placeholder="Điền mật khẩu tạo mới" maxLength={256} allowClear />
-            </Form.Item>
-          </Form.Item>
-          <Form.Item name='filed' className="group-form--item">
-            <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng điền đầy đủ họ và tên",
-                },
-                {
-                  maxLength: 256,
-                  message: "Điền thông tin dưới 256 kí tự"
-                }
               ]}
               hasFeedback
               name="name"
-              label="Họ và tên"
+              label="Tên công việc"
             >
-              <Input size="large" placeholder="Điền đầy đủ họ và tên" maxLength={256} />
+              <Input
+                size="large"
+                placeholder="Điền tên công việc"
+                maxLength={256}
+              />
             </Form.Item>
-            <Form.Item name="dob" label="Ngày sinh" rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}>
-              <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Chọn ngày sinh" size="large" />
-            </Form.Item>
-          </Form.Item>
-          <Form.Item name='filed' className="group-form--item">
-            <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng điền đầy đủ họ và tên",
-                },
-                {
-                  maxLength: 256,
-                  message: "Điền thông tin dưới 256 kí tự"
-                }
-              ]}
-              hasFeedback
-              name="sex"
-              label="Giới tính"
-            >
+            <Form.Item name="user_id" label="Người thực hiện">
               <Select
                 showSearch
-                placeholder="Chọn loại bằng cấp"
+                placeholder="Chọn người thực hiện"
                 onSearch={handleSearch}
                 allowClear
               >
-                {
-                  listGender.map((item, index) => {
+                {!_.isEmpty(listUser) &&
+                  listUser.map((item, index) => {
                     return (
-                      <Option value={item.label} key={index}>{item.label}</Option>
-                    )
-                  })
-                }
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="phone"
-              label="Số điện thoại"
-              rules={[
-                { required: true, message: "Vui lòng điền số điện thoại" },
-                { max: 11, message: 'Số điẹn thoại không được vượt quá 11 kí tự' }
-              ]}
-            >
-              <Input size="large" style={{ borderRadius: "4px", cursor: "pointer" }} placeholder="Điền số điện thoại" />
-            </Form.Item>
-          </Form.Item>
-          <Form.Item name='filed' className="group-form--item">
-            <Form.Item
-              name="email"
-              label="E-mail"
-              rules={[
-                {
-                  type: "email",
-                  message: "Vui lòng nhập lại không đúng định dạng email",
-                },
-                {
-                  required: true,
-                  message: "Vui lòng nhập email",
-                },
-              ]}
-
-            >
-              <Input size="large" style={{ borderRadius: "4px", cursor: "pointer" }} maxLength={256} placeholder="Điền thông tin email" />
-            </Form.Item>
-            <Form.Item
-              name="address"
-              label="Địa chỉ"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập địa chỉ",
-                },
-              ]}
-            >
-              <Input size="large" style={{ borderRadius: "4px", cursor: "pointer" }} placeholder="Điền thông tin địa chỉ" />
-            </Form.Item>
-          </Form.Item>
-          <Form.Item name='filed' className="group-form--item">
-            <Form.Item label="Phòng ban" rules={[{ required: true, message: 'Vui lòng chọn phòng ban' }]} name="department_id">
-              <Select
-                showSearch
-                placeholder="Chọn phòng ban"
-                onSearch={handleSearch}
-                allowClear
-              >
-                {
-                  !_.isEmpty(listDepartment) && listDepartment.map((item, index) => {
-                    return (
-                      <Option value={item._id} key={index}>{item.name}</Option>
-                    )
-                  })
-                }
-              </Select>
-            </Form.Item>
-            <Form.Item label="Chức vụ" rules={[{ required: true, message: 'Vui lòng chọn chức vụ' }]} name="role_id">
-              <Select
-                showSearch
-                placeholder="Chọn chức vụ"
-                onSearch={handleSearch}
-                allowClear
-              >
-                {
-                  !_.isEmpty(listRole) && listRole.map((item, index) => {
-                    return (
-                      <Option value={item._id} key={index}>{item.name}</Option>
-                    )
-                  })
-                }
+                      <Option value={item._id} key={index}>
+                        {item.name}
+                      </Option>
+                    );
+                  })}
               </Select>
             </Form.Item>
           </Form.Item>
-          <Form.Item name='filed' className="group-form--item">
-            <Form.Item label="Trình độ học vấn" rules={[{ required: true, message: 'Vui lòng chọn trình độ học vấn' }]} name="education_id">
+          <Form.Item name="filed" className="group-form--item">
+            <Form.Item
+              name="from_date"
+              label="Từ ngày"
+              rules={[
+                { required: true, message: "Vui lòng chọn ngày bắt đầu" },
+              ]}
+            >
+              <DatePicker
+                style={{ width: "100%" }}
+                format="DD/MM/YYYY"
+                placeholder="Chọn bắt đầu công việc"
+                size="large"
+                disabledDate={(current) => {
+                  let customDate = moment().format("YYYY-MM-DD");
+                  return current && current < moment(customDate, "YYYY-MM-DD");
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="end_date"
+              label="Đến ngày"
+              rules={[
+                { required: true, message: "Vui lòng chọn ngày kết thúc" },
+              ]}
+            >
+              <DatePicker
+                style={{ width: "100%" }}
+                format="DD/MM/YYYY"
+                placeholder="Chọn kết thúc công việc"
+                size="large"
+                disabledDate={(current) => {
+                  let customDate = moment().format("YYYY-MM-DD");
+                  return current && current < moment(customDate, "YYYY-MM-DD");
+                }}
+              />
+            </Form.Item>
+          </Form.Item>
+          <Form.Item name="filed" className="group-form--item">
+            <Form.Item
+              label="Người giao việc"
+              rules={[{ required: true, message: "Vui lòng chọn chức vụ" }]}
+              name="create_by_id"
+            >
               <Select
                 showSearch
-                placeholder="Chọn trình độ học vấn"
+                placeholder="Chọn người giao việc"
                 onSearch={handleSearch}
                 allowClear
+                disabled={true}
+                suffixIcon={false}
               >
-                {
-                  !_.isEmpty(listEducation) && listEducation.map((item, index) => {
+                {!_.isEmpty(listUser) &&
+                  listUser.map((item, index) => {
                     return (
-                      <Option value={item._id} key={index}>{item.name}</Option>
-                    )
-                  })
-                }
+                      <Option value={item._id} key={index}>
+                        {item.name}
+                      </Option>
+                    );
+                  })}
               </Select>
             </Form.Item>
-            <Form.Item label="Loại bằng cấp" rules={[{ required: true, message: 'Vui lòng chọn loại bằng cấp' }]} name="certificate">
+            <Form.Item
+              label="Phòng ban giao việc"
+              rules={[{ required: true, message: "Vui lòng chọn phòng ban" }]}
+              name="department_id"
+            >
               <Select
                 showSearch
-                placeholder="Chọn loại bằng cấp"
+                placeholder="Chọn phòng ban giao"
                 onSearch={handleSearch}
                 allowClear
+                disabled={true}
+                suffixIcon={false}
               >
-                {
-                  listCertiFicate.map((item, index) => {
+                {!_.isEmpty(listDepartment) &&
+                  listDepartment.map((item, index) => {
                     return (
-                      <Option value={item.label} key={index}>{item.label}</Option>
-                    )
-                  })
-                }
+                      <Option value={item._id} key={index}>
+                        {item.name}
+                      </Option>
+                    );
+                  })}
               </Select>
             </Form.Item>
           </Form.Item>
@@ -365,7 +301,12 @@ export default function AddRequest() {
             label="Thông tin mô tả"
             className="item-area"
           >
-            <TextArea style={{ borderRadius: "4px", cursor: "pointer" }} placeholder="Điền thông tin mô tả" maxLength={4000} autoSize={{ minRows: 5, maxRows: 5 }} />
+            <TextArea
+              style={{ borderRadius: "4px", cursor: "pointer" }}
+              placeholder="Điền thông tin mô tả"
+              maxLength={4000}
+              autoSize={{ minRows: 5, maxRows: 5 }}
+            />
           </Form.Item>
           <Form.Item className="item-button">
             <Button
@@ -379,7 +320,7 @@ export default function AddRequest() {
                 maxWidth: 256,
               }}
             >
-              {state && state.id ? 'Chỉnh sửa' : 'Tạo mới'}
+              {state && state.id ? "Chỉnh sửa" : "Tạo mới"}
             </Button>
           </Form.Item>
         </Form>

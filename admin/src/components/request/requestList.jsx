@@ -37,10 +37,11 @@ export default function ListRequest() {
     },
     {
       title: 'Người giao',
-      dataIndex: 'created_by_id',
-      key: 'created_by_id',
+      dataIndex: 'create_by_id',
+      key: 'create_by_id',
       width: '150px',
       render: (item, record, index) => {
+        console.log('item',item)
         return (
           <Typography key={index} >{item && item.name ? item.name : ''}</Typography>
         )
@@ -69,7 +70,7 @@ export default function ListRequest() {
       }
     },
     {
-      title: "Ngày sinh",
+      title: "Ngày kết thúc",
       dataIndex: "end_date",
       key: "end_date",
       width: '125px',
@@ -151,7 +152,7 @@ export default function ListRequest() {
 
   const handleEdit = (id) => {
     history.push({
-      pathname: `/customer/add`,
+      pathname: `/request/add`,
       state: { id: id },
     });
   };

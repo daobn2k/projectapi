@@ -14,7 +14,6 @@ export class RequestService {
 
     const createdUser = new this.requestModel(create);
 
-    console.log("createUser",createdUser)
     const result = await createdUser.save();
     return result;
   }
@@ -86,7 +85,6 @@ export class RequestService {
 
   async search(params) {
     const { keyword, create_date } = params;
-    console.log(params, 'params');
     const result = await this.requestModel
       .find({ name: keyword, create_date: create_date })
       .populate('department_id')

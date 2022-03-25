@@ -10,9 +10,14 @@ export class Department {
   @Prop()
   name: string;
   
+  @Prop()
+  description:string;
+  
   @Prop({default:Date.now()})
   create_date:Date;
-
+  
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User'  })
+  admin_user_id:User;
   @Prop({default:false})
   status:boolean;
 

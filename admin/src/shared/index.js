@@ -72,26 +72,26 @@ export const listCertiFicate = [
 ] 
 
 
-export const listCheckRoleUser = [
+export const listCheckStatusWork = [
     {
         id:'1',
         value:'1',
-        label:'Nhân Viên'
+        label:'Bắt đầu'
     },
     {
         id:'2',
         value:'2',
-        label:'Trưởng ban điều hành'
+        label:'Đang thực hiện'
     },
     {
         id:'3',
         value:'3',
-        label:'Lãnh đạo cấp cao'
+        label:'Hoàn Thành'
     },
     {
         id:'4',
         value:'4',
-        label:'Ban điều hành tập đoàn'
+        label:'Hủy'
     }
 ]
 
@@ -112,3 +112,25 @@ export const listGender = [
         label:'Khác'
     },
 ]
+
+
+export const convertDataToOptions = (data) => {
+    let options
+    if(typeof data === 'object'){
+        options =  {
+            id:data._id,
+            value:data._id,
+            label:data.name,
+        }
+    }
+    if(Array.isArray(data) && data.length > 0)  {
+        options = data.map((item)=>{
+            return{
+                id:item._id,
+                value:item._id,
+                label:item.name,
+            }
+        })
+    }
+    return options
+}

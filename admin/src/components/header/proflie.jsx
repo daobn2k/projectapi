@@ -9,7 +9,7 @@ import {
   Typography,
 } from "antd";
 import React, { useState } from "react";
-import { LocalStorage } from "../../storage";
+import { store } from "../../storage";
 import DeatailProfile from "./deatail";
 import { EditOutlined } from "@ant-design/icons";
 import "./header.css";
@@ -29,7 +29,7 @@ const TYPECHANGE = [
 export default function Profile({ isProfileVisible, handleCancel }) {
   const [type, setType] = useState("INFO");
   const [isEdit, setIsEdit] = useState(true);
-  const user = LocalStorage.getCurentUser();
+  const user = store.getCurentUser();
 
   const [userInfo, setUserInfo] = useState();
 

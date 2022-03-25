@@ -1,14 +1,13 @@
-const LocalStorage = {
-    getCurentUser: () => {
-      return JSON.parse(window.localStorage.getItem(`currentUser`));
-    },
-    setCurrentUser:(data) =>{
-      window.localStorage.setItem(`currentUser`, JSON.stringify(data));
-    },
-    clearAll: () => {
-      window.localStorage.clear();
-    },
-  };
-  
-  export { LocalStorage };
-  
+const store = {
+  getCurentUser: () => {
+    return JSON.parse(window.localStorage.getItem(`currentUser`));
+  },
+  setCurrentUser: (data) => {
+    window.localStorage.setItem(`currentUser`, JSON.stringify(data));
+  },
+  clearAll: () => {
+    window.localStorage.clear();
+  },
+};
+
+export { store };

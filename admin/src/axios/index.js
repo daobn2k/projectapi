@@ -9,7 +9,7 @@ const config = {
 };
 
 const getRequest = (data) => {
-  return axios.get(`${API_END_POINT}/category`,{params:data}, config);
+  return axios.get(`${API_END_POINT}/request`,{params:data}, config);
 };
 
 const GetProduct = () => {
@@ -26,6 +26,10 @@ const getUserbyId = (id) => {
 };
 const getCategorybyId = (id) => {
   return axios.get(`/category/${id}`, config);
+};
+
+const getRequestById = (id) => {
+  return axios.get(`${API_END_POINT}/request/${id}`, config);
 };
 
 const getStock = () => {
@@ -52,4 +56,5 @@ export {
   getCategorybyId,
   getStock,
   getStockById,
+  getRequestById
 };

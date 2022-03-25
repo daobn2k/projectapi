@@ -1,9 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { Department } from 'src/department/entities/department.entity';
-import { Education } from 'src/education/entities/education.entity';
-import { Role } from 'src/role/entities/role.entity';
 import { User } from 'src/users/entities/user.entity';
 
 export type RequestDocument = Request & Document;

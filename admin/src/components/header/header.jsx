@@ -3,22 +3,20 @@ import { Layout, Avatar, Dropdown, Menu, Space } from "antd";
 import {
   BellOutlined,
   ShoppingCartOutlined,
-  CarryOutOutlined,
   MailOutlined,
   SearchOutlined,
-  StarOutlined,
 } from "@ant-design/icons";
 import { AiOutlineMenu, AiOutlineSetting } from "react-icons/ai";
 import { UserOutlined } from "@ant-design/icons";
 import { FiLogOut } from "react-icons/fi";
 import LogOut from "./logout";
 import "./header.css";
-import { LocalStorage } from "../../storage";
+import { store } from "../../storage";
 import { useHistory } from "react-router";
 import Profile from "./proflie";
 const { Header } = Layout;
 export default function HeaderComponent({ toggle }) {
-  const currentAccount = LocalStorage.getCurentUser();
+  const currentAccount = store.getCurentUser();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isProfileVisible, setIsProfileVisible] = useState(false);
@@ -28,7 +26,7 @@ export default function HeaderComponent({ toggle }) {
   };
 
   const handleOk = () => {
-    LocalStorage.clearAll();
+    store.clearAll();
     history.push({
       pathname: "/auth/login",
     });
@@ -75,12 +73,6 @@ export default function HeaderComponent({ toggle }) {
           </li>
           <li className="NavItem">
             <MailOutlined className="NavIcon" />
-          </li>
-          <li className="NavItem">
-            <CarryOutOutlined className="NavIcon" />
-          </li>
-          <li className="NavItem">
-            <StarOutlined className="NavIcon" />
           </li>
         </ul>
         <ul className="NavList" style={{ justifyContent: "flex-end" }}>

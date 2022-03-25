@@ -1,11 +1,7 @@
 import React from "react";
-import { Image, Layout, Menu } from "antd";
-import {
-  AiOutlineUser,
-  AiOutlineAreaChart,
-  AiFillShop,
-} from "react-icons/ai";
-import { AppstoreOutlined ,FileWordOutlined} from "@ant-design/icons";
+import { Layout, Menu, Tooltip } from "antd";
+import { AiOutlineUser, AiOutlineAreaChart, AiFillShop } from "react-icons/ai";
+import { AppstoreOutlined, FileWordOutlined } from "@ant-design/icons";
 import { BsDot } from "react-icons/bs";
 import "./sider.css";
 import { Link } from "react-router-dom";
@@ -14,7 +10,6 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SiderComponent({ collapsed }) {
-
   return (
     <Sider
       style={{ background: "#222A44" }}
@@ -22,7 +17,7 @@ export default function SiderComponent({ collapsed }) {
       collapsed={collapsed}
     >
       <div className="Logo">
-        <Image
+        {/* <Image
           src="/image/carfoot.png"
           preview={false}
           style={{
@@ -31,7 +26,7 @@ export default function SiderComponent({ collapsed }) {
             borderRadius: "50%",
             objectFit: "cover",
           }}
-        />
+        /> */}
       </div>
       <div style={{ width: "100%" }}>
         <Menu
@@ -77,7 +72,36 @@ export default function SiderComponent({ collapsed }) {
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/customer/list">Danh sách nhân viên</Link>
+              <Tooltip title="Danh sách nhân viên" placement="top">
+                <Link to="/customer/list">Danh sách nhân viên</Link>
+              </Tooltip>
+            </Menu.Item>
+            <Menu.Item
+              key="5"
+              icon={<BsDot />}
+              style={{ color: "#fff", paddingLeft: 20 }}
+            >
+              <Tooltip title="Trình độ học vấn" placement="top">
+                <Link to="/request/list">Trình độ học vấn</Link>
+              </Tooltip>
+            </Menu.Item>
+            <Menu.Item
+              key="6"
+              icon={<BsDot />}
+              style={{ color: "#fff", paddingLeft: 20 }}
+            >
+              <Tooltip title="Danh sách khen thưởng" placement="top">
+                <Link to="/request/list">Danh sách khen thưởng</Link>
+              </Tooltip>
+            </Menu.Item>
+            <Menu.Item
+              key="7"
+              icon={<BsDot />}
+              style={{ color: "#fff", paddingLeft: 20 }}
+            >
+              <Tooltip title="Danh sách phạt" placement="top">
+                <Link to="/request/list">Danh sách phạt</Link>
+              </Tooltip>
             </Menu.Item>
           </SubMenu>
           <SubMenu
@@ -87,11 +111,54 @@ export default function SiderComponent({ collapsed }) {
             icon={<FileWordOutlined />}
           >
             <Menu.Item
-              key="5"
+              key="8"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/request/list">Danh sách công việc</Link>
+              <Tooltip title="Danh sách công việc" placement="top">
+                <Link to="/request/list">Danh sách công việc</Link>
+              </Tooltip>
+            </Menu.Item>
+          </SubMenu>
+          <SubMenu
+            className="SubMenu"
+            key="sub3"
+            title="Phòng Ban"
+            icon={<FileWordOutlined />}
+          >
+            <Menu.Item
+              key="9"
+              icon={<BsDot />}
+              style={{ color: "#fff", paddingLeft: 20 }}
+            >
+              <Tooltip title="Danh sách phòng ban" placement="top">
+                <Link to="/department/list">Danh sách phòng ban</Link>
+              </Tooltip>
+            </Menu.Item>
+          </SubMenu>
+          <SubMenu
+            className="SubMenu"
+            key="sub4"
+            title="Bảng lương"
+            icon={<FileWordOutlined />}
+          >
+            <Menu.Item
+              key="10"
+              icon={<BsDot />}
+              style={{ color: "#fff", paddingLeft: 20 }}
+            >
+              <Tooltip title="Danh sách chấm công" placement="top">
+                <Link to="/request/list">Danh sách chấm công</Link>
+              </Tooltip>
+            </Menu.Item>
+            <Menu.Item
+              key="11"
+              icon={<BsDot />}
+              style={{ color: "#fff", paddingLeft: 20 }}
+            >
+              <Tooltip title="Danh sách lương" placement="top">
+                <Link to="/request/list">Danh sách lương</Link>
+              </Tooltip>
             </Menu.Item>
           </SubMenu>
         </Menu>
