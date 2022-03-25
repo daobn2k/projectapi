@@ -259,3 +259,11 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.button-salary{
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid green;
+}

@@ -1,22 +1,23 @@
 import axios from "axios";
+import { API_END_POINT } from "../lib/axios";
 
 const addNewAccount = async (data) => {
-  return await axios.post("/user/adduserfromadmin", data);
+  return await axios.post(`${API_END_POINT}/users`, data);
 };
 
 const UpdateAccount = async (id, data) => {
-  return await axios.put(`/user/${id}`, data);
+  return await axios.patch(`${API_END_POINT}/users/${id}`, data);
 };
 const DeleteAccount = async (id) => {
-  return await axios.delete(`/user/${id}`);
+  return await axios.delete(`${API_END_POINT}/users/${id}`);
 };
 
 const changePassword = async (id, data) => {
-  return await axios.put(`/user/rePwd/${id}`, data);
+  return await axios.put(`/users/rePwd/${id}`, data);
 };
 
 const SearchAccount = async (data) => {
-  return await axios.post(`/user/searchname`, data);
+  return await axios.post(`/users/searchname`, data);
 };
 
 export {

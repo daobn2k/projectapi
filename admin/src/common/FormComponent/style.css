@@ -1,0 +1,8 @@
+.form-item-component {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+.form-item-component .ant-form-item-control{
+    width: 100%;
+}

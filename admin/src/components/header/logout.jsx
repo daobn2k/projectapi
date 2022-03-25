@@ -14,7 +14,7 @@ export default function LogOut({ isModalVisible, handleOk, handleCancel }) {
       className="Modal"
     >
       <Text className="TextModal">
-        Do you really want to cancel the registration?
+        Bạn có muốn đăng xuất ra ?
       </Text>
       <div
         style={{
@@ -34,10 +34,10 @@ export default function LogOut({ isModalVisible, handleOk, handleCancel }) {
           }}
           onClick={handleCancel}
         >
-          Cancel
+          Hủy bỏ
         </Button>
         <Button className="ButtonModal" type="primary" onClick={handleOk}>
-          Yes
+          Đồng ý
         </Button>
       </div>
     </Modal>

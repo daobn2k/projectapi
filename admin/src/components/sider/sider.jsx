@@ -1,15 +1,7 @@
 import React from "react";
-import { Image, Layout, Menu } from "antd";
-import {
-  AiOutlineUser,
-  AiOutlineShoppingCart,
-  AiOutlineFolderOpen,
-  AiOutlineAreaChart,
-  AiFillShop,
-} from "react-icons/ai";
-import { LocalStorage } from "../../storage";
-import { MdShoppingBasket } from "react-icons/md";
-import { AppstoreOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { Layout, Menu, Tooltip } from "antd";
+import { AiOutlineUser, AiOutlineAreaChart, AiFillShop } from "react-icons/ai";
+import { AppstoreOutlined, FileWordOutlined } from "@ant-design/icons";
 import { BsDot } from "react-icons/bs";
 import "./sider.css";
 import { Link } from "react-router-dom";
@@ -18,8 +10,6 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SiderComponent({ collapsed }) {
-  const currentUser = LocalStorage.getCurentUser();
-
   return (
     <Sider
       style={{ background: "#222A44" }}
@@ -27,7 +17,7 @@ export default function SiderComponent({ collapsed }) {
       collapsed={collapsed}
     >
       <div className="Logo">
-        <Image
+        {/* <Image
           src="/image/carfoot.png"
           preview={false}
           style={{
@@ -36,7 +26,7 @@ export default function SiderComponent({ collapsed }) {
             borderRadius: "50%",
             objectFit: "cover",
           }}
-        />
+        /> */}
       </div>
       <div style={{ width: "100%" }}>
         <Menu
@@ -52,7 +42,7 @@ export default function SiderComponent({ collapsed }) {
             icon={<AppstoreOutlined />}
             className="MenuItem"
           >
-            <Link to="/"> Dashboard</Link>
+            <Link to="/">Thống kê chung</Link>
           </Menu.Item>
           <Menu.Item
             key="2"
@@ -60,7 +50,7 @@ export default function SiderComponent({ collapsed }) {
             icon={<AiOutlineAreaChart />}
             className="MenuItem"
           >
-            <Link to="/">Alternative</Link>
+            <Link to="/">Biểu đồ</Link>
           </Menu.Item>
           <Menu.Item
             key="3"
@@ -68,138 +58,107 @@ export default function SiderComponent({ collapsed }) {
             icon={<AiFillShop />}
             className="MenuItem"
           >
-            <Link to="/">Management</Link>
+            <Link to="/">Quản lý</Link>
           </Menu.Item>
 
           <SubMenu
             className="SubMenu"
             key="sub1"
             icon={<AiOutlineUser />}
-            title="Customers"
+            title="Nhân viên"
           >
             <Menu.Item
               key="4"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/customer/list">Customer List</Link>
+              <Tooltip title="Danh sách nhân viên" placement="top">
+                <Link to="/customer/list">Danh sách nhân viên</Link>
+              </Tooltip>
             </Menu.Item>
-
             <Menu.Item
               key="5"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/customer/add"> New Customer</Link>
+              <Tooltip title="Trình độ học vấn" placement="top">
+                <Link to="/request/list">Trình độ học vấn</Link>
+              </Tooltip>
             </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            className="SubMenu"
-            key="sub2"
-            icon={<AiOutlineShoppingCart />}
-            title="Product"
-          >
             <Menu.Item
               key="6"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/product/list">Product List </Link>
+              <Tooltip title="Danh sách khen thưởng" placement="top">
+                <Link to="/request/list">Danh sách khen thưởng</Link>
+              </Tooltip>
             </Menu.Item>
-
             <Menu.Item
               key="7"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/product/add"> New Product</Link>
+              <Tooltip title="Danh sách phạt" placement="top">
+                <Link to="/request/list">Danh sách phạt</Link>
+              </Tooltip>
             </Menu.Item>
           </SubMenu>
           <SubMenu
             className="SubMenu"
-            key="sub3"
-            icon={<MdShoppingBasket />}
-            title="Category"
+            key="sub2"
+            title="Công việc"
+            icon={<FileWordOutlined />}
           >
             <Menu.Item
               key="8"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/category/list"> Category List</Link>
+              <Tooltip title="Danh sách công việc" placement="top">
+                <Link to="/request/list">Danh sách công việc</Link>
+              </Tooltip>
             </Menu.Item>
+          </SubMenu>
+          <SubMenu
+            className="SubMenu"
+            key="sub3"
+            title="Phòng Ban"
+            icon={<FileWordOutlined />}
+          >
             <Menu.Item
               key="9"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/category/add"> New Category</Link>
+              <Tooltip title="Danh sách phòng ban" placement="top">
+                <Link to="/department/list">Danh sách phòng ban</Link>
+              </Tooltip>
             </Menu.Item>
           </SubMenu>
           <SubMenu
             className="SubMenu"
             key="sub4"
-            icon={<AiOutlineFolderOpen />}
-            title="Orders"
+            title="Bảng lương"
+            icon={<FileWordOutlined />}
           >
             <Menu.Item
               key="10"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/order/list"> Order List</Link>
+              <Tooltip title="Danh sách chấm công" placement="top">
+                <Link to="/request/list">Danh sách chấm công</Link>
+              </Tooltip>
             </Menu.Item>
             <Menu.Item
               key="11"
               icon={<BsDot />}
-              style={{ color: "#fff", paddingLeft: 20, display: "none" }}
-            >
-              <Link to="/order/:id"> Order Detail</Link>
-            </Menu.Item>
-          </SubMenu>
-          {currentUser.role === "admin" && (
-            <SubMenu
-              className="SubMenu"
-              key="sub5"
-              icon={<UsergroupAddOutlined />}
-              title="Membership"
-            >
-              <Menu.Item
-                key="12"
-                icon={<BsDot />}
-                style={{ color: "#fff", paddingLeft: 20 }}
-              >
-                <Link to="/member/list"> List Member</Link>
-              </Menu.Item>
-              <Menu.Item
-                key="13"
-                icon={<BsDot />}
-                style={{ color: "#fff", paddingLeft: 20 }}
-              >
-                <Link to="/member/add"> New Member</Link>
-              </Menu.Item>
-            </SubMenu>
-          )}
-
-          <SubMenu
-            className="SubMenu"
-            key="sub6"
-            icon={<UsergroupAddOutlined />}
-            title="Storage"
-          >
-            <Menu.Item
-              key="14"
-              icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
             >
-              <Link to="/storage/list"> Import</Link>
-            </Menu.Item>
-            <Menu.Item
-              key="15"
-              icon={<BsDot />}
-              style={{ color: "#fff", paddingLeft: 20 }}
-            >
-              <Link to="/storage/add"> New Import</Link>
+              <Tooltip title="Danh sách lương" placement="top">
+                <Link to="/request/list">Danh sách lương</Link>
+              </Tooltip>
             </Menu.Item>
           </SubMenu>
         </Menu>

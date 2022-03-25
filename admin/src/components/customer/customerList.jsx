@@ -1,133 +1,203 @@
-import { Image, notification, Space, Table, Input, Button, Spin } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import {notification, Space, Table, Input, Button, Spin, Typography } from "antd";
+import React, { useEffect, useState } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
 import { Link, useHistory } from "react-router-dom";
 import { GetUser } from "../../axios";
-import { DeleteAccount, SearchAccount } from "../../axios/account";
+import { DeleteAccount } from "../../axios/account";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
-
+import { convertTimeStampUTCToLocal } from "../../shared";
 const { Search } = Input;
 export default function ListCustomer() {
   const [loading, setLoading] = useState(false);
 
   const columns = [
     {
-      title: "Name",
+      title:'Số thứ tự',
+      dataIndex:"_id",
+      key:"_id",
+      width:'80px',
+      align:'center',
+      fixed:'left',
+      render:(i,re,index)=>{
+       return <Typography key={`${i}-${index}`}>{index + 1}</Typography>
+      }
+    },
+    {
+      title: "Họ và tên",
       dataIndex: "name",
       key: "name",
+      width:'125px',
+      fixed:'left',
     },
     {
-      title: "BirthDay",
+      title:"Giới tính",
+      dataIndex:'sex',
+      key:'sex',
+      align:'center',
+      width:'100px'
+    },
+    {
+      title: "Ngày sinh",
       dataIndex: "dob",
       key: "dob",
+      width:'125px',
+      render:(date,re,index)=>{
+        return(
+          <Typography key={index}>{convertTimeStampUTCToLocal(date)}</Typography>
+        )
+      }
+    },
+    // {
+    //   title: "Ảnh đại diện",
+    //   dataIndex: "avatar",
+    //   key:'avatar',
+    //   align:'center',
+    //   width:'150px',
+    //   render: (e) => {
+    //     return <Avatar key={e} width={50} src={e} />;
+    //   },
+    // },
+    {
+      title: "Phòng ban",
+      dataIndex: "department_id",
+      key: "department_id",
+      width:'150px',
+      render:(item,re,index)=>{
+        return(
+          <Typography key={`${index}`}>{item.name}</Typography>
+        )
+      }
     },
     {
-      title: "Avatar",
-      dataIndex: "image",
-      render: (e, index) => {
-        return <Image key={index} width={50} src={e} />;
-      },
+      title: "Trình độ học vấn",
+      dataIndex: "education_id",
+      key: "education_id",
+      width:'175px',      
+      render:(item,re,index)=>{
+        return(
+          <Typography key={`${index}`}>{item && item.name ? item.name : ''}</Typography>
+        )
+      }
     },
     {
-      title: "Username",
-      dataIndex: "username",
-      key: "username",
-    },
-    {
-      title: "Password",
-      dataIndex: "password",
-      key: "password",
-    },
-    {
-      title: "Email",
+      title: "Địa chỉ email",
       dataIndex: "email",
       key: "email",
+      width:'200px',      
     },
     {
-      title: "Address",
+      title: "Địa chỉ cư trú",
       dataIndex: "address",
       key: "address",
+      width:'250px',      
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phone",
       key: "phone",
+      width:'150px',      
     },
     {
-      title: "Action",
+      title:'Chức vụ',
+      dataIndex:'role_id',
+      key:'role_id',
+      width:'200px',
+      render:(item,record,index)=>{
+        return(
+          <Typography key={index} >{item && item.name ? item.name : ''}</Typography>
+        )
+      }
+    },
+    {
+      title: "Thao tác",
       key: "action",
+      fixed: 'right',
+      width: 75,
       render: (e) => (
         <Space size="middle">
-          <AiOutlineEdit key={e.id} onClick={() => handleEdit(e.id)} />
-          <AiFillDelete key={e.id} onClick={() => handleDelete(e.id)} />
+          <AiOutlineEdit key={e.id} onClick={() => handleEdit(e._id)} />
+          <AiFillDelete key={e.id} onClick={() => handleDelete(e._id)} />
         </Space>
       ),
     },
   ];
   const history = useHistory();
   const [data, setData] = useState();
-  const GetInfoUser = useCallback(() => {
-    GetUser()
+  const [totalPage,setTotalPage] = useState()
+  const [params,setParams] = useState({
+    page:1,
+    perPage:5,
+    keyword:'',
+  })
+  const GetInfoUser = (payload) => {
+    setLoading(true);
+    GetUser(payload)
       .then((res) => {
-        const ListUserData = res.data.filter((e) => e.role === "user");
-        setData(ListUserData);
+        const { data,status } = res
+        if(status === 200) {
+          setData(data.data);
+          setTotalPage(data.total)
+        }
       })
       .catch((err) => {
         console.log(err);
-      });
-  }, []);
+      })
+      .finally(()=>{
+         setLoading(false);
+      })
+  }
 
   useEffect(() => {
-    GetInfoUser();
-  }, [GetInfoUser]);
+    GetInfoUser(params);
+  }, [params]);
 
   const handleDelete = (id) => {
     setLoading(true);
     DeleteAccount(id)
       .then((res) => {
         notification.success({
-          message: `Notification Delete`,
-          description: "Delete Product SuccessFully !",
-          placement: "topRight ",
+          description: "Xóa nhân viên thành công",
+          placement: "topRight",
         });
         GetInfoUser();
-        setLoading(false);
       })
       .catch((err) => {
         notification.error({
-          message: `Notification Delete`,
-          description: "Delete Product Failed !",
-          placement: "topRight ",
+          description: "Xóa nhân viên thất bại",
+          placement: "topRight",
         });
+      })
+      .finally(()=>{
         setLoading(false);
-      });
+      })
   };
 
   const handleEdit = (id) => {
     history.push({
       pathname: `/customer/add`,
-      search: "?" + new URLSearchParams({ customer_id: id }).toString(),
+    state:{id:id},
     });
   };
 
   const handleSearch = (e) => {
-    SearchAccount({ key: e })
-      .then((res) => {
-        const ListCustomer = res.data.filter((e) => e.role === "user");
-        console.log(ListCustomer);
-        setData(ListCustomer);
-      })
-      .catch((err) => console.log(err));
+    setParams({
+      ...params,
+      keyword:e
+    })
   };
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
+  const onChangePage = (page)  =>{
+   setParams({...params,page:page})
+  }
+
   return (
-    <Spin indicator={antIcon} spinning={loading}>
+    <Spin indicator={antIcon} spinning={false}>
       <Space className="Space" size={14}>
         <div className="top-table">
           <Search
             allowClear
-            placeholder="Search to name"
+            placeholder="Tìm kiếm"
             optionFilterProp="children"
             className="input-search"
             onSearch={handleSearch}
@@ -135,14 +205,20 @@ export default function ListCustomer() {
           ></Search>
           <Link to="/customer/add">
             <Button className="btn-add" icon={<PlusOutlined />}>
-              New Account Customer
+              Thêm mới nhân viên
             </Button>
           </Link>
         </div>
         <Table
           columns={columns}
+          loading={loading}
           dataSource={data}
-          pagination={{ pageSize: 5 }}
+          pagination={{
+            total: totalPage|| 0,
+            pageSize: 5,
+            onChange: onChangePage,
+          }}
+          scroll={{ x:2000 }}
         />
       </Space>
     </Spin>
