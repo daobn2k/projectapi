@@ -77,15 +77,6 @@ export default function SiderComponent({ collapsed }) {
               </Tooltip>
             </Menu.Item>
             <Menu.Item
-              key="5"
-              icon={<BsDot />}
-              style={{ color: "#fff", paddingLeft: 20 }}
-            >
-              <Tooltip title="Trình độ học vấn" placement="top">
-                <Link to="/request/list">Trình độ học vấn</Link>
-              </Tooltip>
-            </Menu.Item>
-            <Menu.Item
               key="6"
               icon={<BsDot />}
               style={{ color: "#fff", paddingLeft: 20 }}
@@ -104,6 +95,7 @@ export default function SiderComponent({ collapsed }) {
               </Tooltip>
             </Menu.Item>
           </SubMenu>
+
           <SubMenu
             className="SubMenu"
             key="sub2"
@@ -161,6 +153,14 @@ export default function SiderComponent({ collapsed }) {
               </Tooltip>
             </Menu.Item>
           </SubMenu>
+          <Menu.Item
+            key="12"
+            style={{ color: "#fff" }}
+            icon={<AppstoreOutlined />}
+            className="MenuItem"
+          >
+            <Link to="/education/list">Trình độ</Link>
+          </Menu.Item>
         </Menu>
       </div>
     </Sider>
