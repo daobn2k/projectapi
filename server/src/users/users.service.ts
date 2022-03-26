@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { rgx } from 'src/ultils';
-import { CreateUserDto, QueryListUsers } from './dto/create-user.dto';
+import {
+  changePassDto,
+  CreateUserDto,
+  QueryListUsers,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
@@ -129,5 +133,29 @@ export class UsersService {
       message: 'SUCCESS',
       data: result,
     };
+  }
+
+  async changePass(body: changePassDto) {
+    const { id, new_password, old_password } = body;
+    let result;
+    const oldResult = await this.userModel
+      .findById(id)
+      .select('+password')
+      .exec();
+    if (oldResult.password === old_password) {
+      await this.userModel.findByIdAndUpdate(
+        id,
+        { password: new_password },
+        { new: true },
+      );
+      result = {
+        message: 'SUCCESS',
+      };
+    } else {
+      result = {
+        message: 'Old password can not find',
+      };
+    }
+    return result;
   }
 }

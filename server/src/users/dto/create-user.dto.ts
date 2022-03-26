@@ -33,3 +33,14 @@ export class QueryListUsers {
   @ApiProperty({ required: false, type: String })
   keyword: string;
 }
+
+export interface changePassDto {
+  id: ObjectId;
+  old_password: string;
+  new_password: string;
+}
+
+export interface signInDto {
+  name: string;
+  password: string;
+}

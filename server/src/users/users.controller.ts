@@ -11,7 +11,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto, QueryListUsers } from './dto/create-user.dto';
+import {
+  changePassDto,
+  CreateUserDto,
+  QueryListUsers,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ErrorModel } from 'src/exceptions/error.model';
 import {
@@ -22,9 +26,6 @@ import {
   ApiServiceUnavailableResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
-  ApiQuery,
-  ApiBearerAuth,
-  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 @ApiTags('Users')
@@ -77,15 +78,19 @@ export class UsersController {
   }
 
   @Post('/search')
-  search(@Body() body){
-    return this.usersService.search(body)
+  search(@Body() body) {
+    return this.usersService.search(body);
   }
   @Post('/login')
-  login(@Body() body){
-    return this.usersService.login(body)
+  login(@Body() body) {
+    return this.usersService.login(body);
   }
   @Post('/logout')
-  logout(@Body() id:string){
-    return this.usersService.logout(id)
+  logout(@Body() id: string) {
+    return this.usersService.logout(id);
+  }
+  @Post('/change')
+  changePass(@Body() body: changePassDto) {
+    return this.usersService.changePass(body);
   }
 }
