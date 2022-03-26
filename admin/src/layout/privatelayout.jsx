@@ -11,6 +11,7 @@ import Customer from "../pages/customerpage";
 import { store } from "../storage";
 import RequestPage from "../pages/request";
 import Department from "../pages/department";
+import EducationPage from "../pages/education";
 const { Content } = Layout;
 
 export default function PrivateLayout() {
@@ -46,6 +47,9 @@ export default function PrivateLayout() {
             </Route>
             <Route path="/customer">
               <Customer />
+            </Route>
+            <Route path="/education">
+              <EducationPage />
             </Route>
           </Content>
         </Switch>

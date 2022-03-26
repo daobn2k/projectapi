@@ -7,21 +7,24 @@ export type EducationDocument = Education & Document;
 
 @Schema()
 export class Education {
-  @Prop()
+  @Prop({ required: true })
   name: string;
-  
-  @Prop({default:Date.now()})
-  create_date:Date;
 
-  @Prop({default:false})
-  status:boolean;
+  @Prop({ required: false, default: '' })
+  description: string;
 
-  @Prop({default:Date.now()})
-  update_date:Date;
-  
+  @Prop({ default: Date.now() })
+  create_date: Date;
+
+  @Prop({ default: false })
+  status: boolean;
+
+  @Prop({ default: Date.now() })
+  update_date: Date;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  create_by_id:User
-  
+  create_by_id: User;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   edit_by_id: User;
 }

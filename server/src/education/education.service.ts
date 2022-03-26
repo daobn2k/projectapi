@@ -1,6 +1,7 @@
 import { Injectable, Post } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
+import { rgx } from 'src/ultils';
 import {
   CreateEducationDto,
   QueryListEducation,
@@ -15,24 +16,40 @@ export class EducationService {
   ) {}
 
   create(createDepartmentDto: CreateEducationDto) {
-    const newDepartment = new this.EducationModel(createDepartmentDto);
-    newDepartment.save();
-    return 'success';
+    const newEducation = new this.EducationModel(createDepartmentDto);
+    newEducation.save();
+    return {
+      message: 'SUCCESS',
+      data: {},
+    };
   }
 
   async findAll(query: QueryListEducation) {
-    const { page, perPage } = query;
-
+    const { page = 1, perPage = 5, fileds = 'name', keyword = '' } = query;
     const skip: number = (page - 1) * perPage;
-
-    const result = await this.EducationModel.find()
-      .limit(+perPage)
-      .skip(skip)
-      .populate('create_by_id')
-      .populate('edit_by_id')
-      .exec();
-
+    let result;
+    if (keyword !== '') {
+      result = await this.EducationModel.find({ [fileds]: rgx(keyword) })
+        .limit(+perPage)
+        .skip(skip)
+        .populate('create_by_id')
+        .populate('edit_by_id')
+        .exec();
+    } else if (page && perPage) {
+      result = await this.EducationModel.find({})
+        .limit(+perPage)
+        .skip(skip)
+        .populate('create_by_id')
+        .populate('edit_by_id')
+        .exec();
+    } else {
+      result = await this.EducationModel.find({})
+        .populate('create_by_id')
+        .populate('edit_by_id')
+        .exec();
+    }
     const totalRecord = await this.EducationModel.find().count().exec();
+
     return {
       message: 'SUCCESS',
       data: result,
@@ -42,13 +59,13 @@ export class EducationService {
 
   async findOne(id: string) {
     const result = await this.EducationModel.findById(id)
-    .populate('create_by_id')
-    .populate('edit_by_id')
-    .exec();
+      .populate('create_by_id')
+      .populate('edit_by_id')
+      .exec();
     return {
-      message:'SUCCESS',
-      data:result
-    }
+      message: 'SUCCESS',
+      data: result,
+    };
   }
 
   async update(id: string, updateDepartmentDto: UpdateEducationDto) {

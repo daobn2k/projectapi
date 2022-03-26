@@ -1,22 +1,20 @@
 import { notification, Space, Table, Input, Spin, Typography } from "antd";
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
-import { GetUser } from "../../axios";
 import { LoadingOutlined } from "@ant-design/icons";
-import { convertDataToOptions, convertTimeStampUTCToLocal } from "../../shared";
+import { convertTimeStampUTCToLocal } from "../../shared";
 import AddNewDialogComponent from "../AddNewDialogComponent";
-import {
-  deleteDepartment,
-  editDepartment,
-  getDataDeaprtment,
-  newDepartment,
-} from "../../axios/department";
 import { NotificationCommon } from "../../common/Notification";
 import { store } from "../../storage";
+import {
+  addEducation,
+  deleteEducation,
+  editEducation,
+  getDataEducation,
+} from "../../axios/education";
 const { Search } = Input;
-export default function ListDepartment() {
+export default function ListEducation() {
   const [data, setData] = useState();
-  const [listUser, setListUser] = useState([]);
   const [totalPage, setTotalPage] = useState();
   const [params, setParams] = useState({
     page: 1,
@@ -29,28 +27,18 @@ export default function ListDepartment() {
   const columns = useMemo(() => {
     return [
       {
-        title: "Tên phòng ban",
+        title: "Tên trình độ học vấn",
         dataIndex: "name",
         key: "name",
         align: "left",
+        width: 250,
       },
       {
         title: "Mô tả",
         dataIndex: "description",
         key: "description",
         align: "left",
-      },
-      {
-        title: "Trưởng ban",
-        dataIndex: "admin_user_id",
-        key: "admin_user_id",
-        render: (item, record, index) => {
-          return (
-            <Typography key={index}>
-              {item && item.name ? item.name : ""}
-            </Typography>
-          );
-        },
+        width: 250,
       },
       {
         title: "Người tạo",
@@ -120,43 +108,25 @@ export default function ListDepartment() {
     return [
       {
         itemForm: {
-          label: "Tên phòng ban",
+          label: "Tên trình độ học vấn",
           name: "name",
           rules: [
             {
-              message: "Vui lòng điền tên phòng ban",
+              message: "Vui lòng điền tên trình độ học vấn",
               required: true,
             },
           ],
         },
         filed: {
-          placeholder: "Điền tên phòng ban",
+          placeholder: "Điền tên trình độ học vấn",
           size: "large",
         },
         typeFiled: "input",
       },
       {
         itemForm: {
-          label: "Tên trưởng phòng ban",
-          name: "admin_user_id",
-          rules: [
-            {
-              message: "Vui lòng chọn trưởng phòng ban",
-              required: true,
-            },
-          ],
-        },
-        filed: {
-          placeholder: "Chọn trưởng phòng ban",
-          size: "large",
-          dataOptions: listUser || [],
-        },
-        typeFiled: "select",
-      },
-      {
-        itemForm: {
-          name: "description",
           label: "Mô tả",
+          name: "description",
           rules: [
             {
               required: false,
@@ -164,17 +134,16 @@ export default function ListDepartment() {
           ],
         },
         filed: {
-          placeholder: "Điền thông tin mô tả",
+          placeholder: "Điền mô tả",
           size: "large",
-          autoSize: { minRows: 3, maxRows: 10 },
         },
-        typeFiled: "area",
+        typeFiled: "input",
       },
     ];
-  }, [listUser]);
-  const getDepartment = (payload) => {
+  }, []);
+  const getEducation = (payload) => {
     setLoading(true);
-    getDataDeaprtment(payload)
+    getDataEducation(payload)
       .then((res) => {
         const { data, status } = res;
         if (status === 200) {
@@ -192,37 +161,23 @@ export default function ListDepartment() {
       });
   };
 
-  const getAllUser = async () => {
-    let d;
-    const res = await GetUser();
-    const { data } = res;
-    if (data.message === "SUCCESS") {
-      d = convertDataToOptions(data.data);
-      setListUser(d);
-    } else {
-      NotificationCommon("error", "Không lấy được thông tin người dùng");
-    }
-  };
   useEffect(() => {
-    getDepartment(params);
+    getEducation(params);
   }, [params]);
 
-  useEffect(() => {
-    getAllUser();
-  }, []);
   const handleDelete = (id) => {
     setLoading(true);
-    deleteDepartment(id)
+    deleteEducation(id)
       .then((res) => {
         notification.success({
-          description: "Xóa phòng ban thành công",
+          description: "Xóa trình độ học vấn thành công",
           placement: "topRight",
         });
-        getDepartment(params);
+        getEducation(params);
       })
       .catch((err) => {
         notification.error({
-          description: "Xóa phòng ban thất bại",
+          description: "Xóa trình độ học vấn thất bại",
           placement: "topRight",
         });
       })
@@ -260,7 +215,7 @@ export default function ListDepartment() {
         edit_by_id: user._id,
         update_date: new Date(),
       };
-      res = await editDepartment(v.id, payload);
+      res = await editEducation(v.id, payload);
     } else {
       payload = {
         ...v,
@@ -268,20 +223,20 @@ export default function ListDepartment() {
         edit_by_id: user._id,
       };
       console.log(payload, "");
-      res = await newDepartment(payload);
+      res = await addEducation(payload);
     }
     const { status, data } = res;
     if (status === 200 || data.message === "SUCCESS") {
-      getDepartment(params);
+      getEducation(params);
       NotificationCommon(
         "success",
-        `${v.id ? "Chỉnh sửa" : "Tạo mới"} phòng ban thành công`
+        `${v.id ? "Chỉnh sửa" : "Tạo mới"} trình độ học vấn thành công`
       );
       ref.current.clearData();
     } else {
       NotificationCommon(
         "error",
-        `${v.id ? "Chỉnh sửa" : "Tạo mới"} phòng ban thất bại`
+        `${v.id ? "Chỉnh sửa" : "Tạo mới"} trình độ học vấn thất bại`
       );
       setLoading(false);
     }
@@ -301,7 +256,7 @@ export default function ListDepartment() {
           ></Search>
           <AddNewDialogComponent
             fileds={dataForm}
-            title="phòng ban"
+            title="trình độ học vấn"
             onClose={onClose}
             ref={ref}
             onSubmit={onSubmit}
