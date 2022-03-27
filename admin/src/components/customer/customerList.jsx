@@ -20,17 +20,6 @@ export default function ListCustomer() {
 
   const columns = [
     {
-      title: "Số thứ tự",
-      dataIndex: "_id",
-      key: "_id",
-      width: "80px",
-      align: "center",
-      fixed: "left",
-      render: (i, re, index) => {
-        return <Typography key={`${i}-${index}`}>{index + 1}</Typography>;
-      },
-    },
-    {
       title: "Họ và tên",
       dataIndex: "name",
       key: "name",

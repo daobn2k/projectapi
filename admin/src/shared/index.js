@@ -113,6 +113,24 @@ export const listGender = [
     },
 ]
 
+export const listReward = [
+    {
+        id:'1',
+        value:'1',
+        label:'Nhân viên xuất sắc'
+    },
+    {
+        id:'2',
+        value:'2',
+        label:'Thưởng tết'
+    },
+    {
+        id:'3',
+        value:'3',
+        label:'Thưởng công tác',
+    },
+]
+
 
 export const convertDataToOptions = (data) => {
     let options

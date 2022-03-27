@@ -9,6 +9,7 @@ import { TimeSheetsModule } from './timesheets/timesheets.module';
 import { PayRollModule } from './payroll/payroll.module';
 import { RoleModule } from './role/role.module';
 import { RequestModule } from './request/request.module';
+import { EvaluateModule } from './evaluate/evaluate.module';
 
 
 
@@ -21,6 +22,7 @@ import { RequestModule } from './request/request.module';
     PayRollModule,
     RoleModule,
     RequestModule,
+    EvaluateModule,
     MongooseModule.forRoot('mongodb://127.0.0.1/nest'),
   ],
   controllers: [AppController],
