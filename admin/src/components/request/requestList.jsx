@@ -38,7 +38,6 @@ export default function ListRequest() {
       key: "create_by_id",
       width: "150px",
       render: (item, record, index) => {
-        console.log("item", item);
         return (
           <Typography key={index}>
             {item && item.name ? item.name : ""}

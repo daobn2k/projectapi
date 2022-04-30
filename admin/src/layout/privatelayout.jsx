@@ -12,6 +12,7 @@ import { store } from "../storage";
 import RequestPage from "../pages/request";
 import Department from "../pages/department";
 import EducationPage from "../pages/education";
+import PayRoll from "../pages/payroll";
 const { Content } = Layout;
 
 export default function PrivateLayout() {
@@ -21,6 +22,7 @@ export default function PrivateLayout() {
     setCollapsed(!collapsed);
   };
   const currentUser = store.getCurentUser();
+  
   if (!currentUser) {
     return <Redirect to="/auth/login" />;
   } else {
@@ -50,6 +52,9 @@ export default function PrivateLayout() {
             </Route>
             <Route path="/education">
               <EducationPage />
+            </Route>
+            <Route path="/payroll">
+              <PayRoll />
             </Route>
           </Content>
         </Switch>

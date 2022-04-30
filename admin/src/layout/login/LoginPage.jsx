@@ -3,19 +3,26 @@ import "./loginPage.css";
 import { Row, Col, Form, Input, Checkbox, Button, notification } from "antd";
 import { Link } from "react-router-dom";
 import { Login } from "../../axios/login";
+import { checkInWork } from "../../axios/timesheet";
 import { useHistory } from "react-router-dom";
 import { store } from "../../storage";
+import moment from "moment";
 export default function LoginPage() {
   const history = useHistory();
   const onFinish = (values) => {
-    const data = {
-      username: values.username,
-      password: values.password,
-    };
-    Login(data)
+    Login(values)
       .then((res) => {
+        if(res.data.message === 'SUCCESS'){
+         store.setCurrentUser(res.data.data);
+         return checkInWork({
+            start_date_time:moment(new Date()),
+            user_id:res.data.data._id
+          })
+        }
+      })
+      .then(res =>{
         if (res.data.message === "SUCCESS") {
-          store.setCurrentUser(res.data.data);
+          store.setCurrentTimeSheet(res.data.data)
           history.push({
             pathname: "/",
           });
@@ -24,29 +31,30 @@ export default function LoginPage() {
       .catch((err) =>
         notification.error({
           duration: 2,
-          message: `Error user or password `,
-          description: "Please check your password or account !",
+          message: `Tài khoản hoặc mật khẩu đăng nhập sai`,
+          description: "Kiểm tra lại tài khoản hoặc mật khẩu",
         })
       );
   };
   return (
-    <Row className="Container">
+    <Row className="Container login">
       <Col className="Card" span={8} sm={12} xl={8}>
-        <h1 className="CardTitle"> Login</h1>
+        <h1 className="CardTitle"> Đăng nhập</h1>
         <Form
           name="basic"
           initialValues={{
             remember: false,
           }}
           onFinish={onFinish}
+          {...layout}
         >
           <Form.Item
-            label="Username"
+            label="Tên đăng nhập"
             name="username"
             rules={[
               {
                 required: true,
-                message: "Please input your username!",
+                message: "Vui lòng điền tên tài khoản",
               },
             ]}
           >
@@ -54,12 +62,12 @@ export default function LoginPage() {
           </Form.Item>
 
           <Form.Item
-            label="Password"
+            label="Mật khẩu"
             name="password"
             rules={[
               {
                 required: true,
-                message: "Please input your password!",
+                message: "Vui lòng điền mật khẩu",
               },
             ]}
           >
@@ -73,21 +81,26 @@ export default function LoginPage() {
           </Form.Item>
 
           <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>Remember me</Checkbox>
+            <Checkbox>Ghi nhớ tài khoản </Checkbox>
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item className="item-button-form-login">
             <Button className="Button" type="primary" htmlType="submit">
-              Submit
+              Đăng Nhập
             </Button>
           </Form.Item>
         </Form>
         <div style={{ textAlign: "center" }}>
           <Link to="/auth/sign" className="Link">
-            Create New Account ?{" "}
+              Tạo tài khoản mới ?
           </Link>
         </div>
       </Col>
     </Row>
   );
 }
+
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};

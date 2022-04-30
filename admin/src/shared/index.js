@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import moment from "moment"
-
+import { storage } from "../firebase";
 
 export default function getDataByUrl(url,params){
 
@@ -134,3 +134,26 @@ export const convertDataToOptions = (data) => {
     }
     return options
 }
+
+
+export const handleChangeGetFile = async (e,setUrl) => {
+    if (e.target.files[0]) {
+      const upLoadTask = storage
+        .ref(`images/${e.target.files[0].name}`)
+        .put(e.target.files[0]);
+      upLoadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {},
+        () => {
+            storage
+            .ref("images")
+            .child(e.target.files[0].name)
+            .getDownloadURL()
+            .then((url) => {
+                setUrl(url)
+            });
+        }
+      );
+    }
+};

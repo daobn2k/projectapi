@@ -1,20 +1,15 @@
 import { notification, Space, Table, Input, Spin, Typography } from "antd";
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
-import { GetUser } from "../../axios";
+import { getDataTimeSheet, GetUser } from "../../axios";
 import { LoadingOutlined } from "@ant-design/icons";
 import { convertDataToOptions, convertTimeStampUTCToLocal } from "../../shared";
 import AddNewDialogComponent from "../AddNewDialogComponent";
-import {
-  deleteDepartment,
-  editDepartment,
-  getDataDeaprtment,
-  newDepartment,
-} from "../../axios/department";
 import { NotificationCommon } from "../../common/Notification";
 import { store } from "../../storage";
+import { createTimeSheet, deleteTimeSheet, updateTimeSheet } from "../../axios/timesheet";
 const { Search } = Input;
-export default function ListDepartment() {
+export default function TimeSheet() {
   const [data, setData] = useState();
   const [listUser, setListUser] = useState([]);
   const [totalPage, setTotalPage] = useState();
@@ -29,72 +24,49 @@ export default function ListDepartment() {
   const columns = useMemo(() => {
     return [
       {
-        title: "Tên phòng ban",
-        dataIndex: "name",
-        key: "name",
-        align: "left",
-      },
-      {
-        title: "Mô tả",
-        dataIndex: "description",
-        key: "description",
-        align: "left",
-      },
-      {
-        title: "Trưởng ban",
-        dataIndex: "admin_user_id",
-        key: "admin_user_id",
+        title: "Tên nhân viên",
+        dataIndex: "user_id",
+        key: "user_id",
+        align: "center",
         render: (item, record, index) => {
           return (
             <Typography key={index}>
-              {item && item.name ? item.name : ""}
+              {item && item.name ? item.name : ''}
             </Typography>
           );
         },
       },
       {
-        title: "Người tạo",
-        dataIndex: "create_by_id",
-        key: "create_by_id",
+        title: "Giờ vào",
+        dataIndex: "start_date_time",
+        key: "start_date_time",
+        align: "center",
         render: (item, record, index) => {
           return (
             <Typography key={index}>
-              {item && item.name ? item.name : ""}
+                {convertTimeStampUTCToLocal(item,"DD/MM/YYYY HH:mm:ss")} 
+          </Typography>
+          );
+        },
+      },
+      {
+        title: "Giờ ra",
+        dataIndex: "end_date_time",
+        key: "end_date_time",
+        align: "center",
+        render: (item, record, index) => {
+          return (
+            <Typography key={index}>
+              {item ? convertTimeStampUTCToLocal(item,"DD/MM/YYYY HH:mm:ss") : ''}
             </Typography>
           );
         },
       },
       {
-        title: "Ngày tạo",
+        title: "Ngày làm việc",
         dataIndex: "create_date",
         key: "create_date",
         width: 125,
-        render: (item, record, index) => {
-          return (
-            <Typography key={index}>
-              {convertTimeStampUTCToLocal(item)}
-            </Typography>
-          );
-        },
-      },
-      {
-        title: "Người chỉnh sửa",
-        dataIndex: "edit_by_id",
-        key: "edit_by_id",
-        width: 200,
-        render: (item, record, index) => {
-          return (
-            <Typography key={index}>
-              {item && item.name ? item.name : ""}
-            </Typography>
-          );
-        },
-      },
-      {
-        title: "Ngày chỉnh sửa",
-        dataIndex: "update_date",
-        key: "update_date",
-        width: 175,
         render: (item, record, index) => {
           return (
             <Typography key={index}>
@@ -172,9 +144,9 @@ export default function ListDepartment() {
       },
     ];
   }, [listUser]);
-  const getDepartment = (payload) => {
+  const getTimeSheets = (payload) => {
     setLoading(true);
-    getDataDeaprtment(payload)
+    getDataTimeSheet(payload)
       .then((res) => {
         const { data, status } = res;
         if (status === 200) {
@@ -204,7 +176,7 @@ export default function ListDepartment() {
     }
   };
   useEffect(() => {
-    getDepartment(params);
+    getTimeSheets(params);
   }, [params]);
 
   useEffect(() => {
@@ -212,13 +184,13 @@ export default function ListDepartment() {
   }, []);
   const handleDelete = (id) => {
     setLoading(true);
-    deleteDepartment(id)
+    deleteTimeSheet(id)
       .then((res) => {
         notification.success({
           description: "Xóa phòng ban thành công",
           placement: "topRight",
         });
-        getDepartment(params);
+        getTimeSheets(params);
       })
       .catch((err) => {
         notification.error({
@@ -259,18 +231,18 @@ export default function ListDepartment() {
         edit_by_id: user._id,
         update_date: new Date(),
       };
-      res = await editDepartment(v.id, payload);
+      res = await updateTimeSheet(v.id, payload);
     } else {
       payload = {
         ...v,
         create_by_id: user._id,
         edit_by_id: user._id,
       };
-      res = await newDepartment(payload);
+      res = await createTimeSheet(payload);
     }
     const { status, data } = res;
     if (status === 200 || data.message === "SUCCESS") {
-      getDepartment(params);
+      getTimeSheets(params);
       NotificationCommon(
         "success",
         `${v.id ? "Chỉnh sửa" : "Tạo mới"} phòng ban thành công`
@@ -284,7 +256,6 @@ export default function ListDepartment() {
       setLoading(false);
     }
   };
-
   return (
     <Spin indicator={antIcon} spinning={false}>
       <Space className="Space" size={14}>
@@ -299,7 +270,7 @@ export default function ListDepartment() {
           ></Search>
           <AddNewDialogComponent
             fileds={dataForm}
-            title="Phòng ban"
+            title="chấm công"
             onClose={onClose}
             ref={ref}
             onSubmit={onSubmit}

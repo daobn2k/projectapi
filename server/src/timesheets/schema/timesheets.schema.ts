@@ -7,14 +7,18 @@ export type TimeSheetsDocument = TimeSheets & Document;
 
 @Schema()
 export class TimeSheets {
-  @Prop()
-  name: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' ,required:true})
+  user_id: User;
   
-  @Prop({default:Date.now()})
-  start_date:Date;
+  @Prop()
+  start_date_time:Date;
 
   @Prop()
-  end_date:Date;
+  end_date_time:Date;
+
+  @Prop({default:Date.now()})
+  create_date:Date;
+
   @Prop({default:false})
   status:boolean;
 

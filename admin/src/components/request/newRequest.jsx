@@ -41,7 +41,6 @@ export default function AddRequest() {
 
   const handleSetData = (listKey, data) => {
     listKey.forEach((item) => {
-      console.log("item", typeof data[item]);
       if (typeof data[item] === "object") {
         const valueSet = {
           [item]: data[item] && data[item]._id ? data[item]._id : "",
@@ -67,7 +66,6 @@ export default function AddRequest() {
         const valueSet = {
           [item]: data && data[item] ? data[item] : "",
         };
-        console.log("valueSet", valueSet);
         return form.setFieldsValue(valueSet);
       }
     });

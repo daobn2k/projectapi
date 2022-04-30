@@ -15,9 +15,14 @@ export class TimeSheetsService {
   ) {}
 
   create(createTimeSheetsDto: CreateTimeSheetsDto) {
+    
     const newDepartment = new this.TimeSheetsModel(createTimeSheetsDto);
+    
     newDepartment.save();
-    return 'success';
+    return {
+      message:"SUCCESS",
+      data:newDepartment,
+    };
   }
 
   async findAll(query: QueryListTimeSheets) {
@@ -28,11 +33,14 @@ export class TimeSheetsService {
     const result = await this.TimeSheetsModel.find()
       .limit(+perPage)
       .skip(skip)
+      .populate('user_id')
       .populate('create_by_id')
       .populate('edit_by_id')
+      .sort({ create_date: -1 })
       .exec();
 
     const totalRecord = await this.TimeSheetsModel.find().count().exec();
+
     return {
       message: 'SUCCESS',
       data: result,

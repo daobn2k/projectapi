@@ -14,9 +14,15 @@ import "./header.css";
 import { store } from "../../storage";
 import { useHistory } from "react-router";
 import Profile from "./proflie";
+import { logoutUser } from "../../axios/login";
+import { NotificationCommon } from "../../common/Notification";
+import moment from "moment";
+import { updateTimeSheet } from "../../axios/timesheet";
+
 const { Header } = Layout;
 export default function HeaderComponent({ toggle }) {
   const currentAccount = store.getCurentUser();
+  const times = store.getCurrentTimeSheet();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isProfileVisible, setIsProfileVisible] = useState(false);
@@ -26,10 +32,22 @@ export default function HeaderComponent({ toggle }) {
   };
 
   const handleOk = () => {
-    store.clearAll();
-    history.push({
-      pathname: "/auth/login",
-    });
+    logoutUser({id:currentAccount._id}).then(res=>{
+      if(res.data.message === 'SUCCESS'){
+        return updateTimeSheet(times._id,{
+          ...times,
+          end_date_time:moment(new Date())
+        })
+      }
+    }).then(res=>{
+      if(res.data.message === 'SUCCESS') {
+        history.push('/auth/login')
+      }
+    }).catch(err => {
+      NotificationCommon("error", "Đăng xuất thất bại");
+    }).finally(()=>{
+      store.clearAll()
+    })
     setIsModalVisible(false);
   };
 
@@ -46,19 +64,19 @@ export default function HeaderComponent({ toggle }) {
       <Menu.Item key="1" className="item-menu" onClick={showProfile}>
         <Space size={8} className="space-item">
           <UserOutlined className="NavIcon" />
-          ProFile
+          Thông tin cá nhân
         </Space>
       </Menu.Item>
       <Menu.Item key="2" className="item-menu">
         <Space size={8} className="space-item">
           <AiOutlineSetting className="NavIcon" />
-          Setting
+          Cài Đặt
         </Space>
       </Menu.Item>
       <Menu.Item key="3" className="item-menu" onClick={showModal}>
         <Space size={8} className="space-item">
           <FiLogOut className="NavIcon" />
-          Log Out
+          Đăng xuất
         </Space>
       </Menu.Item>
     </Menu>
@@ -92,7 +110,7 @@ export default function HeaderComponent({ toggle }) {
               arrow
               trigger={["click"]}
             >
-              <Avatar src={currentAccount.image} size={50} />
+              <Avatar src={currentAccount  && currentAccount.avatar ? currentAccount.avatar : ''} size={50} />
             </Dropdown>
           </li>
         </ul>

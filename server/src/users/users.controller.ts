@@ -11,7 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto, QueryListUsers } from './dto/create-user.dto';
+import { ChangePassWordDto, CreateUserDto, QueryListUsers } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ErrorModel } from 'src/exceptions/error.model';
 import {
@@ -27,6 +27,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
@@ -85,7 +86,11 @@ export class UsersController {
     return this.usersService.login(body)
   }
   @Post('/logout')
-  logout(@Body() id:string){
+  logout(@Body() id:ObjectId){
     return this.usersService.logout(id)
+  }
+  @Post('/updatePwd')
+  changePassWord(@Body() data: ChangePassWordDto) {
+    return this.usersService.changePassWord(data);
   }
 }
