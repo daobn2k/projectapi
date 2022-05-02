@@ -22,7 +22,7 @@ export class UsersService {
   }
 
   async findAll(query: QueryListUsers) {
-    const { page = 1, perPage = 5, fileds = 'name', keyword = '' } = query;
+    const { page , perPage , fileds = 'name', keyword = '' } = query;
     const skip: number = (page - 1) * perPage;
     let result;
     if (keyword !== '') {
