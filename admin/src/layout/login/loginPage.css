@@ -58,3 +58,15 @@
     width: 100%;
     font-size: 14;
 }
+
+.login .ant-input-password  {
+    margin-left: 0 !important;
+}
+.login .ant-form-item-required {
+    width: 100%;
+}
+.item-button-form-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

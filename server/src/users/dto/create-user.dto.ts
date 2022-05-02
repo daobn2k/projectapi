@@ -15,6 +15,8 @@ export class CreateUserDto {
   role_id: ObjectId;
   avatar: string;
   certificate: string;
+  school:string;
+  salary:string;
   phone: string;
   description: string;
   sex: String;
@@ -34,13 +36,9 @@ export class QueryListUsers {
   keyword: string;
 }
 
-export interface changePassDto {
-  id: ObjectId;
-  old_password: string;
-  new_password: string;
-}
 
-export interface signInDto {
-  name: string;
-  password: string;
+export class ChangePassWordDto {
+  old_pass:string;
+  new_pass:string;
+  id:ObjectId;
 }

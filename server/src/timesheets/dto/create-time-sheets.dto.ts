@@ -3,9 +3,10 @@ import { ObjectId } from 'mongoose';
 
 export class CreateTimeSheetsDto {
   _id:string;
-  name: string;
-  start_date:Date;
-  end_date;
+  user_id: ObjectId;
+  start_date_time:Date;
+  end_date_time:Date;
+  create_date:Date;
   status:boolean;
   update_date:Date;
   create_by_id:ObjectId;

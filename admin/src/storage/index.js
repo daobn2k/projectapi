@@ -5,6 +5,12 @@ const store = {
   setCurrentUser: (data) => {
     window.localStorage.setItem(`currentUser`, JSON.stringify(data));
   },
+  getCurrentTimeSheet: () => {
+    return JSON.parse(window.localStorage.getItem(`timeS`));
+  },
+  setCurrentTimeSheet: (data) => {
+    window.localStorage.setItem(`timeS`, JSON.stringify(data));
+  },
   clearAll: () => {
     window.localStorage.clear();
   },

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { rgx } from 'src/ultils';
 import {
-  changePassDto,
+  ChangePassWordDto,
   CreateUserDto,
   QueryListUsers,
 } from './dto/create-user.dto';
@@ -22,7 +22,7 @@ export class UsersService {
   }
 
   async findAll(query: QueryListUsers) {
-    const { page = 1, perPage = 5, fileds = 'name', keyword = '' } = query;
+    const { page , perPage , fileds = 'name', keyword = '' } = query;
     const skip: number = (page - 1) * perPage;
     let result;
     if (keyword !== '') {
@@ -123,8 +123,8 @@ export class UsersService {
     };
   }
 
-  async logout(id: string) {
-    const result = await this.userModel.findByIdAndUpdate(
+  async logout(id: ObjectId) {
+    const result = await this.userModel.findOneAndUpdate(
       id,
       { status: false },
       { new: true },
@@ -135,27 +135,32 @@ export class UsersService {
     };
   }
 
-  async changePass(body: changePassDto) {
-    const { id, new_password, old_password } = body;
-    let result;
-    const oldResult = await this.userModel
-      .findById(id)
-      .select('+password')
-      .exec();
-    if (oldResult.password === old_password) {
-      await this.userModel.findByIdAndUpdate(
-        id,
-        { password: new_password },
-        { new: true },
-      );
-      result = {
+  async changePassWord(data: ChangePassWordDto) {
+    const { id, new_pass, old_pass } = data;
+
+    const result = await this.userModel.findOneAndUpdate(
+      { password: old_pass, id },
+      { password: new_pass },
+      { new: true },
+    );
+    if (new_pass === old_pass) {
+      return {
         message: 'SUCCESS',
-      };
-    } else {
-      result = {
-        message: 'Old password can not find',
+        error: 'Mật khẩu mới và mật khẩu cũ không được trùng nhau',
+        status: 400,
       };
     }
-    return result;
+    if(!result){
+      return {
+        message:"SUCCESS",
+        error:"Kiểm tra lại các trường dữ liệu",
+        status:400,
+      }
+    }
+    return {
+      message: 'SUCCESS',
+      data: result,
+      status: 200,
+    };
   }
 }

@@ -12,12 +12,12 @@ const DeleteAccount = async (id) => {
   return await axios.delete(`${API_END_POINT}/users/${id}`);
 };
 
-const changePassword = async (id, data) => {
-  return await axios.put(`/users/rePwd/${id}`, data);
+const changePassword = async (data) => {
+  return await axios.post(`${API_END_POINT}/users/updatePwd`, data);
 };
 
 const SearchAccount = async (data) => {
-  return await axios.post(`/users/searchname`, data);
+  return await axios.post(`/users/searchname`, data); 
 };
 
 export {

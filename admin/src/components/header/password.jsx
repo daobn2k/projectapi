@@ -7,16 +7,20 @@ export default function ChangePassword({
   onCancel,
   editPassword,
 }) {
+  const [form] = Form.useForm();
+
   const onFinish = (values) => {
     const data = {
-      current: values.oldpassword,
-      new: values.password,
+      old_pass: values.oldpassword,
+      new_pass: values.password,
     };
     editPassword(data);
+    form.resetFields()
   };
   return (
     <Form
       name="complex-form"
+      form={form}
       layout="vertical"
       onFinish={onFinish}
       fields={[
@@ -30,7 +34,7 @@ export default function ChangePassword({
         <Col span={12}>
           <Form.Item
             name="username"
-            label="Username"
+            label="Tên đăng nhập"
             className="hide-content-multi"
           >
             <Input size="large" disabled={true} />
@@ -39,24 +43,18 @@ export default function ChangePassword({
         <Col span={12}>
           <Form.Item
             name="oldpassword"
-            label="Old Password"
+            label="Mật khẩu hiện tại"
             className="hide-content-multi"
             rules={[
               {
                 required: true,
-                message: "Please input your  new password",
+                message: "Điền mật khẩu cũ "
               },
               {
                 validator(_, value) {
-                  console.log(value);
                   if (!value || value.length > 6 || value.length < 16) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(
-                    new Error(
-                      "The two passwords that you entered do not match , value can't not length < 6  or > 16!"
-                    )
-                  );
                 },
               },
             ]}
@@ -71,14 +69,14 @@ export default function ChangePassword({
         <Col span={12}>
           <Form.Item
             name="password"
-            label="New Password"
+            label="Mật khẩu mới"
             dependencies={["oldpassword"]}
             className="hide-content-multi"
             hasFeedback
             rules={[
               {
                 required: true,
-                message: "Please input your confirm password",
+                message: "Điền mật khẩu mới của bạn",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -92,7 +90,7 @@ export default function ChangePassword({
                   }
                   return Promise.reject(
                     new Error(
-                      "The two passwords that you entered do not match , value can't not length < 6  or > 16!"
+                      "Mật khẩu không giống nhau"
                     )
                   );
                 },
@@ -109,14 +107,14 @@ export default function ChangePassword({
         <Col span={12}>
           <Form.Item
             name="confirm"
-            label="Confirm Password"
+            label="Mật khẩu xác nhận"
             className="hide-content-multi"
             dependencies={["password"]}
             hasFeedback
             rules={[
               {
                 required: true,
-                message: "Please confirm your password!",
+                message: "Điền mật khẩu xác nhận của bạn",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -125,7 +123,7 @@ export default function ChangePassword({
                   }
                   return Promise.reject(
                     new Error(
-                      "The two passwords that you entered do not match , value can't not length < 6  or > 16!"
+                      "Mật khẩu không giống với mật khẩu mới"
                     )
                   );
                 },
@@ -145,12 +143,12 @@ export default function ChangePassword({
             <Fragment>
               <Form.Item className="hide-content-multi">
                 <Button className="button_save" htmlType="submit">
-                  Save
+                  Lưu
                 </Button>
               </Form.Item>
               <Form.Item className="hide-content-multi">
                 <Button className="button_cancel" onClick={onCancel}>
-                  Cancel
+                  Hủy bỏ
                 </Button>
               </Form.Item>
             </Fragment>

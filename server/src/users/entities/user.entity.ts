@@ -13,6 +13,8 @@ export class User {
   department_id:ObjectId;
   role_id:ObjectId;
   certificate:String;
+  school:String;
+  salary:String;
   phone:String;
   description:string;
   avatar:String;

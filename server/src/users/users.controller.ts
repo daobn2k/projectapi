@@ -11,11 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import {
-  changePassDto,
-  CreateUserDto,
-  QueryListUsers,
-} from './dto/create-user.dto';
+import { ChangePassWordDto, CreateUserDto, QueryListUsers } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ErrorModel } from 'src/exceptions/error.model';
 import {
@@ -28,6 +24,7 @@ import {
   ApiNotFoundResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
@@ -86,11 +83,11 @@ export class UsersController {
     return this.usersService.login(body);
   }
   @Post('/logout')
-  logout(@Body() id: string) {
-    return this.usersService.logout(id);
+  logout(@Body() id:ObjectId){
+    return this.usersService.logout(id)
   }
-  @Post('/change')
-  changePass(@Body() body: changePassDto) {
-    return this.usersService.changePass(body);
+  @Post('/updatePwd')
+  changePassWord(@Body() data: ChangePassWordDto) {
+    return this.usersService.changePassWord(data);
   }
 }

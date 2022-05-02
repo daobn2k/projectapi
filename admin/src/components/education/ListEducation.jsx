@@ -206,7 +206,6 @@ export default function ListEducation() {
   };
 
   const onSubmit = async (v) => {
-    console.log(v);
     let payload;
     let res;
     if (v.id) {
@@ -222,7 +221,6 @@ export default function ListEducation() {
         create_by_id: user._id,
         edit_by_id: user._id,
       };
-      console.log(payload, "");
       res = await addEducation(payload);
     }
     const { status, data } = res;

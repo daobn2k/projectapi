@@ -14,6 +14,7 @@ import Department from "../pages/department";
 import EducationPage from "../pages/education";
 import ListReward from "../components/reward/ListReward";
 import ListChastise from "../components/chastise/ListChastise";
+import PayRoll from "../pages/payroll";
 const { Content } = Layout;
 
 export default function PrivateLayout() {
@@ -23,6 +24,7 @@ export default function PrivateLayout() {
     setCollapsed(!collapsed);
   };
   const currentUser = store.getCurentUser();
+  
   if (!currentUser) {
     return <Redirect to="/auth/login" />;
   } else {
@@ -62,11 +64,15 @@ export default function PrivateLayout() {
          
             </Route>
             <Route path="/chastise/list">
-            <Row style={{ width: '100%', height: '100%' }}>
-                 <Col style={{ width: '100%', height: '100%', padding: 24 }}>
-                  <ListChastise />
-                </Col>
-            </Row>
+              <Row style={{ width: '100%', height: '100%' }}>
+                  <Col style={{ width: '100%', height: '100%', padding: 24 }}>
+                    <ListChastise />
+                  </Col>
+              </Row>
+            </Route>
+
+            <Route path="/payroll">
+              <PayRoll />
             </Route>
           </Content>
         </Switch>

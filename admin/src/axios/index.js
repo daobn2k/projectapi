@@ -47,6 +47,9 @@ export const getOrderDetail = (id) => {
   return axios.get(`/detail_code/${id}`, config);
 };
 
+export const getDataTimeSheet = (data) => {
+  return axios.get(`${API_END_POINT}/timesheets`,{params:data},config)
+}
 export {
   getRequest,
   GetProduct,

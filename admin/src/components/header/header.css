@@ -102,7 +102,7 @@
   width: 100%;
 }
 .menu-dropdown {
-  width: 150px;
+  width: 200px;
 }
 .menu-dropdown .ant-dropdown-menu-title-content {
   display: flex;
@@ -234,6 +234,7 @@
 }
 .button_save,
 .button_cancel {
+  width: 82px;
   height: 40px;
   display: flex;
   justify-content: center;

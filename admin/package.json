@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "antd": "^4.16.13",
     "axios": "^0.21.1",
+    "file-saver": "^2.0.5",
     "firebase": "^8.0.0",
     "http-proxy-middleware": "^2.0.4",
     "lodash": "^4.17.21",
@@ -17,7 +18,9 @@
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.1",
     "react-scripts": "^1.1.5",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "xlsx": "^0.18.5",
+    "xlsx-populate": "^1.21.0"
   },
   "scripts": {
     "start": "react-scripts start",

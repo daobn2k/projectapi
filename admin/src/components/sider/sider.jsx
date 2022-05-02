@@ -140,7 +140,7 @@ export default function SiderComponent({ collapsed }) {
               style={{ color: "#fff", paddingLeft: 20 }}
             >
               <Tooltip title="Danh sách chấm công" placement="top">
-                <Link to="/request/list">Danh sách chấm công</Link>
+                <Link to="/payroll/timesheet">Danh sách chấm công</Link>
               </Tooltip>
             </Menu.Item>
             <Menu.Item

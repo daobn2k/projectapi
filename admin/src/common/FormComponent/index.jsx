@@ -10,13 +10,13 @@ const FormComponent = (props) => {
   const renderFiledItem = (type, config) => {
     switch (type) {
       case "input":
-        return <Input {...config} />;
+        return <Input maxLength={256} {...config} />;
       case "ipassword":
-        return <Input.Password {...config} />;
+        return <Input.Password maxLength={256} {...config} />;
       case "date":
         return <DatePicker {...config} />;
       case "area":
-        return <Input.TextArea {...config} />;
+        return <Input.TextArea maxLength={4000} {...config} />;
       case "select":
         return <SelectComponent {...config} />;
       default:
@@ -41,7 +41,6 @@ const FormComponent = (props) => {
       fileds.forEach((ele) => {
         const { typeFiled: type } = ele;
         const { name } = ele.itemForm;
-        console.log("type", type);
         if (typeof data[name] === "object" && type === "select") {
           const valueSet = {
             [name]: data[name] && data[name]._id ? data[name]._id : "",
