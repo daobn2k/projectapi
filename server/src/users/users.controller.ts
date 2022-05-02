@@ -22,9 +22,6 @@ import {
   ApiServiceUnavailableResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
-  ApiQuery,
-  ApiBearerAuth,
-  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
@@ -78,12 +75,12 @@ export class UsersController {
   }
 
   @Post('/search')
-  search(@Body() body){
-    return this.usersService.search(body)
+  search(@Body() body) {
+    return this.usersService.search(body);
   }
   @Post('/login')
-  login(@Body() body){
-    return this.usersService.login(body)
+  login(@Body() body) {
+    return this.usersService.login(body);
   }
   @Post('/logout')
   logout(@Body() id:ObjectId){

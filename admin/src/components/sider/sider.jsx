@@ -82,7 +82,7 @@ export default function SiderComponent({ collapsed }) {
               style={{ color: "#fff", paddingLeft: 20 }}
             >
               <Tooltip title="Danh sách khen thưởng" placement="top">
-                <Link to="/request/list">Danh sách khen thưởng</Link>
+                <Link to="/reward/list">Danh sách khen thưởng</Link>
               </Tooltip>
             </Menu.Item>
             <Menu.Item
@@ -91,7 +91,7 @@ export default function SiderComponent({ collapsed }) {
               style={{ color: "#fff", paddingLeft: 20 }}
             >
               <Tooltip title="Danh sách phạt" placement="top">
-                <Link to="/request/list">Danh sách phạt</Link>
+                <Link to="/chastise/list">Danh sách phạt</Link>
               </Tooltip>
             </Menu.Item>
           </SubMenu>
