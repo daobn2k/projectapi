@@ -360,6 +360,27 @@ export default function AddCustomer() {
               </Select>
             </Form.Item>
           </Form.Item>
+          <Form.Item name='filed' className="group-form--item">
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền lương cơ bản nhân viên",
+                },
+              ]}
+              hasFeedback
+              name="salary"
+              label="Lương cơ bản"
+            >
+              <Input size="large" placeholder="Điền lương cơ bản" maxLength={256} />
+            </Form.Item>
+            <Form.Item
+              name="school"
+              label="Trường học"
+            >
+              <Input size="large" placeholder="Điền thông tin trường học" maxLength={256}  />
+            </Form.Item>
+          </Form.Item>
           <Form.Item
             name="description"
             label="Thông tin mô tả"

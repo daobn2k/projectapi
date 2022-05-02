@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
 import { getDataTimeSheet, GetUser } from "../../axios";
 import { LoadingOutlined } from "@ant-design/icons";
-import { convertDataToOptions, convertTimeStampUTCToLocal } from "../../shared";
+import { convertDataToOptions, convertTimeStampUTCToLocal, getHourMinuteTime } from "../../shared";
 import AddNewDialogComponent from "../AddNewDialogComponent";
 import { NotificationCommon } from "../../common/Notification";
 import { store } from "../../storage";
@@ -44,7 +44,7 @@ export default function TimeSheet() {
         render: (item, record, index) => {
           return (
             <Typography key={index}>
-                {convertTimeStampUTCToLocal(item,"DD/MM/YYYY HH:mm:ss")} 
+                {item ? getHourMinuteTime (item,"DD/MM/YYYY HH:mm:ss") : ''} 
           </Typography>
           );
         },
@@ -57,7 +57,7 @@ export default function TimeSheet() {
         render: (item, record, index) => {
           return (
             <Typography key={index}>
-              {item ? convertTimeStampUTCToLocal(item,"DD/MM/YYYY HH:mm:ss") : ''}
+              {item ? getHourMinuteTime(item,"DD/MM/YYYY HH:mm:ss") : ''}
             </Typography>
           );
         },

@@ -39,3 +39,8 @@
     align-items: center;
     justify-content: center;
 }
+
+.space-table{
+    display: flex;
+    flex-direction: column;
+}

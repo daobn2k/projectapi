@@ -157,3 +157,10 @@ export const handleChangeGetFile = async (e,setUrl) => {
       );
     }
 };
+
+export const getHourMinuteTime = (date = '') => {
+
+    const newDate = moment(date).format("HH:mm A");
+    
+    return newDate
+}
