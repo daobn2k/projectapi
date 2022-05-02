@@ -15,6 +15,8 @@ export class CreateUserDto {
   role_id: ObjectId;
   avatar: string;
   certificate: string;
+  school:string;
+  salary:string;
   phone: string;
   description: string;
   sex: String;

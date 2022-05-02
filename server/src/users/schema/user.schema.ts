@@ -9,52 +9,58 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({required:true,type:String,maxlength:256})
-  username:string
-  
-  @Prop({required:true,type:String,maxlength:256})
-  password:string
+  @Prop({ required: true, type: String, maxlength: 256 })
+  username: string;
 
-  @Prop({required:true,type:String,maxlength:256})
+  @Prop({ required: true, type: String, maxlength: 256 })
+  password: string;
+
+  @Prop({ required: true, type: String, maxlength: 256 })
   name: string;
 
-  @Prop({default:Date.now()})
+  @Prop({ default: Date.now() })
   dob: Date;
 
-  @Prop({required:true,type:String})
-  sex:string
+  @Prop({ required: true, type: String })
+  sex: string;
 
-  @Prop({required:true,type:String,maxlength:256})
-  address:string;
+  @Prop({ required: true, type: String, maxlength: 256 })
+  address: string;
 
-  @Prop({required:true,type:String,maxlength:11})
-  phone:string;
+  @Prop({ required: true, type: String, maxlength: 11 })
+  phone: string;
 
   @Prop()
-  avatar:string;
+  avatar: string;
 
-  @Prop({required:true,type:String,maxlength:256})
-  email:string;
+  @Prop({ required: true, type: String, maxlength: 256 })
+  email: string;
 
-  @Prop({maxlength:4000,type:String,required:false})
-  description:string;
+  @Prop({ maxlength: 4000, type: String, required: false })
+  description: string;
 
-  @Prop({default:Date.now()})
-  create_date:Date;
+  @Prop({ default: Date.now() })
+  create_date: Date;
 
-  @Prop({required:true,type:String,maxlength:256})
-  certificate:string;
+  @Prop({ required: true, type: String, maxlength: 256 })
+  certificate: string;
 
-  @Prop({default:false})
-  status:boolean;
+  @Prop({ required: true, type: String, maxLength: 256 })
+  salary: string;
+
+  @Prop({ type: String, maxLength: 256 })
+  school: string;
+
+  @Prop({ default: false })
+  status: boolean;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Department' })
   department_id: Department;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Education' })
-  education_id:Education;
+  education_id: Education;
 
-  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Role'})
-  role_id:Role;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Role' })
+  role_id: Role;
 }
 export const UserSchema = SchemaFactory.createForClass(User);
