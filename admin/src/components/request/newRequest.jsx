@@ -270,7 +270,7 @@ export default function AddRequest() {
                   })}
               </Select>
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Phòng ban giao việc"
               rules={[{ required: true, message: "Vui lòng chọn phòng ban" }]}
               name="department_id"
@@ -292,7 +292,7 @@ export default function AddRequest() {
                     );
                   })}
               </Select>
-            </Form.Item>
+            </Form.Item> */}
           </Form.Item>
           <Form.Item
             name="description"

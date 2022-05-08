@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 import { TimeSheetsService } from './timesheets.service';
 import { TimeSheetsController } from './timesheets.controller';
 import { TimeSheets } from './entities/timesheets.entity';

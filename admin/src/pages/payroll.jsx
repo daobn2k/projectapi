@@ -2,6 +2,8 @@ import React from "react";
 import { Col, Row } from "antd";
 import { Route } from "react-router-dom";
 import TimeSheet from "../components/timesheets/TimeSheet";
+import PayRollComponent from "../components/payroll/PayRoll";
+import AddPayRoll from "../components/payroll/AddPayroll";
 
 export default function PayRoll() {
   return (
@@ -16,6 +18,10 @@ export default function PayRoll() {
           }}
         >
           <Route path="/payroll/timesheet" component={TimeSheet} />
+          <Route path="/payroll/list" component={PayRollComponent} />
+          <Route path="/payroll/new" component={AddPayRoll} />
+          <Route path="/payroll/edit/:id" component={AddPayRoll} />
+
         </Col>
       </Row>
     </React.Fragment>

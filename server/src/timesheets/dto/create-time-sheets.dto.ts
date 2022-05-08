@@ -15,9 +15,15 @@ export class CreateTimeSheetsDto {
 }
 
 export class QueryListTimeSheets {
-  @ApiProperty({ default: 1, description: 'Page number' })
+  @ApiProperty({ required: false })
   page: number;
 
-  @ApiProperty({ default: 5, description: 'Limit number' })
+  @ApiProperty({ required: false })
   perPage: number;
+
+  @ApiProperty({ required: false, type: String })
+  fileds: string;
+
+  @ApiProperty({ required: false, type: String })
+  keyword: string;
 }

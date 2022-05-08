@@ -115,6 +115,9 @@ export class UsersService {
         { status: true },
         { new: true },
       )
+      .populate('education_id')
+      .populate('department_id')
+      .populate('role_id')
       .exec();
 
     return {

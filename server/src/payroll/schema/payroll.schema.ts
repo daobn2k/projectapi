@@ -7,19 +7,23 @@ export type PayRollDocument = PayRoll & Document;
 
 @Schema()
 export class PayRoll {
+  
+  @Prop({default:0,required:true})
+
+  salary:number;
+  @Prop({ default:0 })
+
+  salary_bonus:number;
+  
   @Prop()
-  name: string;
-  
-  @Prop({default:0})
+  in_month:string;
 
-  salary_daily:number;
-  
-  @Prop({default:0})
+  @Prop({default:0,required:true})
 
-  quantity:number;
+  total_working_time:number;
 
-  @Prop({default:0})
-  total:number;
+  @Prop({default:0,required:true})
+  total_money:number;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user_id:User
@@ -30,12 +34,9 @@ export class PayRoll {
   @Prop({default:Date.now()})
   create_date:Date;
 
-  @Prop()
-  status:string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  create_by_id: User;
 
-  @Prop({default:Date.now()})
-  update_date:Date;
-  
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   edit_by_id: User;
 }

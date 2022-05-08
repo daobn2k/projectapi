@@ -13,6 +13,7 @@ import {
 } from "../../axios/department";
 import { NotificationCommon } from "../../common/Notification";
 import { store } from "../../storage";
+import ExportExcelComponent from "../ExportExcelComponent";
 const { Search } = Input;
 export default function ListDepartment() {
   const [data, setData] = useState();
@@ -24,6 +25,7 @@ export default function ListDepartment() {
     keyword: "",
   });
   const [loading, setLoading] = useState(false);
+  const [dataExportExcel, setDataExportExcel] = useState([]);
   const ref = useRef();
   const user = store.getCurentUser();
   const columns = useMemo(() => {
@@ -192,6 +194,23 @@ export default function ListDepartment() {
       });
   };
 
+  const getDepartmentExport = (payload) => {
+    getDataDeaprtment(payload)
+      .then((res) => {
+        const { data, status } = res;
+        if (status === 200) {
+          setDataExportExcel(data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+      });
+  };
+  useEffect(()=>{
+    getDepartmentExport();
+  },[])
   const getAllUser = async () => {
     let d;
     const res = await GetUser();
@@ -285,6 +304,15 @@ export default function ListDepartment() {
     }
   };
 
+  const dataExport = useMemo(() => {
+    return {
+        data: dataExportExcel,
+        header: columns.map((i) => i.title),
+        key: columns.map((i) => i.key),
+        fileName: 'Danh Sách Phòng Ban',
+    };
+}, [dataExportExcel]);
+
   return (
     <Spin indicator={antIcon} spinning={false}>
       <Space className="Space" size={14}>
@@ -305,17 +333,21 @@ export default function ListDepartment() {
             onSubmit={onSubmit}
           />
         </div>
-        <Table
-          columns={columns}
-          loading={loading}
-          dataSource={data}
-          pagination={{
-            total: totalPage || 0,
-            pageSize: 10,
-            onChange: onChangePage,
-          }}
-        />
       </Space>
+      <div className="space-table">
+                <ExportExcelComponent dataExport={dataExport} />
+                <Table
+                    columns={columns}
+                    loading={loading}
+                    dataSource={data}
+                    pagination={{
+                        total: totalPage || 0,
+                        pageSize: 5,
+                        onChange: onChangePage,
+                    }}
+                    scroll={{ x: 2000 }}
+                />
+            </div>
     </Spin>
   );
 }

@@ -5,11 +5,21 @@ import { AppstoreOutlined, FileWordOutlined } from "@ant-design/icons";
 import { BsDot } from "react-icons/bs";
 import "./sider.css";
 import { Link } from "react-router-dom";
+// import { store } from "../../storage";
+// import { listCheckRoleViewAll, listRoleCheckProfile, listRoleViewPayRoll } from "../../shared";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SiderComponent({ collapsed }) {
+
+  // const infoUser = store.getCurentUser();
+
+  // const isShowAll = listCheckRoleViewAll.includes(infoUser.role_id.name)
+
+  // const isShowViewPayRoll = listRoleViewPayRoll.includes(infoUser.role_id.name)
+
+  // const isShowCheckProifle = listRoleCheckProfile.includes(infoUser.role_id.name)
   return (
     <Sider
       style={{ background: "#222A44" }}
@@ -149,7 +159,7 @@ export default function SiderComponent({ collapsed }) {
               style={{ color: "#fff", paddingLeft: 20 }}
             >
               <Tooltip title="Danh sách lương" placement="top">
-                <Link to="/request/list">Danh sách lương</Link>
+                <Link to="/payroll/list">Danh sách lương</Link>
               </Tooltip>
             </Menu.Item>
           </SubMenu>

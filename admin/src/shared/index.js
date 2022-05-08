@@ -178,7 +178,20 @@ export const handleChangeGetFile = async (e,setUrl) => {
 
 export const getHourMinuteTime = (date = '') => {
 
-    const newDate = moment(date).format("HH:mm A");
+    const newDate = moment(date).format("HH:mm:ss A");
     
     return newDate
+}
+
+export const listCheckRoleViewAll = ["Hội đồng sáng lập tập đoàn","Ban điều hành tập đoàn","Trưởng phòng","Quản lí","Lãnh đạo"]
+
+export const listRoleViewPayRoll = ["Kế toán"]
+
+export const listRoleCheckProfile = ["Nhân sự"]
+
+
+export const parseMoney = (number) =>{
+    if(!Number(number)) return 0
+        
+    return parseFloat(Number(number)).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
 }

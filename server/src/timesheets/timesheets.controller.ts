@@ -47,4 +47,9 @@ export class TimeSheetsController {
   search(@Body() body){
     return this.timeSheetsService.search(body)
   }
+
+  @Post('/payroll')
+  getPayroll(@Body() body){
+    return this.timeSheetsService.getPayroll(body)
+  }
 }

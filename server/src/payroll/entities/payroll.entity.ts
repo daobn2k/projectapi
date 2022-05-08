@@ -1,14 +1,14 @@
 import { ObjectId } from "mongoose";
 
 export class PayRoll {
-  name: String;
-  quantity:number;
-  total:number;
-  salary_daily:number;
+  total_working_time:number;
+  total_money:number;
+  salary:number;
+  salary_bonus:number;
+  in_month:String;
   user_id:ObjectId;
   payment_date:Date;
-  status:boolean;
-  update_date:Date;
   create_by_id:ObjectId;
   edit_by_id:ObjectId;
+  create_date:Date;
 };

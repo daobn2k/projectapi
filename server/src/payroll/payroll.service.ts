@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
+import { rgx } from 'src/ultils';
 import {
   CreatePayRollDto,
   QueryListPayRoll,
@@ -21,18 +22,37 @@ export class PayRollService {
   }
 
   async findAll(query: QueryListPayRoll) {
-    const { page, perPage } = query;
-
+    const { page , perPage , fileds = 'name', keyword = '' } = query;
     const skip: number = (page - 1) * perPage;
-
-    const result = await this.PayRollModule.find()
-      .limit(+perPage)
-      .skip(skip)
-      .populate('create_by_id')
-      .populate('edit_by_id')
-      .exec();
-
+    let result;
+    if (keyword !== '') {
+      result = await this.PayRollModule
+        .find({ [fileds]: rgx(keyword) })
+        .limit(+perPage)
+        .skip(skip)
+        .sort({ create_date: -1 })
+        .populate('create_by_id')
+        .populate('user_id')
+        .exec();
+    } else if (page && perPage) {
+      result = await this.PayRollModule
+        .find({})
+        .limit(+perPage)
+        .skip(skip)
+        .sort({ create_date: -1 })
+        .populate('user_id')
+        .populate('create_by_id')
+        .exec();
+    } else {
+      result = await this.PayRollModule
+        .find({})
+        .sort({ create_date: -1 })
+        .populate('user_id')
+        .populate('create_by_id')
+        .exec();
+    }
     const totalRecord = await this.PayRollModule.find().count().exec();
+
     return {
       message: 'SUCCESS',
       data: result,

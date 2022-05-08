@@ -50,6 +50,11 @@ export const getOrderDetail = (id) => {
 export const getDataTimeSheet = (data) => {
   return axios.get(`${API_END_POINT}/timesheets`,{params:data},config)
 }
+
+export const getDataPayRoll = (data) => {
+  return axios.get(`${API_END_POINT}/payroll`,{params:data},config)
+}
+
 export {
   getRequest,
   GetProduct,
