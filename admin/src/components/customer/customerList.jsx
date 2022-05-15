@@ -15,8 +15,10 @@ import { DeleteAccount } from '../../axios/account';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { convertTimeStampUTCToLocal } from '../../shared';
 import ExportExcelComponent from '../ExportExcelComponent';
+import PopupConfirmComponent from '../../common/PopupComfirmComponent';
 const { Search } = Input;
-export default function ListCustomer() {
+export default function ListCustomer(props) {
+    const { isShow = true } = props;
     const [loading, setLoading] = useState(false);
     const [dataExportExcel, setDataExportExcel] = useState([]);
     const columns = [
@@ -149,10 +151,13 @@ export default function ListCustomer() {
                         key={e.id}
                         onClick={() => handleEdit(e._id)}
                     />
-                    <AiFillDelete
-                        key={e.id}
-                        onClick={() => handleDelete(e._id)}
-                    />
+                    <PopupConfirmComponent
+                        title="nhân viên"
+                        data={e}
+                        handleDelete={handleDelete}
+                    >
+                        <AiFillDelete />
+                    </PopupConfirmComponent>
                 </Space>
             ),
         },
@@ -179,7 +184,9 @@ export default function ListCustomer() {
                 console.log(err);
             })
             .finally(() => {
-                setLoading(false);
+                setTimeout(() => {
+                    setLoading(false);
+                  }, 500);
             });
     };
 
@@ -194,9 +201,6 @@ export default function ListCustomer() {
             .catch((err) => {
                 console.log(err);
             })
-            .finally(() => {
-                setLoading(false);
-            });
     };
 
     useEffect(() => {
@@ -257,25 +261,27 @@ export default function ListCustomer() {
 
     return (
         <Spin indicator={antIcon} spinning={false}>
-            <Space className="Space">
-                <div className="top-table">
-                    <Search
-                        allowClear
-                        placeholder="Tìm kiếm"
-                        optionFilterProp="children"
-                        className="input-search"
-                        onSearch={handleSearch}
-                        enterButton
-                    ></Search>
-                    <Link to="/customer/add">
-                        <Button className="btn-add" icon={<PlusOutlined />}>
-                            Thêm mới nhân viên
-                        </Button>
-                    </Link>
-                </div>
-            </Space>
+            {isShow && (
+                <Space className="Space">
+                    <div className="top-table">
+                        <Search
+                            allowClear
+                            placeholder="Tìm kiếm"
+                            optionFilterProp="children"
+                            className="input-search"
+                            onSearch={handleSearch}
+                            enterButton
+                        ></Search>
+                        <Link to="/customer/add">
+                            <Button className="btn-add" icon={<PlusOutlined />}>
+                                Thêm mới nhân viên
+                            </Button>
+                        </Link>
+                    </div>
+                </Space>
+            )}
             <div className="space-table">
-                <ExportExcelComponent dataExport={dataExport} />
+                {isShow && <ExportExcelComponent dataExport={dataExport} />}
                 <Table
                     columns={columns}
                     loading={loading}

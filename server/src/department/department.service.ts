@@ -86,8 +86,7 @@ export class DepartmentService {
   }
 
   async remove(id: string) {
-    const result = await this.DepartmentModel.deleteOne({ id });
-
+    const result = await this.DepartmentModel.findByIdAndDelete(id, { new: true });
     return {
       message: 'SUCCESS',
       data: result,

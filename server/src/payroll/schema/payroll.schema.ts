@@ -18,9 +18,9 @@ export class PayRoll {
   @Prop()
   in_month:string;
 
-  @Prop({default:0,required:true})
+  @Prop({required:true})
 
-  total_working_time:number;
+  total_working_time:string;
 
   @Prop({default:0,required:true})
   total_money:number;

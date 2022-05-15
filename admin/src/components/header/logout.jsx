@@ -13,9 +13,11 @@ export default function LogOut({ isModalVisible, handleOk, handleCancel }) {
       closable={false}
       className="Modal"
     >
-      <Text className="TextModal">
-        Bạn có muốn đăng xuất ra ?
-      </Text>
+      <div className="" style={{display:'flex',alignItems:'center',justifyContent: 'center'}}>
+        <Text className="TextModal">
+          Bạn có muốn đăng xuất ra ?
+        </Text>
+      </div>
       <div
         style={{
           display: "flex",

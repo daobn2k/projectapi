@@ -83,7 +83,7 @@ export class EducationService {
   }
 
   async remove(id: string) {
-    const result = await this.EducationModel.deleteOne({ id });
+    const result = await this.EducationModel.findByIdAndDelete(id, { new: true });
     return {
       message: 'SUCCESS',
       data: result,

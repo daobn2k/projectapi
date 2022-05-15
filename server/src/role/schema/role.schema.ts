@@ -9,6 +9,9 @@ export type RoleDocument = Role & Document;
 @Schema()
 export class Role {
   @Prop({type:String,required:true,maxlength:256})
+  code: string;
+  
+  @Prop({type:String,required:true,maxlength:256})
   name: string;
   
   @Prop({type:String,maxlength:4000})

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 
 export class CreatePayRollDto {
-  total_working_time:number;
+  total_working_time:string;
   total_money:number;
   salary:number;
   salary_bonus:number;

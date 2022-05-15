@@ -4,6 +4,7 @@ import { ObjectId } from 'mongoose';
 export class CreateRoleDto {
   _id:string;
   name: string;
+  code: string;
   create_date:Date;
   status:boolean;
   update_date:Date;
@@ -13,9 +14,15 @@ export class CreateRoleDto {
 }
 
 export class QueryListRole {
-  @ApiProperty({ default: 1, description: 'Page number' })
+  @ApiProperty({ required: false })
   page: number;
 
-  @ApiProperty({ default: 5, description: 'Limit number' })
+  @ApiProperty({ required: false })
   perPage: number;
+
+  @ApiProperty({ required: false, type: String })
+  fileds: string;
+
+  @ApiProperty({ required: false, type: String })
+  keyword: string;
 }

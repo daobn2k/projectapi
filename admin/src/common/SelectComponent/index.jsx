@@ -25,7 +25,7 @@ const SelectComponent = (props, ref) => {
         dataOptions.map((item, index) => {
           return (
             <Option value={item.value} key={index}>
-              {item.label}
+              {item.code && item.label ? `[${item.code}] - ${item.label}` : item.label}
             </Option>
           );
         })}

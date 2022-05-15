@@ -1,21 +1,19 @@
 import { notification, Space, Table, Input, Spin, Typography } from 'antd';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
+import { GetUser } from '../../axios';
 import { LoadingOutlined } from '@ant-design/icons';
-import { convertTimeStampUTCToLocal } from '../../shared';
+import { convertDataToOptions, convertTimeStampUTCToLocal } from '../../shared';
 import AddNewDialogComponent from '../AddNewDialogComponent';
 import { NotificationCommon } from '../../common/Notification';
 import { store } from '../../storage';
-import {
-    addEducation,
-    deleteEducation,
-    editEducation,
-    getDataEducation,
-} from '../../axios/education';
+import { deleteRole, editRole, getDataRole, newRole } from '../../axios/role';
+import { listCodeRole } from './defaultValue';
 import PopupConfirmComponent from '../../common/PopupComfirmComponent';
 const { Search } = Input;
-export default function ListEducation() {
+export default function RolePageComponent() {
     const [data, setData] = useState();
+    const [listUser, setListUser] = useState([]);
     const [totalPage, setTotalPage] = useState();
     const [params, setParams] = useState({
         page: 1,
@@ -23,23 +21,32 @@ export default function ListEducation() {
         keyword: '',
     });
     const [loading, setLoading] = useState(false);
+    const [dataExportExcel, setDataExportExcel] = useState([]);
     const ref = useRef();
     const user = store.getCurentUser();
     const columns = useMemo(() => {
         return [
             {
-                title: 'Tên trình độ học vấn',
+                title: 'Mã chức vụ',
+                dataIndex: 'code',
+                key: 'code',
+                align: 'left',
+                render:(code)=>{
+                    const item = listCodeRole && listCodeRole.find(i => String(i.id) === String(code))
+                    return<Typography>{item.label}</Typography>
+                }
+            },
+            {
+                title: 'Tên chức vụ',
                 dataIndex: 'name',
                 key: 'name',
                 align: 'left',
-                width: 250,
             },
             {
                 title: 'Mô tả',
                 dataIndex: 'description',
                 key: 'description',
                 align: 'left',
-                width: 250,
             },
             {
                 title: 'Người tạo',
@@ -57,33 +64,6 @@ export default function ListEducation() {
                 title: 'Ngày tạo',
                 dataIndex: 'create_date',
                 key: 'create_date',
-                width: 125,
-                render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>
-                            {convertTimeStampUTCToLocal(item)}
-                        </Typography>
-                    );
-                },
-            },
-            {
-                title: 'Người chỉnh sửa',
-                dataIndex: 'edit_by_id',
-                key: 'edit_by_id',
-                width: 200,
-                render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>
-                            {item && item.name ? item.name : ''}
-                        </Typography>
-                    );
-                },
-            },
-            {
-                title: 'Ngày chỉnh sửa',
-                dataIndex: 'update_date',
-                key: 'update_date',
-                width: 175,
                 render: (item, record, index) => {
                     return (
                         <Typography key={index}>
@@ -99,11 +79,10 @@ export default function ListEducation() {
                 render: (e) => (
                     <Space size="middle">
                         <AiOutlineEdit
-                            key={e.id}
                             onClick={() => handleEdit(e)}
                         />
                         <PopupConfirmComponent
-                            title="trình độ"
+                            title="chức vụ"
                             data={e}
                             handleDelete={handleDelete}
                         >
@@ -118,25 +97,43 @@ export default function ListEducation() {
         return [
             {
                 itemForm: {
-                    label: 'Tên trình độ học vấn',
-                    name: 'name',
+                    label: 'Mã Chức vụ',
+                    name: 'code',
                     rules: [
                         {
-                            message: 'Vui lòng điền tên trình độ học vấn',
+                            message: 'Vui lòng chọn mã chức vụ',
                             required: true,
                         },
                     ],
                 },
                 filed: {
-                    placeholder: 'Điền tên trình độ học vấn',
+                    placeholder: 'Chọn mã chức vụ',
+                    size: 'large',
+                    dataOptions: listCodeRole || [],
+                },
+                typeFiled: 'select',
+            },
+            {
+                itemForm: {
+                    label: 'Tên chức vụ',
+                    name: 'name',
+                    rules: [
+                        {
+                            message: 'Vui lòng điền tên chức vụ',
+                            required: true,
+                        },
+                    ],
+                },
+                filed: {
+                    placeholder: 'Điền tên chức vụ',
                     size: 'large',
                 },
                 typeFiled: 'input',
             },
             {
                 itemForm: {
-                    label: 'Mô tả',
                     name: 'description',
+                    label: 'Mô tả',
                     rules: [
                         {
                             required: false,
@@ -144,16 +141,17 @@ export default function ListEducation() {
                     ],
                 },
                 filed: {
-                    placeholder: 'Điền mô tả',
+                    placeholder: 'Điền thông tin mô tả',
                     size: 'large',
+                    autoSize: { minRows: 3, maxRows: 10 },
                 },
-                typeFiled: 'input',
+                typeFiled: 'area',
             },
         ];
-    }, []);
-    const getEducation = (payload) => {
+    }, [listUser]);
+    const getRole = (payload) => {
         setLoading(true);
-        getDataEducation(payload)
+        getDataRole(payload)
             .then((res) => {
                 const { data, status } = res;
                 if (status === 200) {
@@ -171,23 +169,53 @@ export default function ListEducation() {
             });
     };
 
+    const getRoleExport = (payload) => {
+        getDataRole(payload)
+            .then((res) => {
+                const { data, status } = res;
+                if (status === 200) {
+                    setDataExportExcel(data.data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {});
+    };
     useEffect(() => {
-        getEducation(params);
+        getRoleExport();
+    }, []);
+    const getAllUser = async () => {
+        let d;
+        const res = await GetUser();
+        const { data } = res;
+        if (data.message === 'SUCCESS') {
+            d = convertDataToOptions(data.data);
+            setListUser(d);
+        } else {
+            NotificationCommon('error', 'Không lấy được thông tin người dùng');
+        }
+    };
+    useEffect(() => {
+        getRole(params);
     }, [params]);
 
+    useEffect(() => {
+        getAllUser();
+    }, []);
     const handleDelete = (id) => {
         setLoading(true);
-        deleteEducation(id)
+        deleteRole(id)
             .then((res) => {
                 notification.success({
-                    description: 'Xóa trình độ học vấn thành công',
+                    description: 'Xóa chức vụ thành công',
                     placement: 'topRight',
                 });
-                getEducation(params);
+                getRole(params);
             })
             .catch((err) => {
                 notification.error({
-                    description: 'Xóa trình độ học vấn thất bại',
+                    description: 'Xóa chức vụ thất bại',
                     placement: 'topRight',
                 });
             })
@@ -224,31 +252,40 @@ export default function ListEducation() {
                 edit_by_id: user._id,
                 update_date: new Date(),
             };
-            res = await editEducation(v.id, payload);
+            res = await editRole(v.id, payload);
         } else {
             payload = {
                 ...v,
                 create_by_id: user._id,
                 edit_by_id: user._id,
             };
-            res = await addEducation(payload);
+            res = await newRole(payload);
         }
         const { status, data } = res;
         if (status === 200 || data.message === 'SUCCESS') {
-            getEducation(params);
+            getRole(params);
             NotificationCommon(
                 'success',
-                `${v.id ? 'Chỉnh sửa' : 'Tạo mới'} trình độ học vấn thành công`
+                `${v.id ? 'Chỉnh sửa' : 'Tạo mới'} chức vụ thành công`
             );
             ref.current.clearData();
         } else {
             NotificationCommon(
                 'error',
-                `${v.id ? 'Chỉnh sửa' : 'Tạo mới'} trình độ học vấn thất bại`
+                `${v.id ? 'Chỉnh sửa' : 'Tạo mới'} chức vụ thất bại`
             );
             setLoading(false);
         }
     };
+
+    const dataExport = useMemo(() => {
+        return {
+            data: dataExportExcel,
+            header: columns.map((i) => i.title),
+            key: columns.map((i) => i.key),
+            fileName: 'Danh Sách Phòng Ban',
+        };
+    }, [dataExportExcel]);
 
     return (
         <Spin indicator={antIcon} spinning={false}>
@@ -264,23 +301,26 @@ export default function ListEducation() {
                     ></Search>
                     <AddNewDialogComponent
                         fileds={dataForm}
-                        title="trình độ học vấn"
+                        title="chức vụ"
                         onClose={onClose}
                         ref={ref}
                         onSubmit={onSubmit}
                     />
                 </div>
+            </Space>
+            <div className="space-table" style={{ paddingTop: 24 }}>
+                {/* <ExportExcelComponent dataExport={dataExport} /> */}
                 <Table
                     columns={columns}
                     loading={loading}
                     dataSource={data}
                     pagination={{
                         total: totalPage || 0,
-                        pageSize: 10,
+                        pageSize: 5,
                         onChange: onChangePage,
                     }}
                 />
-            </Space>
+            </div>
         </Spin>
     );
 }

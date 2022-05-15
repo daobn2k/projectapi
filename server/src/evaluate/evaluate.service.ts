@@ -78,8 +78,7 @@ export class EvaluateService {
   }
 
   async remove(id: string) {
-    const result = await this.EvaluateModel.deleteOne({ id });
-
+    const result = await this.EvaluateModel.findByIdAndDelete(id, { new: true });
     return {
       message: 'SUCCESS',
       data: result,

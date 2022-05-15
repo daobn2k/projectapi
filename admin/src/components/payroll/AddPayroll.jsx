@@ -3,12 +3,11 @@ import { Button, Input, Form, DatePicker, notification, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { GetUser, getUserbyId } from '../../axios';
 import { useHistory, useLocation } from 'react-router-dom';
-import { addNewAccount, UpdateAccount } from '../../axios/account';
 import './customer.css';
 import moment from 'moment';
 import BreadcrumbComponent from '../BreadcrumbComponent';
 import * as _ from 'lodash';
-import { getDataCreatePayRoll } from '../../axios/payroll';
+import { createPayRoll, getDataCreatePayRoll } from '../../axios/payroll';
 import { parseMoney } from '../../shared';
 import { store } from '../../storage';
 
@@ -17,7 +16,6 @@ const { Option } = Select;
 export default function AddPayRoll() {
     const [listUser, setListUser] = useState([]);
     const [valueChooseUser, setValueChooseUser] = useState();
-    const history = useHistory();
     const location = useLocation();
     const currentAccount = store.getCurentUser();
 
@@ -75,48 +73,7 @@ export default function AddPayRoll() {
             setListUser(result.data.data);
         }
     };
-    const onFinish = (data) => {
-        // const { avatar } = currentData
-        const dataSubmit = { ...data, role: '1' };
-        if (state && state.id) {
-            UpdateAccount(state.id, dataSubmit)
-                .then((res) => {
-                    notification.success({
-                        message: `Thông báo cật nhập`,
-                        description: ' Cập nhật thông tin thành công',
-                        placement: 'topRight',
-                    });
-                })
-                .catch((err) => {
-                    notification.error({
-                        message: `Thông báo cật nhập`,
-                        description: 'Có lỗi xảy ra khi cập nhật thông tin',
-                        placement: 'topRight',
-                    });
-                });
-        } else {
-            addNewAccount(dataSubmit)
-                .then((res) => {
-                    if (res.status === 200) {
-                        notification.success({
-                            message: `Thông báo tạo mới`,
-                            description: 'Tạo mới nhân viên thành công',
-                            placement: 'topRight',
-                        });
-                        history.push({
-                            pathname: '/customer/list',
-                        });
-                    }
-                })
-                .catch((err) => {
-                    notification.error({
-                        message: `Thông báo tạo mới`,
-                        description: 'Vui lòng kiểm tra lại thông tin',
-                        placement: 'topRight',
-                    });
-                });
-        }
-    };
+   
 
     const onSearch = (event) => {
         console.log('event', event);
@@ -148,6 +105,10 @@ export default function AddPayRoll() {
         handlerShowDataCreatePR(data);
     };
 
+    const checkTimeWorking = (total) => {
+        if(total > 8 * 60) return 8 * 60
+        return total
+    }
     const handlerShowDataCreatePR = (data = []) => {
         let total_time = 0;
 
@@ -159,9 +120,8 @@ export default function AddPayRoll() {
                     Math.abs(moment(end_date_time) - moment(start_date_time)) /
                         1000 /
                         60
-                );
-
-                total_time = total_time + time;
+                )
+                total_time = total_time  + checkTimeWorking(time)
             }
         });
 
@@ -203,7 +163,8 @@ export default function AddPayRoll() {
         setValueChooseUser({
           total_money:Math.round((salary_daily / 8) * total_working_time ),
           total_working_time,
-          salary_daily
+          salary_daily,
+          salary:parseInt(detailUser.salary)
         })
     };
 
@@ -230,6 +191,9 @@ export default function AddPayRoll() {
     };
 
     const validateNumber = (number) => {
+        if(Number.isInteger(Math.floor(number))){
+            return false
+        }
         if (!/^[0-9]+$/.test(number)) {
             return true;
         }
@@ -240,12 +204,28 @@ export default function AddPayRoll() {
 
       let total
 
-     
-
       total = parseInt(value || 0) + parseInt(valueChooseUser.total_money)
        
       form.setFieldsValue({total_money:parseMoney(total)})
     }
+
+    const onFinish = (data) => {
+
+        const payload = {
+            ...valueChooseUser,
+            in_month:moment(data.in_month).format("MM"),
+            salary_bonus:parseInt(data.salary_bonus),
+            user_id:data.user_id,
+            create_by_id:data.create_by_id,
+        }
+        createPayRoll(payload).then((res) => {
+            console.log(res,"res");
+        }).catch((err) => {
+            console.log(err,"err");
+        }).finally((f) => {
+            console.log("f",f)
+        })
+    };
     return (
         <div>
             <BreadcrumbComponent
@@ -343,6 +323,7 @@ export default function AddPayRoll() {
                         <Form.Item
                             rules={[
                                 () => ({
+                                    required:true,
                                     validator(_, value) {
                                         if (!value) {
                                             return Promise.reject(
@@ -358,6 +339,7 @@ export default function AddPayRoll() {
                                                 )
                                             );
                                         }
+                                        return Promise.resolve()
                                     },
                                 }),
                             ]}
@@ -397,6 +379,7 @@ export default function AddPayRoll() {
                                                 )
                                             );
                                         }
+                                        return Promise.resolve()
                                     },
                                 }),
                             ]}

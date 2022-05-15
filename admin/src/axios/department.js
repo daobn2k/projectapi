@@ -15,3 +15,4 @@ export const editDepartment = async (id, data) => {
 export const deleteDepartment = async (id) => {
   return await axios.delete(`${API_END_POINT}/department/${id}`);
 };
+

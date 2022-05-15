@@ -130,6 +130,23 @@ export const listReward = [
         label:'Thưởng công tác',
     },
 ]
+export const ListChooseChastise = [
+    {
+        id:'1',
+        value:'1',
+        label:'Đi muộn'
+    },
+    {
+        id:'2',
+        value:'2',
+        label:'Không hoàn thành công việc'
+    },
+    {
+        id:'3',
+        value:'3',
+        label:'Nhân viên kém',
+    },
+]
 
 
 export const convertDataToOptions = (data) => {

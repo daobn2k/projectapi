@@ -8,13 +8,14 @@ const FormComponent = (props) => {
   const { form, className, name, fileds, actionHandler, data } = props;
 
   const renderFiledItem = (type, config) => {
+    const { format = "DD/MM/YYYY HH:mm:ss"} = config
     switch (type) {
       case "input":
         return <Input maxLength={256} {...config} />;
       case "ipassword":
         return <Input.Password maxLength={256} {...config} />;
       case "date":
-        return <DatePicker {...config} />;
+        return <DatePicker {...config} format={format}/>;
       case "area":
         return <Input.TextArea maxLength={4000} {...config} />;
       case "select":
@@ -41,25 +42,29 @@ const FormComponent = (props) => {
       fileds.forEach((ele) => {
         const { typeFiled: type } = ele;
         const { name } = ele.itemForm;
+        let valueSet = {}
         if (typeof data[name] === "object" && type === "select") {
-          const valueSet = {
+           valueSet = {
             [name]: data[name] && data[name]._id ? data[name]._id : "",
           };
           return form.setFieldsValue(valueSet);
         }
         if (type === "date") {
-          const valueSet = {
+           valueSet = {
             [name]:
-              data && data[name] ? moment(data[name]).format("DD/MM/YYYY") : "",
+              data && data[name] ? moment(data[name]) : "",
           };
           return form.setFieldsValue(valueSet);
         }
         if (type === "input" || type === "area") {
-          const valueSet = {
+           valueSet = {
             [name]: data && data[name] ? data[name] : "",
           };
           return form.setFieldsValue(valueSet);
         }
+        valueSet = { [name] : data[name]}
+        
+        return form.setFieldsValue(valueSet);
       });
     }
   }, [data]);

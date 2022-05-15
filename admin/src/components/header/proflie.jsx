@@ -49,8 +49,7 @@ export default function Profile({ isProfileVisible, handleCancel }) {
     UpdateAccount(user._id, {...values,avatar:url})
       .then((res) => {
         notification.success({
-          message: `Notification`,
-          description: " Update Info SuccessFully",
+          description: "Chỉnh sửa thông tin cá nhân thành công",
           placement: "topRight",
         });
         loadingInfo(user._id);
@@ -58,8 +57,7 @@ export default function Profile({ isProfileVisible, handleCancel }) {
       })
       .catch((err) => {
         notification.error({
-          message: `Notification`,
-          description: " Error Can't Update Data",
+          description: "Chỉnh sửa thất bại",
           placement: "topRight",
         });
         setIsEdit(true);

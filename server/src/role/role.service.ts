@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
+import { rgx } from 'src/ultils';
 import {
   CreateRoleDto,
   QueryListRole,
@@ -24,27 +25,45 @@ export class RoleService {
   }
 
   async findAll(query: QueryListRole) {
-    const { page, perPage } = query;
-
+    const { page , perPage , fileds = 'name', keyword = '' } = query;
     const skip: number = (page - 1) * perPage;
-    const result = await this.RoleModel.find()
-      .limit(+perPage)
-      .skip(skip)
-      .populate('create_by_id')
-      .populate('edit_by_id')
-      .exec();
+    let result;
+    if (keyword !== '') {
+      result = await this.RoleModel
+        .find({ [fileds]: rgx(keyword) })
+        .limit(+perPage)
+        .skip(skip)
+        .sort({ create_date: -1 })
+        .populate('create_by_id')
+        .exec();
+    } else if (page && perPage) {
+      result = await this.RoleModel
+        .find({})
+        .limit(+perPage)
+        .skip(skip)
+        .sort({ create_date: -1 })
+        .populate('create_by_id')
+        .exec();
+    } else {
+      result = await this.RoleModel
+        .find({})
+        .sort({ create_date: -1 })
+        .populate('create_by_id')
+        .exec();
+    }
+
     const totalRecord = await this.RoleModel.find().count().exec();
+
     return {
-        message:'SUCCESS',
-        data:result,
-        total:totalRecord
+      message: 'SUCCESS',
+      data: result,
+      total: totalRecord,
     };
   }
 
   async findOne(id: string) {
     const result  = await this.RoleModel.findById(id)
       .populate('create_by_id')
-      .populate('edit_by_id')
       .exec();
     return {
       message:'SUCCESS',
@@ -63,11 +82,10 @@ export class RoleService {
   }
 
   async remove(id: string) {
-    const result = await this.RoleModel.deleteOne({ id });
-
+    const result = await this.RoleModel.findByIdAndDelete(id, { new: true });
     return {
-      message:'SUCCESS',
-      data:result
+      message: 'SUCCESS',
+      data: result,
     };
   }
 

@@ -7,7 +7,6 @@ import "./request.css";
 import moment from "moment";
 import BreadcrumbComponent from "../BreadcrumbComponent";
 import * as _ from "lodash";
-import { getDataDeaprtment } from "../../axios/department";
 import { store } from "../../storage";
 import { addRequest, updateRequest } from "../../axios/request";
 
@@ -16,7 +15,6 @@ const { TextArea } = Input;
 
 export default function AddRequest() {
   const dataUser = store.getCurentUser();
-  const [listDepartment, setListDepartment] = useState([]);
   const [listUser, setListUser] = useState([]);
   const history = useHistory();
   const location = useLocation();
@@ -71,16 +69,10 @@ export default function AddRequest() {
     });
   };
   useEffect(() => {
-    getDataListDeaprtment();
     getDataListUser();
   }, []);
 
-  const getDataListDeaprtment = async () => {
-    const result = await getDataDeaprtment();
-    if (result.status === 200) {
-      setListDepartment(result.data.data);
-    }
-  };
+  
   const getDataListUser = async () => {
     const result = await GetUser();
     if (result.status === 200) {

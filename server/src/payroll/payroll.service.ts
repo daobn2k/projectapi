@@ -17,8 +17,13 @@ export class PayRollService {
 
   create(createPayRollDto: CreatePayRollDto) {
     const newDepartment = new this.PayRollModule(createPayRollDto);
+    
     newDepartment.save();
-    return 'success';
+
+    return {
+      message:"SUCCESS",
+      data:newDepartment,
+    };
   }
 
   async findAll(query: QueryListPayRoll) {
@@ -88,7 +93,7 @@ export class PayRollService {
   }
 
   async remove(id: string) {
-    const result = await this.PayRollModule.deleteOne({ id });
+    const result = await this.PayRollModule.findByIdAndDelete(id, { new: true });
     return {
       message: 'SUCCESS',
       data: result,

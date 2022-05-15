@@ -15,6 +15,7 @@ import EducationPage from "../pages/education";
 import ListReward from "../components/reward/ListReward";
 import ListChastise from "../components/chastise/ListChastise";
 import PayRoll from "../pages/payroll";
+import RolePage from "../pages/rolepage";
 const { Content } = Layout;
 
 export default function PrivateLayout() {
@@ -40,7 +41,7 @@ export default function PrivateLayout() {
         <HeaderComponent toggle={toggle} />
         <Switch>
           <Content style={{ overflowY: "scroll" }}>
-            <Route path="/">
+            <Route path="/" exact={true}>
               <DashBoard />
             </Route>
             <Route path="/request">
@@ -73,6 +74,9 @@ export default function PrivateLayout() {
 
             <Route path="/payroll">
               <PayRoll />
+            </Route>
+            <Route path="/role">
+              <RolePage/>
             </Route>
           </Content>
         </Switch>

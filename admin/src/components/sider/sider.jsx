@@ -1,25 +1,25 @@
 import React from "react";
 import { Layout, Menu, Tooltip } from "antd";
-import { AiOutlineUser, AiOutlineAreaChart, AiFillShop } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineAreaChart } from "react-icons/ai";
 import { AppstoreOutlined, FileWordOutlined } from "@ant-design/icons";
 import { BsDot } from "react-icons/bs";
 import "./sider.css";
 import { Link } from "react-router-dom";
-// import { store } from "../../storage";
-// import { listCheckRoleViewAll, listRoleCheckProfile, listRoleViewPayRoll } from "../../shared";
+import { store } from "../../storage";
+import { listCheckRoleViewAll, listRoleCheckProfile, listRoleViewPayRoll } from "../../shared";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SiderComponent({ collapsed }) {
 
-  // const infoUser = store.getCurentUser();
+  const infoUser = store.getCurentUser();
 
-  // const isShowAll = listCheckRoleViewAll.includes(infoUser.role_id.name)
+  const isShowAll = infoUser.role_id.code === 'LĐ' ? true : false;
 
-  // const isShowViewPayRoll = listRoleViewPayRoll.includes(infoUser.role_id.name)
+  const isShowViewPayRoll = listRoleViewPayRoll.includes(infoUser.role_id.name)
 
-  // const isShowCheckProifle = listRoleCheckProfile.includes(infoUser.role_id.name)
+  const isShowCheckProifle = listRoleCheckProfile.includes(infoUser.role_id.name)
   return (
     <Sider
       style={{ background: "#222A44" }}
@@ -55,20 +55,12 @@ export default function SiderComponent({ collapsed }) {
             <Link to="/">Thống kê chung</Link>
           </Menu.Item>
           <Menu.Item
-            key="2"
+            key="3"
             style={{ color: "#fff" }}
             icon={<AiOutlineAreaChart />}
             className="MenuItem"
           >
-            <Link to="/">Biểu đồ</Link>
-          </Menu.Item>
-          <Menu.Item
-            key="3"
-            style={{ color: "#fff" }}
-            icon={<AiFillShop />}
-            className="MenuItem"
-          >
-            <Link to="/">Quản lý</Link>
+            <Link to="/role">Quản lý chức vụ</Link>
           </Menu.Item>
 
           <SubMenu

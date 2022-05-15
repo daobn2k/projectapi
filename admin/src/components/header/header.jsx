@@ -100,9 +100,6 @@ export default function HeaderComponent({ toggle }) {
           <li className="NavItem">
             <BellOutlined className="NavIcon" />
           </li>
-          <li className="NavItem">
-            <ShoppingCartOutlined className="NavIcon" />
-          </li>
           <li className="NavImageUser">
             <Dropdown
               overlay={menu}

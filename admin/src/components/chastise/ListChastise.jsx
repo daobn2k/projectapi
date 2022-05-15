@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
 import { GetUser } from "../../axios";
 import { LoadingOutlined } from "@ant-design/icons";
-import { convertDataToOptions, convertTimeStampUTCToLocal, listReward } from "../../shared";
+import { convertDataToOptions, convertTimeStampUTCToLocal, ListChooseChastise } from "../../shared";
 import AddNewDialogComponent from "../AddNewDialogComponent";
 import { NotificationCommon } from "../../common/Notification";
 import { store } from "../../storage";
@@ -40,7 +40,7 @@ export default function ListChastise() {
         key: "category_reward",
         width:150,
         render: (item, record, index) => {
-          const cate = listReward.find(i=>i.value === item).label
+          const cate = ListChooseChastise.find(i=>i.value === item).label
           return (
             <Typography key={index}>
               {cate ? cate : ''}
@@ -149,7 +149,7 @@ export default function ListChastise() {
         filed: {
           placeholder: "Chọn loại phạt",
           size: "large",
-          dataOptions: listReward || [],
+          dataOptions: ListChooseChastise || [],
         },
         typeFiled: "select",
       },
@@ -178,7 +178,7 @@ export default function ListChastise() {
       .then((res) => {
         const { data, status } = res;
         if (status === 200) {
-          const c = Array.isArray( data.data) &&  data.data.length > 0 ? data.data.filter(i=>i.type === 'reward') : [];
+          const c = Array.isArray( data.data) &&  data.data.length > 0 ? data.data.filter(i=>i.type !== 'reward') : [];
           setData(c);
           setTotalPage(data.total);
         }

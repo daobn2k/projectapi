@@ -14,24 +14,23 @@ const ExportExcelComponent = (props) => {
                 return listFiledName.map( (fieldName) =>{
                     const isDate =  Array.isArray(fieldName.split('_')) && fieldName.split('_').length > 0 && fieldName.split('_')[fieldName.split('_').length - 1] === 'date' ? true : false
                     const isDateTime =  Array.isArray(fieldName.split('_')) && fieldName.split('_').length > 0 && fieldName.split('_')[fieldName.split('_').length - 1] === 'time' ? true : false
-
-                    if(typeof row[fieldName] === 'object'){
-                        return row[fieldName] && row[fieldName].name ?  row[fieldName].name  : ''
-                    }
-                    if(typeof  row[fieldName] === 'string' ||  typeof row[fieldName] === 'number') {
-                        return row[fieldName] ? row[fieldName] : "";
-                    }
                     if(fieldName === 'dob' ||  isDate){
                         return row[fieldName] ?  convertTimeStampUTCToLocal(row[fieldName]): "" ;
                     }
                     if(isDateTime) {
                         return row[fieldName] ?  convertTimeStampUTCToLocal(row[fieldName]): "" ;
                     }
+                    if(typeof row[fieldName] === 'object'){
+                        return row[fieldName] && row[fieldName].name ?  row[fieldName].name  : ''
+                    }
+                    if(typeof  row[fieldName] === 'string' ||  typeof row[fieldName] === 'number') {
+                        return row[fieldName] ? row[fieldName] : "";
+                    }
                 });
               });
 
               sheetData.unshift(header);
-          
+              console.log(sheetData,"sheetData");
               return sheetData;
       }
     

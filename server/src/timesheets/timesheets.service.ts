@@ -99,7 +99,7 @@ export class TimeSheetsService {
   }
 
   async remove(id: string) {
-    const result = await this.TimeSheetsModel.deleteOne({ id });
+    const result = await this.TimeSheetsModel.findByIdAndDelete(id, { new: true });
     return {
       message: 'SUCCESS',
       data: result,
