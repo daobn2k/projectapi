@@ -119,7 +119,7 @@ export default function ListRequest() {
     const [totalPage, setTotalPage] = useState();
     const [params, setParams] = useState({
         page: 1,
-        perPage: 10,
+        perPage: 5,
         keyword: '',
     });
     const getDataRequest = (payload) => {

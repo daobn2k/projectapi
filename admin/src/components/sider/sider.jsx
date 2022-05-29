@@ -6,20 +6,20 @@ import { BsDot } from "react-icons/bs";
 import "./sider.css";
 import { Link } from "react-router-dom";
 import { store } from "../../storage";
-import { listCheckRoleViewAll, listRoleCheckProfile, listRoleViewPayRoll } from "../../shared";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SiderComponent({ collapsed }) {
 
-  const infoUser = store.getCurentUser();
+  // const infoUser = store.getCurentUser();
 
-  const isShowAll = infoUser.role_id.code === 'LĐ' ? true : false;
+  // const { role_id = {} } = infoUser
 
-  const isShowViewPayRoll = listRoleViewPayRoll.includes(infoUser.role_id.name)
+  // const { code = '' } = role_id
 
-  const isShowCheckProifle = listRoleCheckProfile.includes(infoUser.role_id.name)
+  // const isShowAll = code === 'LĐ' ? true : false;
+
   return (
     <Sider
       style={{ background: "#222A44" }}

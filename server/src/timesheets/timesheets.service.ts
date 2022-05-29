@@ -1,8 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import * as moment from 'moment';
-import { Model, Query } from 'mongoose';
-import { rgx } from 'src/ultils';
+import { Model } from 'mongoose';
+import { checkPermisstionUser } from 'src/ultils';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 import {
   CreateTimeSheetsDto,
   QueryListTimeSheets,
@@ -27,41 +28,38 @@ export class TimeSheetsService {
     };
   }
 
-  async findAll(query: QueryListTimeSheets) {
-    const { page , perPage , fileds = 'name', keyword = '' } = query;
-    const skip: number = (page - 1) * perPage;
-    let result;
-    if (keyword !== '') {
-      result = await this.TimeSheetsModel
-        .find({ [fileds]: rgx(keyword) })
-        .limit(+perPage)
-        .skip(skip)
-        .sort({ create_date: -1 })
-        .populate('user_id')
-        .populate('create_by_id')
-        .populate('edit_by_id')
-        .exec();
-    } else if (page && perPage) {
-      result = await this.TimeSheetsModel
-        .find({})
-        .limit(+perPage)
-        .skip(skip)
-        .sort({ create_date: -1 })
-        .populate('user_id')
-        .populate('create_by_id')
-        .populate('edit_by_id')
-        .exec();
-    } else {
-      result = await this.TimeSheetsModel
-        .find({})
-        .sort({ create_date: -1 })
-        .populate('user_id')
-        .populate('create_by_id')
-        .populate('edit_by_id')
-        .exec();
-    }
+  async findAll(query: any) {
+    const { page , perPage , fileds = 'name', keyword = ''} = query;
 
-    const totalRecord = await this.TimeSheetsModel.find().count().exec();
+    
+ 
+    let result;
+    let totalRecord;
+
+      const skip: number = (page - 1) * perPage;
+      
+      if (Object.keys(query).length > 0) {
+        delete query.page
+        delete query.perPage
+        result = await this.TimeSheetsModel
+          .find({...query})
+          .limit(+perPage)
+          .skip(skip)
+          .sort({ create_date: -1 })
+          .populate('user_id')
+          .populate('create_by_id')
+          .populate('edit_by_id')
+          .exec();
+      } else {
+        result = await this.TimeSheetsModel
+          .find({})
+          .sort({ create_date: -1 })
+          .populate('user_id')
+          .populate('create_by_id')
+          .populate('edit_by_id')
+          .exec();
+      }
+      totalRecord = await this.TimeSheetsModel.find().count().exec();
 
     return {
       message: 'SUCCESS',

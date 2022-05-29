@@ -19,7 +19,7 @@ export default function ListEducation() {
     const [totalPage, setTotalPage] = useState();
     const [params, setParams] = useState({
         page: 1,
-        perPage: 10,
+        perPage: 5,
         keyword: '',
     });
     const [loading, setLoading] = useState(false);
@@ -276,7 +276,7 @@ export default function ListEducation() {
                     dataSource={data}
                     pagination={{
                         total: totalPage || 0,
-                        pageSize: 10,
+                        pageSize: 5,
                         onChange: onChangePage,
                     }}
                 />

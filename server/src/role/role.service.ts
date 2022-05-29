@@ -25,20 +25,14 @@ export class RoleService {
   }
 
   async findAll(query: QueryListRole) {
-    const { page , perPage , fileds = 'name', keyword = '' } = query;
+    const { page , perPage , fileds = 'name',keyword=''} = query;
     const skip: number = (page - 1) * perPage;
     let result;
-    if (keyword !== '') {
+    if (Object.keys(query).length > 0) {
+      delete query.page
+      delete query.perPage
       result = await this.RoleModel
-        .find({ [fileds]: rgx(keyword) })
-        .limit(+perPage)
-        .skip(skip)
-        .sort({ create_date: -1 })
-        .populate('create_by_id')
-        .exec();
-    } else if (page && perPage) {
-      result = await this.RoleModel
-        .find({})
+        .find({...query})
         .limit(+perPage)
         .skip(skip)
         .sort({ create_date: -1 })
@@ -53,7 +47,8 @@ export class RoleService {
     }
 
     const totalRecord = await this.RoleModel.find().count().exec();
-
+    console.log(result,"result");
+    
     return {
       message: 'SUCCESS',
       data: result,

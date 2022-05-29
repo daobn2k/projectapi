@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
+import { User } from 'src/users/entities/user.entity';
 
 export class CreateTimeSheetsDto {
   _id:string;
@@ -26,4 +27,7 @@ export class QueryListTimeSheets {
 
   @ApiProperty({ required: false, type: String })
   keyword: string;
+
+  @ApiProperty({ required:false, type:String })
+  get_user_id:string;
 }

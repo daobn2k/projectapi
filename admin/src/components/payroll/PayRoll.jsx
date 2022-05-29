@@ -9,28 +9,33 @@ import {
 } from 'antd';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
-import { getDataPayRoll } from '../../axios';
+import { getDataPayRoll, GetUser } from '../../axios';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import {
+  convertDataToOptions,
     parseMoney,
 } from '../../shared';
 import { deletePayRoll } from '../../axios/payroll';
 import ExportExcelComponent from '../ExportExcelComponent';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PopupConfirmComponent from '../../common/PopupComfirmComponent';
+import SelectComponent from '../../common/SelectComponent';
+import { NotificationCommon } from '../../common/Notification';
 
 const { Search } = Input;
 export default function PayRollComponent() {
     const [data, setData] = useState();
     const [totalPage, setTotalPage] = useState();
+    const [listUser, setListUser] = useState([]);
     const [params, setParams] = useState({
         page: 1,
-        perPage: 10,
+        perPage: 5,
         keyword: '',
     });
     const [loading, setLoading] = useState(false);
     const [dataExportExcel, setDataExportExcel] = useState([]);
     const ref = useRef();
+    const history = useHistory();
     const columns = useMemo(() => {
         return [
             // {
@@ -162,10 +167,22 @@ export default function PayRollComponent() {
 
     useEffect(() => {
         getDataPayRollExport();
+        getAllUser();
     }, []);
     useEffect(() => {
         getPayRolls(params);
     }, [params]);
+    const getAllUser = async () => {
+      let d;
+      const res = await GetUser();
+      const { data } = res;
+      if (data.message === 'SUCCESS') {
+          d = convertDataToOptions(data.data);
+          setListUser(d);
+      } else {
+          NotificationCommon('error', 'Không lấy được thông tin người dùng');
+      }
+  };
 
     const handleDelete = (id) => {
         setLoading(true);
@@ -189,7 +206,10 @@ export default function PayRollComponent() {
     };
 
     const handleEdit = (data) => {
-        ref.current.showEdit(data);
+        history.push({
+            pathname: `/payroll/new`,
+            state: { id: data._id },
+        });
     };
 
     const handleSearch = (e) => {
@@ -213,18 +233,25 @@ export default function PayRollComponent() {
         };
     }, [dataExportExcel]);
 
+    const onChangeUser = (e,name) => {
+      setParams({
+        ...params,
+        [name]: e,
+      });
+    } 
     return (
         <Spin indicator={antIcon} spinning={false}>
             <Space className="Space" size={14}>
                 <div className="top-table">
-                    <Search
-                        allowClear
-                        placeholder="Tìm kiếm"
-                        optionFilterProp="children"
-                        className="input-search"
-                        onSearch={handleSearch}
-                        enterButton
-                    ></Search>
+                      <div className='group-search'>
+                         <SelectComponent
+                            name="user_id"
+                            onChange={onChangeUser}
+                            dataOptions={listUser ? listUser : []}
+                            placeholder="Chọn nhân viên"
+                          />
+                    <ExportExcelComponent dataExport={dataExport} />
+                    </div>
                     <Link to="/payroll/new">
                         <Button className="btn-add" icon={<PlusOutlined />}>
                             Thêm mới lương
@@ -233,7 +260,7 @@ export default function PayRollComponent() {
                 </div>
             </Space>
             <div className="space-table">
-                <ExportExcelComponent dataExport={dataExport} />
+             
                 <Table
                     columns={columns}
                     loading={loading}

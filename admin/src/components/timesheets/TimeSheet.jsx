@@ -16,20 +16,25 @@ import {
     deleteTimeSheet,
     updateTimeSheet,
 } from '../../axios/timesheet';
+import moment from 'moment';
 import PopupConfirmComponent from '../../common/PopupComfirmComponent';
+import SelectComponent from '../../common/SelectComponent';
+import ExportExcelComponent from '../ExportExcelComponent';
 const { Search } = Input;
 export default function TimeSheet() {
+    const user = store.getCurentUser();
     const [data, setData] = useState();
     const [listUser, setListUser] = useState([]);
     const [totalPage, setTotalPage] = useState();
+    const [dataExportExcel, setDataExportExcel] = useState([]);
+
     const [params, setParams] = useState({
         page: 1,
-        perPage: 10,
+        perPage: 5,
         keyword: '',
     });
     const [loading, setLoading] = useState(false);
     const ref = useRef();
-    const user = store.getCurentUser();
     const columns = useMemo(() => {
         return [
             {
@@ -191,6 +196,9 @@ export default function TimeSheet() {
         ];
     }, [listUser]);
     const getTimeSheets = (payload) => {
+        if(false){
+        payload.user_id = user._id;
+        }
         setLoading(true);
         getDataTimeSheet(payload)
             .then((res) => {
@@ -256,7 +264,7 @@ export default function TimeSheet() {
     const handleSearch = (e) => {
         setParams({
             ...params,
-            keyword: e,
+            name: e,
         });
     };
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -302,18 +310,53 @@ export default function TimeSheet() {
             setLoading(false);
         }
     };
+
+    const getDataPayRollExport = () => {
+        getDataTimeSheet()
+            .then((res) => {
+                const { data, status } = res;
+                if (status === 200) {
+                    setDataExportExcel(data.data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {});
+    };
+
+    useEffect(() => {
+        getDataPayRollExport();
+    }, []);
+
+    const dataExport = useMemo(() => {
+        return {
+            data: dataExportExcel,
+            header: columns.map((i) => i.title),
+            key: columns.map((i) => i.key),
+            fileName: 'Bảng chấm công',
+        };
+    }, [dataExportExcel]);
+
+    const onChangeUser = (e, name) => {
+        setParams({
+            ...params,
+            [name]: e,
+        });
+    };
     return (
         <Spin indicator={antIcon} spinning={false}>
             <Space className="Space" size={14}>
                 <div className="top-table">
-                    <Search
-                        allowClear
-                        placeholder="Tìm kiếm"
-                        optionFilterProp="children"
-                        className="input-search"
-                        onSearch={handleSearch}
-                        enterButton
-                    ></Search>
+                    <div className="group-search">
+                        <SelectComponent
+                            name="user_id"
+                            onChange={onChangeUser}
+                            dataOptions={listUser ? listUser : []}
+                            placeholder="Chọn nhân viên"
+                        />
+                        <ExportExcelComponent dataExport={dataExport} />
+                    </div>
                     <AddNewDialogComponent
                         fileds={dataForm}
                         title="chấm công"
@@ -322,17 +365,19 @@ export default function TimeSheet() {
                         onSubmit={onSubmit}
                     />
                 </div>
+            </Space>
+            <div className="space-table">
                 <Table
                     columns={columns}
                     loading={loading}
                     dataSource={data}
                     pagination={{
                         total: totalPage || 0,
-                        pageSize: 10,
+                        pageSize: 5,
                         onChange: onChangePage,
                     }}
                 />
-            </Space>
+            </div>
         </Spin>
     );
 }

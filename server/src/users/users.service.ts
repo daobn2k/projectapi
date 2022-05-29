@@ -14,7 +14,16 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto) {
+    const findUser =  await this.userModel.findOne({username:createUserDto.username});
+
+    if(findUser){
+      return {
+        message: 'SUCCESS',
+        data: null,
+        ERROR_MESSAGE:"Tên tài khoản đã có người sử dụng vui lòng sử dụng tên khác"
+      }
+    }
     const createdUser = new this.userModel(createUserDto);
 
     const result = await createdUser.save();

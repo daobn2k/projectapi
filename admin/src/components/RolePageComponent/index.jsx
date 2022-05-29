@@ -17,7 +17,7 @@ export default function RolePageComponent() {
     const [totalPage, setTotalPage] = useState();
     const [params, setParams] = useState({
         page: 1,
-        perPage: 10,
+        perPage: 5,
         keyword: '',
     });
     const [loading, setLoading] = useState(false);
@@ -143,7 +143,7 @@ export default function RolePageComponent() {
                 filed: {
                     placeholder: 'Điền thông tin mô tả',
                     size: 'large',
-                    autoSize: { minRows: 3, maxRows: 10 },
+                    autoSize: { minRows: 3, maxRows: 5 },
                 },
                 typeFiled: 'area',
             },
@@ -246,11 +246,13 @@ export default function RolePageComponent() {
     const onSubmit = async (v) => {
         let payload;
         let res;
+        console.log(user,"user");
         if (v.id) {
             payload = {
                 ...v,
                 edit_by_id: user._id,
                 update_date: new Date(),
+                create_by_id: user._id,
             };
             res = await editRole(v.id, payload);
         } else {

@@ -118,6 +118,13 @@ export default function AddCustomer() {
       addNewAccount(dataSubmit)
         .then((res) => {
           if (res.status === 200) {
+            if(res.data && res.data.ERROR_MESSAGE){
+              return   notification.error({
+                message: `Thông báo tạo mới`,
+                description: res.data.ERROR_MESSAGE,
+                placement: "topRight",
+              });
+            }
             notification.success({
               message: `Thông báo tạo mới`,
               description: "Tạo mới nhân viên thành công",
@@ -224,7 +231,7 @@ export default function AddCustomer() {
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng điền đầy đủ họ và tên",
+                  message: "Vui lòng chọn giới tính",
                 },
                 {
                   maxLength: 256,

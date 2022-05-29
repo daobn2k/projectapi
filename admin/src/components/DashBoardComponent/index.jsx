@@ -6,14 +6,14 @@ import { Row, Col } from 'antd';
 const DashBoardComponent = () => {
     return (
         <div className="root-dashboard">
-          <Row className='db-row'>
+          {/* <Row className='db-row'>
               <Col span={10}>
                   <ListCustomer isShow={false} />
               </Col>
               <Col span={10}>
                   <ListCustomer isShow={false} />
               </Col>
-          </Row>
+          </Row> */}
         </div>
     );
 };

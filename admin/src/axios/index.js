@@ -55,6 +55,9 @@ export const getDataPayRoll = (data) => {
   return axios.get(`${API_END_POINT}/payroll`,{params:data},config)
 }
 
+export const getPayrollDetail = (id) => {
+  return axios.get(`${API_END_POINT}/payroll/${id}`, config);
+};
 export {
   getRequest,
   GetProduct,

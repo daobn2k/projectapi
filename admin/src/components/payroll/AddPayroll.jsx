@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import { Button, Input, Form, DatePicker, notification, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { GetUser, getUserbyId } from '../../axios';
+import { getPayrollDetail, GetUser, getUserbyId } from '../../axios';
 import { useHistory, useLocation } from 'react-router-dom';
 import './customer.css';
 import moment from 'moment';
@@ -25,7 +25,7 @@ export default function AddPayRoll() {
 
     useEffect(() => {
         if (state && state.id) {
-            getUserbyId(state.id)
+            getPayrollDetail(state.id)
                 .then((res) => {
                     const { data, status } = res;
                     if (status === 200) {
@@ -38,24 +38,25 @@ export default function AddPayRoll() {
     }, [state]);
 
     const handleSetData = (listKey, data) => {
+        console.log(data,"<<<-----detail");
+
         listKey.forEach((item) => {
+            const keySplit = item.split('_')
+            console.log(keySplit);
             if (typeof data[item] === 'object') {
                 const valueSet = {
                     [item]: data[item] && data[item]._id ? data[item]._id : '',
                 };
                 return form.setFieldsValue(valueSet);
             }
-            if (item === 'dob') {
+            if(keySplit[keySplit.length - 1] === 'date' || item ==='in_month'){
                 const valueSet = {
-                    [item]: data && data[item] ? moment(data[item]) : '',
+                    [item]: data[item] ? moment(data[item],"MM") : ''
                 };
                 return form.setFieldsValue(valueSet);
             }
-            if (
-                typeof data[item] !== 'object' &&
-                item !== 'create_date' &&
-                item !== 'dob'
-            ) {
+            
+            if (typeof data[item] === 'string' || typeof data[item] === 'number') {
                 const valueSet = {
                     [item]: data && data[item] ? data[item] : '',
                 };

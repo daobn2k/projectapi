@@ -22,7 +22,7 @@ export default function ListDepartment() {
     const [totalPage, setTotalPage] = useState();
     const [params, setParams] = useState({
         page: 1,
-        perPage: 10,
+        perPage: 5,
         keyword: '',
     });
     const [loading, setLoading] = useState(false);
@@ -80,32 +80,32 @@ export default function ListDepartment() {
                     );
                 },
             },
-            {
-                title: 'Người chỉnh sửa',
-                dataIndex: 'edit_by_id',
-                key: 'edit_by_id',
-                width: 200,
-                render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>
-                            {item && item.name ? item.name : ''}
-                        </Typography>
-                    );
-                },
-            },
-            {
-                title: 'Ngày chỉnh sửa',
-                dataIndex: 'update_date',
-                key: 'update_date',
-                width: 175,
-                render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>
-                            {convertTimeStampUTCToLocal(item)}
-                        </Typography>
-                    );
-                },
-            },
+            // {
+            //     title: 'Người chỉnh sửa',
+            //     dataIndex: 'edit_by_id',
+            //     key: 'edit_by_id',
+            //     width: 200,
+            //     render: (item, record, index) => {
+            //         return (
+            //             <Typography key={index}>
+            //                 {item && item.name ? item.name : ''}
+            //             </Typography>
+            //         );
+            //     },
+            // },
+            // {
+            //     title: 'Ngày chỉnh sửa',
+            //     dataIndex: 'update_date',
+            //     key: 'update_date',
+            //     width: 175,
+            //     render: (item, record, index) => {
+            //         return (
+            //             <Typography key={index}>
+            //                 {convertTimeStampUTCToLocal(item)}
+            //             </Typography>
+            //         );
+            //     },
+            // },
             {
                 title: 'Thao tác',
                 key: 'action',
@@ -178,7 +178,7 @@ export default function ListDepartment() {
                 filed: {
                     placeholder: 'Điền thông tin mô tả',
                     size: 'large',
-                    autoSize: { minRows: 3, maxRows: 10 },
+                    autoSize: { minRows: 3, maxRows: 5 },
                 },
                 typeFiled: 'area',
             },
@@ -354,7 +354,7 @@ export default function ListDepartment() {
                         pageSize: 5,
                         onChange: onChangePage,
                     }}
-                    scroll={{ x: 2000 }}
+                    // scroll={{ x: 2000 }}
                 />
             </div>
         </Spin>

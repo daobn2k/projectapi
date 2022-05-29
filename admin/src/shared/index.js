@@ -200,13 +200,6 @@ export const getHourMinuteTime = (date = '') => {
     return newDate
 }
 
-export const listCheckRoleViewAll = ["Hội đồng sáng lập tập đoàn","Ban điều hành tập đoàn","Trưởng phòng","Quản lí","Lãnh đạo"]
-
-export const listRoleViewPayRoll = ["Kế toán"]
-
-export const listRoleCheckProfile = ["Nhân sự"]
-
-
 export const parseMoney = (number) =>{
     if(!Number(number)) return 0
         

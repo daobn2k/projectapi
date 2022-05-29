@@ -30,18 +30,12 @@ export class PayRollService {
     const { page , perPage , fileds = 'name', keyword = '' } = query;
     const skip: number = (page - 1) * perPage;
     let result;
-    if (keyword !== '') {
+    if (Object.keys(query).length > 0) {
+      delete query.page
+      delete query.perPage
+      
       result = await this.PayRollModule
-        .find({ [fileds]: rgx(keyword) })
-        .limit(+perPage)
-        .skip(skip)
-        .sort({ create_date: -1 })
-        .populate('create_by_id')
-        .populate('user_id')
-        .exec();
-    } else if (page && perPage) {
-      result = await this.PayRollModule
-        .find({})
+        .find({...query})
         .limit(+perPage)
         .skip(skip)
         .sort({ create_date: -1 })
@@ -68,7 +62,7 @@ export class PayRollService {
   async findOne(id: string) {
     const result = await this.PayRollModule.findById(id)
       .populate('create_by_id')
-      .populate('edit_by_id')
+      .populate('user_id')
       .exec();
 
     return {

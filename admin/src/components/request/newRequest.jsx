@@ -18,7 +18,7 @@ export default function AddRequest() {
   const [listUser, setListUser] = useState([]);
   const history = useHistory();
   const location = useLocation();
-
+  console.log(listUser,"listUser");
   const { state } = location;
 
   const [form] = Form.useForm();

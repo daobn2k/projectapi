@@ -17,7 +17,7 @@ const SelectComponent = (props, ref) => {
       showSearch
       placeholder={placeholder}
       onSearch={onSearch}
-      onChange={onChange}
+      onChange={(e)=>onChange(e,name)}
       allowClear
       {...rest}
     >
