@@ -205,3 +205,13 @@ export const parseMoney = (number) =>{
         
     return parseFloat(Number(number)).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
 }
+
+
+export const checkPermisstionUser = (code) => {
+    switch(code){
+        case '4':
+            return 'user';
+        default:
+            return 'admin';
+    }
+}

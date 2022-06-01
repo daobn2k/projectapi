@@ -216,7 +216,6 @@ export default function AddCustomer() {
                   message: "Điền thông tin dưới 256 kí tự"
                 }
               ]}
-              hasFeedback
               name="name"
               label="Họ và tên"
             >
@@ -238,7 +237,6 @@ export default function AddCustomer() {
                   message: "Điền thông tin dưới 256 kí tự"
                 }
               ]}
-              hasFeedback
               name="sex"
               label="Giới tính"
             >

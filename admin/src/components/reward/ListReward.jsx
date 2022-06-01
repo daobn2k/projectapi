@@ -1,9 +1,9 @@
 import { notification, Space, Table, Input, Spin, Typography } from "antd";
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useRef, useMemo, Fragment } from "react";
 import { AiOutlineEdit, AiFillDelete } from "react-icons/ai";
 import { GetUser } from "../../axios";
 import { LoadingOutlined } from "@ant-design/icons";
-import { convertDataToOptions, convertTimeStampUTCToLocal, listReward } from "../../shared";
+import { checkPermisstionUser, convertDataToOptions, convertTimeStampUTCToLocal, listReward } from "../../shared";
 import AddNewDialogComponent from "../AddNewDialogComponent";
 import { NotificationCommon } from "../../common/Notification";
 import { store } from "../../storage";
@@ -91,8 +91,14 @@ export default function ListReward() {
         width: 100,
         render: (e) => (
           <Space size="middle">
-            <AiOutlineEdit key={e.id} onClick={() => handleEdit(e)} />
-            <AiFillDelete key={e.id} onClick={() => handleDelete(e._id)} />
+            {
+                 role === 'admin' && 
+                 <Fragment>
+                      <AiOutlineEdit key={e.id} onClick={() => handleEdit(e)} />
+                      <AiFillDelete key={e.id} onClick={() => handleDelete(e._id)} />
+                 </Fragment>
+            }
+         
           </Space>
         ),
       },
@@ -172,7 +178,12 @@ export default function ListReward() {
       },
     ];
   }, [listUser]);
+  const role = checkPermisstionUser(user.role_id.code)
+
   const getReward = (payload) => {
+        if(role === 'user'){
+        payload.user_id = user._id;
+    }
     setLoading(true);
     getDataEvaluate(payload)
       .then((res) => {
@@ -300,13 +311,17 @@ export default function ListReward() {
             onSearch={handleSearch}
             enterButton
           ></Search>
-          <AddNewDialogComponent
+          {
+            role === 'admin' && 
+            <AddNewDialogComponent
             fileds={dataForm}
             title="khen thưởng"
             onClose={onClose}
             ref={ref}
             onSubmit={onSubmit}
           />
+          }
+         
         </div>
         <Table
           columns={columns}

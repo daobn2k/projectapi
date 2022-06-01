@@ -37,7 +37,7 @@ export default function ListCustomer(props) {
             title: 'Họ và tên',
             dataIndex: 'name',
             key: 'name',
-            width: '125px',
+            width: '200px',
             fixed: 'left',
         },
         {

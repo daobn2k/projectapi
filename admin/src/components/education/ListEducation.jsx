@@ -1,8 +1,8 @@
 import { notification, Space, Table, Input, Spin, Typography } from 'antd';
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, Fragment } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { LoadingOutlined } from '@ant-design/icons';
-import { convertTimeStampUTCToLocal } from '../../shared';
+import { checkPermisstionUser, convertTimeStampUTCToLocal } from '../../shared';
 import AddNewDialogComponent from '../AddNewDialogComponent';
 import { NotificationCommon } from '../../common/Notification';
 import { store } from '../../storage';
@@ -25,6 +25,7 @@ export default function ListEducation() {
     const [loading, setLoading] = useState(false);
     const ref = useRef();
     const user = store.getCurentUser();
+    const role = checkPermisstionUser(user.role_id.code);
     const columns = useMemo(() => {
         return [
             {
@@ -47,9 +48,7 @@ export default function ListEducation() {
                 key: 'create_by_id',
                 render: (item, record, index) => {
                     return (
-                        <Typography key={index}>
-                            {item && item.name ? item.name : ''}
-                        </Typography>
+                        <Typography key={index}>{item && item.name ? item.name : ''}</Typography>
                     );
                 },
             },
@@ -59,11 +58,7 @@ export default function ListEducation() {
                 key: 'create_date',
                 width: 125,
                 render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>
-                            {convertTimeStampUTCToLocal(item)}
-                        </Typography>
-                    );
+                    return <Typography key={index}>{convertTimeStampUTCToLocal(item)}</Typography>;
                 },
             },
             {
@@ -73,9 +68,7 @@ export default function ListEducation() {
                 width: 200,
                 render: (item, record, index) => {
                     return (
-                        <Typography key={index}>
-                            {item && item.name ? item.name : ''}
-                        </Typography>
+                        <Typography key={index}>{item && item.name ? item.name : ''}</Typography>
                     );
                 },
             },
@@ -85,11 +78,7 @@ export default function ListEducation() {
                 key: 'update_date',
                 width: 175,
                 render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>
-                            {convertTimeStampUTCToLocal(item)}
-                        </Typography>
-                    );
+                    return <Typography key={index}>{convertTimeStampUTCToLocal(item)}</Typography>;
                 },
             },
             {
@@ -98,17 +87,18 @@ export default function ListEducation() {
                 width: 100,
                 render: (e) => (
                     <Space size="middle">
-                        <AiOutlineEdit
-                            key={e.id}
-                            onClick={() => handleEdit(e)}
-                        />
-                        <PopupConfirmComponent
-                            title="trình độ"
-                            data={e}
-                            handleDelete={handleDelete}
-                        >
-                            <AiFillDelete />
-                        </PopupConfirmComponent>
+                        {role === 'admin' && (
+                            <Fragment>
+                                <AiOutlineEdit key={e.id} onClick={() => handleEdit(e)} />
+                                <PopupConfirmComponent
+                                    title="trình độ"
+                                    data={e}
+                                    handleDelete={handleDelete}
+                                >
+                                    <AiFillDelete />
+                                </PopupConfirmComponent>
+                            </Fragment>
+                        )}
                     </Space>
                 ),
             },
@@ -262,13 +252,17 @@ export default function ListEducation() {
                         onSearch={handleSearch}
                         enterButton
                     ></Search>
-                    <AddNewDialogComponent
+                    {
+                        role === 'admin' && 
+                        <AddNewDialogComponent
                         fileds={dataForm}
                         title="trình độ học vấn"
                         onClose={onClose}
                         ref={ref}
                         onSubmit={onSubmit}
                     />
+                    }
+                   
                 </div>
                 <Table
                     columns={columns}

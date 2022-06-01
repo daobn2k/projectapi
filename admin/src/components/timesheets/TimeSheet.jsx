@@ -1,9 +1,10 @@
 import { notification, Space, Table, Input, Spin, Typography } from 'antd';
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, Fragment } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { getDataTimeSheet, GetUser } from '../../axios';
 import { LoadingOutlined } from '@ant-design/icons';
 import {
+    checkPermisstionUser,
     convertDataToOptions,
     convertTimeStampUTCToLocal,
     getHourMinuteTime,
@@ -99,7 +100,10 @@ export default function TimeSheet() {
                 width: 100,
                 render: (e) => (
                     <Space size="middle">
-                        <AiOutlineEdit
+                        {
+                            role === 'admin' || isShowListTimeSheets && 
+                            <Fragment>
+                                <AiOutlineEdit
                             key={e.id}
                             onClick={() => handleEdit(e)}
                         />
@@ -109,7 +113,9 @@ export default function TimeSheet() {
                             handleDelete={handleDelete}
                         >
                             <AiFillDelete />
-                        </PopupConfirmComponent>
+                        </PopupConfirmComponent></Fragment>
+                        }
+                        
                     </Space>
                 ),
             },
@@ -195,8 +201,12 @@ export default function TimeSheet() {
             },
         ];
     }, [listUser]);
+    const role = checkPermisstionUser(user.role_id.code)
+    const isShowListTimeSheets = user.department_id.name === 'Ban Kế Toán' ? true : false;
     const getTimeSheets = (payload) => {
-        if(false){
+      
+
+        if(role === 'user' && !isShowListTimeSheets){
         payload.user_id = user._id;
         }
         setLoading(true);
@@ -357,13 +367,17 @@ export default function TimeSheet() {
                         />
                         <ExportExcelComponent dataExport={dataExport} />
                     </div>
-                    <AddNewDialogComponent
+                    {
+                        role === 'admin' || isShowListTimeSheets && 
+                        <AddNewDialogComponent
                         fileds={dataForm}
                         title="chấm công"
                         onClose={onClose}
                         ref={ref}
                         onSubmit={onSubmit}
-                    />
+                        />
+                    }
+                   
                 </div>
             </Space>
             <div className="space-table">

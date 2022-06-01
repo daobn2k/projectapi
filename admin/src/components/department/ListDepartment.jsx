@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { GetUser } from '../../axios';
 import { LoadingOutlined } from '@ant-design/icons';
-import { convertDataToOptions, convertTimeStampUTCToLocal } from '../../shared';
+import { checkPermisstionUser, convertDataToOptions, convertTimeStampUTCToLocal } from '../../shared';
 import AddNewDialogComponent from '../AddNewDialogComponent';
 import {
     deleteDepartment,
@@ -55,18 +55,18 @@ export default function ListDepartment() {
                     );
                 },
             },
-            {
-                title: 'Người tạo',
-                dataIndex: 'create_by_id',
-                key: 'create_by_id',
-                render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>
-                            {item && item.name ? item.name : ''}
-                        </Typography>
-                    );
-                },
-            },
+            // {
+            //     title: 'Người tạo',
+            //     dataIndex: 'create_by_id',
+            //     key: 'create_by_id',
+            //     render: (item, record, index) => {
+            //         return (
+            //             <Typography key={index}>
+            //                 {item && item.name ? item.name : ''}
+            //             </Typography>
+            //         );
+            //     },
+            // },
             {
                 title: 'Ngày tạo',
                 dataIndex: 'create_date',

@@ -1,24 +1,19 @@
-import {
-    notification,
-    Space,
-    Table,
-    Input,
-    Button,
-    Spin,
-    Typography,
-} from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { notification, Space, Table, Input, Button, Spin, Typography } from 'antd';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { Link, useHistory } from 'react-router-dom';
 import { getRequest } from '../../axios';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
-import { convertTimeStampUTCToLocal } from '../../shared';
+import { checkPermisstionUser, convertTimeStampUTCToLocal } from '../../shared';
 import ExportExcelComponent from '../ExportExcelComponent';
 import { deleteRequest } from '../../axios/request';
 import PopupConfirmComponent from '../../common/PopupComfirmComponent';
+import { store } from '../../storage';
+
 const { Search } = Input;
 export default function ListRequest() {
     const [loading, setLoading] = useState(false);
+    const user = store.getCurentUser();
 
     const columns = [
         {
@@ -40,11 +35,7 @@ export default function ListRequest() {
             key: 'create_by_id',
             width: '150px',
             render: (item, record, index) => {
-                return (
-                    <Typography key={index}>
-                        {item && item.name ? item.name : ''}
-                    </Typography>
-                );
+                return <Typography key={index}>{item && item.name ? item.name : ''}</Typography>;
             },
         },
         {
@@ -53,11 +44,7 @@ export default function ListRequest() {
             key: 'user_id',
             width: '150px',
             render: (item, record, index) => {
-                return (
-                    <Typography key={index}>
-                        {item && item.name ? item.name : ''}
-                    </Typography>
-                );
+                return <Typography key={index}>{item && item.name ? item.name : ''}</Typography>;
             },
         },
         {
@@ -66,11 +53,7 @@ export default function ListRequest() {
             key: 'from_date',
             width: '125px',
             render: (date, re, index) => {
-                return (
-                    <Typography key={index}>
-                        {convertTimeStampUTCToLocal(date)}
-                    </Typography>
-                );
+                return <Typography key={index}>{convertTimeStampUTCToLocal(date)}</Typography>;
             },
         },
         {
@@ -79,11 +62,7 @@ export default function ListRequest() {
             key: 'end_date',
             width: '125px',
             render: (date, re, index) => {
-                return (
-                    <Typography key={index}>
-                        {convertTimeStampUTCToLocal(date)}
-                    </Typography>
-                );
+                return <Typography key={index}>{convertTimeStampUTCToLocal(date)}</Typography>;
             },
         },
         // {
@@ -99,17 +78,18 @@ export default function ListRequest() {
             width: 75,
             render: (e) => (
                 <Space size="middle">
-                    <AiOutlineEdit
-                        key={e.id}
-                        onClick={() => handleEdit(e._id)}
-                    />
-                    <PopupConfirmComponent
-                        title="công việc"
-                        data={e}
-                        handleDelete={handleDelete}
-                    >
-                        <AiFillDelete />
-                    </PopupConfirmComponent>
+                    {role ==='admin' && (
+                        <Fragment>
+                            <AiOutlineEdit key={e.id} onClick={() => handleEdit(e._id)} />
+                            <PopupConfirmComponent
+                                title="công việc"
+                                data={e}
+                                handleDelete={handleDelete}
+                            >
+                                <AiFillDelete />
+                            </PopupConfirmComponent>
+                        </Fragment>
+                    )}
                 </Space>
             ),
         },
@@ -122,7 +102,11 @@ export default function ListRequest() {
         perPage: 5,
         keyword: '',
     });
+    const role = checkPermisstionUser(user.role_id.code);
     const getDataRequest = (payload) => {
+        if (role === 'user') {
+            payload.user_id = user._id;
+        }
         setLoading(true);
         getRequest(payload)
             .then((res) => {
@@ -224,11 +208,13 @@ export default function ListRequest() {
                         onSearch={handleSearch}
                         enterButton
                     ></Search>
-                    <Link to="/request/add">
-                        <Button className="btn-add" icon={<PlusOutlined />}>
-                            Thêm mới nhân viên
-                        </Button>
-                    </Link>
+                    {role === 'admin' && (
+                        <Link to="/request/add">
+                            <Button className="btn-add" icon={<PlusOutlined />}>
+                                Thêm mới nhân viên
+                            </Button>
+                        </Link>
+                    )}
                 </div>
             </Space>
             <div className="space-table">

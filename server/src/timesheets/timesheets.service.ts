@@ -30,8 +30,6 @@ export class TimeSheetsService {
 
   async findAll(query: any) {
     const { page , perPage , fileds = 'name', keyword = ''} = query;
-
-    
  
     let result;
     let totalRecord;

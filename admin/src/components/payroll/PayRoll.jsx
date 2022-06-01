@@ -1,29 +1,21 @@
-import {
-    notification,
-    Space,
-    Table,
-    Input,
-    Spin,
-    Typography,
-    Button,
-} from 'antd';
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { notification, Space, Table, Input, Spin, Typography, Button } from 'antd';
+import React, { useEffect, useState, useRef, useMemo, Fragment } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { getDataPayRoll, GetUser } from '../../axios';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import {
-  convertDataToOptions,
-    parseMoney,
-} from '../../shared';
+import { checkPermisstionUser, convertDataToOptions, parseMoney } from '../../shared';
 import { deletePayRoll } from '../../axios/payroll';
 import ExportExcelComponent from '../ExportExcelComponent';
 import { Link, useHistory } from 'react-router-dom';
 import PopupConfirmComponent from '../../common/PopupComfirmComponent';
 import SelectComponent from '../../common/SelectComponent';
 import { NotificationCommon } from '../../common/Notification';
+import { store } from '../../storage';
 
 const { Search } = Input;
 export default function PayRollComponent() {
+    const user = store.getCurentUser();
+
     const [data, setData] = useState();
     const [totalPage, setTotalPage] = useState();
     const [listUser, setListUser] = useState([]);
@@ -58,9 +50,7 @@ export default function PayRollComponent() {
                 align: 'center',
                 render: (item, record, index) => {
                     return (
-                        <Typography key={index}>
-                            {item && item.name ? item.name : ''}
-                        </Typography>
+                        <Typography key={index}>{item && item.name ? item.name : ''}</Typography>
                     );
                 },
             },
@@ -82,9 +72,7 @@ export default function PayRollComponent() {
                 key: 'salary',
                 width: 125,
                 render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>{parseMoney(item)}</Typography>
-                    );
+                    return <Typography key={index}>{parseMoney(item)}</Typography>;
                 },
             },
             {
@@ -93,9 +81,7 @@ export default function PayRollComponent() {
                 key: 'salary_bonus',
                 width: 200,
                 render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>{parseMoney(item)}</Typography>
-                    );
+                    return <Typography key={index}>{parseMoney(item)}</Typography>;
                 },
             },
             {
@@ -104,9 +90,7 @@ export default function PayRollComponent() {
                 key: 'total_money',
                 width: 150,
                 render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>{parseMoney(item)}</Typography>
-                    );
+                    return <Typography key={index}>{parseMoney(item)}</Typography>;
                 },
             },
             {
@@ -115,23 +99,29 @@ export default function PayRollComponent() {
                 width: 100,
                 render: (e) => (
                     <Space size="middle">
-                        <AiOutlineEdit
-                            key={e.id}
-                            onClick={() => handleEdit(e)}
-                        />
-                        <PopupConfirmComponent
-                            title="bảng lương"
-                            data={e}
-                            handleDelete={handleDelete}
-                        >
-                            <AiFillDelete />
-                        </PopupConfirmComponent>
+                        {role === 'admin' && isShowListTimeSheets && (
+                            <Fragment>
+                                <AiOutlineEdit key={e.id} onClick={() => handleEdit(e)} />
+                                <PopupConfirmComponent
+                                    title="bảng lương"
+                                    data={e}
+                                    handleDelete={handleDelete}
+                                >
+                                    <AiFillDelete />
+                                </PopupConfirmComponent>
+                            </Fragment>
+                        )}
                     </Space>
                 ),
             },
         ];
     }, [data]);
+    const role = checkPermisstionUser(user.role_id.code);
+    const isShowListTimeSheets = user.department_id.name === 'Ban Kế Toán' ? true : false;
     const getPayRolls = (payload) => {
+        if (role === 'user') {
+            payload.user_id = user._id;
+        }
         setLoading(true);
         getDataPayRoll(payload)
             .then((res) => {
@@ -173,16 +163,16 @@ export default function PayRollComponent() {
         getPayRolls(params);
     }, [params]);
     const getAllUser = async () => {
-      let d;
-      const res = await GetUser();
-      const { data } = res;
-      if (data.message === 'SUCCESS') {
-          d = convertDataToOptions(data.data);
-          setListUser(d);
-      } else {
-          NotificationCommon('error', 'Không lấy được thông tin người dùng');
-      }
-  };
+        let d;
+        const res = await GetUser();
+        const { data } = res;
+        if (data.message === 'SUCCESS') {
+            d = convertDataToOptions(data.data);
+            setListUser(d);
+        } else {
+            NotificationCommon('error', 'Không lấy được thông tin người dùng');
+        }
+    };
 
     const handleDelete = (id) => {
         setLoading(true);
@@ -233,34 +223,35 @@ export default function PayRollComponent() {
         };
     }, [dataExportExcel]);
 
-    const onChangeUser = (e,name) => {
-      setParams({
-        ...params,
-        [name]: e,
-      });
-    } 
+    const onChangeUser = (e, name) => {
+        setParams({
+            ...params,
+            [name]: e,
+        });
+    };
     return (
         <Spin indicator={antIcon} spinning={false}>
             <Space className="Space" size={14}>
                 <div className="top-table">
-                      <div className='group-search'>
-                         <SelectComponent
+                    <div className="group-search">
+                        <SelectComponent
                             name="user_id"
                             onChange={onChangeUser}
                             dataOptions={listUser ? listUser : []}
                             placeholder="Chọn nhân viên"
-                          />
-                    <ExportExcelComponent dataExport={dataExport} />
+                        />
+                        <ExportExcelComponent dataExport={dataExport} />
                     </div>
-                    <Link to="/payroll/new">
-                        <Button className="btn-add" icon={<PlusOutlined />}>
-                            Thêm mới lương
-                        </Button>
-                    </Link>
+                    {role === 'admin' && isShowListTimeSheets && (
+                        <Link to="/payroll/new">
+                            <Button className="btn-add" icon={<PlusOutlined />}>
+                                Thêm mới lương
+                            </Button>
+                        </Link>
+                    )}
                 </div>
             </Space>
             <div className="space-table">
-             
                 <Table
                     columns={columns}
                     loading={loading}
