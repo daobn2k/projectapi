@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Layout, Avatar, Dropdown, Menu, Space } from "antd";
 import {
   BellOutlined,
-  ShoppingCartOutlined,
   MailOutlined,
   SearchOutlined,
 } from "@ant-design/icons";

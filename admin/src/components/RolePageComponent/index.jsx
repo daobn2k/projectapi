@@ -49,18 +49,6 @@ export default function RolePageComponent() {
                 align: 'left',
             },
             {
-                title: 'Người tạo',
-                dataIndex: 'create_by_id',
-                key: 'create_by_id',
-                render: (item, record, index) => {
-                    return (
-                        <Typography key={index}>
-                            {item && item.name ? item.name : ''}
-                        </Typography>
-                    );
-                },
-            },
-            {
                 title: 'Ngày tạo',
                 dataIndex: 'create_date',
                 key: 'create_date',

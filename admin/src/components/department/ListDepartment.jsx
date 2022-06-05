@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { GetUser } from '../../axios';
 import { LoadingOutlined } from '@ant-design/icons';
-import { checkPermisstionUser, convertDataToOptions, convertTimeStampUTCToLocal } from '../../shared';
+import { convertDataToOptions, convertTimeStampUTCToLocal } from '../../shared';
 import AddNewDialogComponent from '../AddNewDialogComponent';
 import {
     deleteDepartment,
