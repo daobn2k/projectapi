@@ -91,7 +91,6 @@ export class EducationService {
   }
   async search(params) {
     const { keyword, create_date } = params;
-    console.log(params, 'params');
     const result = await this.EducationModel.find({
       name: keyword,
       create_date: create_date,

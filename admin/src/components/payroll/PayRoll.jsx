@@ -1,4 +1,4 @@
-import { notification, Space, Table, Input, Spin, Typography, Button } from 'antd';
+import { notification, Space, Table, Input, Spin, Typography, Button, DatePicker } from 'antd';
 import React, { useEffect, useState, useRef, useMemo, Fragment } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { getDataPayRoll, GetUser } from '../../axios';
@@ -11,6 +11,8 @@ import PopupConfirmComponent from '../../common/PopupComfirmComponent';
 import SelectComponent from '../../common/SelectComponent';
 import { NotificationCommon } from '../../common/Notification';
 import { store } from '../../storage';
+import * as _ from 'lodash';
+import moment from 'moment';
 
 const { Search } = Input;
 export default function PayRollComponent() {
@@ -229,16 +231,33 @@ export default function PayRollComponent() {
             [name]: e,
         });
     };
+
+    const handleGetDate = (e) => {
+        setParams({
+            ...params,
+            create_date: !_.isEmpty(e) ? moment(e).format('YYYY-MM-DD') : null,
+        });
+    };
+
     return (
         <Spin indicator={antIcon} spinning={false}>
             <Space className="Space" size={14}>
                 <div className="top-table">
                     <div className="group-search">
-                        <SelectComponent
-                            name="user_id"
-                            onChange={onChangeUser}
-                            dataOptions={listUser ? listUser : []}
-                            placeholder="Chọn nhân viên"
+                        {role === 'admin' && isShowListTimeSheets && (
+                            <SelectComponent
+                                name="user_id"
+                                onChange={onChangeUser}
+                                dataOptions={listUser ? listUser : []}
+                                placeholder="Chọn nhân viên"
+                            />
+                        )}
+                        <DatePicker
+                            style={{ width: '100%' }}
+                            format="DD/MM/YYYY"
+                            placeholder="Chọn ngày chấm công"
+                            size="large"
+                            onChange={handleGetDate}
                         />
                         <ExportExcelComponent dataExport={dataExport} />
                     </div>

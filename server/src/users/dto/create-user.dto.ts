@@ -34,6 +34,9 @@ export class QueryListUsers {
 
   @ApiProperty({ required: false, type: String })
   keyword: string;
+
+  @ApiProperty({ required: false, type: String , default: '' })
+  create_date: string;
 }
 
 

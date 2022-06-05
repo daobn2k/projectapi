@@ -12,6 +12,7 @@
 }
 .ant-select-selector {
   height: 40px !important;
+  min-width: 120px;
 }
 
 .FormAddProduct .ant-image {

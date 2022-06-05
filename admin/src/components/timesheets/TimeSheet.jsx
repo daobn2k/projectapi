@@ -1,4 +1,4 @@
-import { notification, Space, Table, Input, Spin, Typography } from 'antd';
+import { notification, Space, Table, Input, Spin, Typography, DatePicker } from 'antd';
 import React, { useEffect, useState, useRef, useMemo, Fragment } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { getDataTimeSheet, GetUser } from '../../axios';
@@ -21,6 +21,7 @@ import moment from 'moment';
 import PopupConfirmComponent from '../../common/PopupComfirmComponent';
 import SelectComponent from '../../common/SelectComponent';
 import ExportExcelComponent from '../ExportExcelComponent';
+import * as _ from 'lodash';
 const { Search } = Input;
 export default function TimeSheet() {
     const user = store.getCurentUser();
@@ -354,28 +355,39 @@ export default function TimeSheet() {
             [name]: e,
         });
     };
+
+    const handleGetDate = (e) => {
+        setParams({
+            ...params,
+            create_date: !_.isEmpty(e) ? moment(e).format("YYYY-MM-DD") : null
+        })
+    }
     return (
         <Spin indicator={antIcon} spinning={false}>
             <Space className="Space" size={14}>
                 <div className="top-table">
                     <div className="group-search">
+                    {
+                        role === 'admin' || isShowListTimeSheets ?
                         <SelectComponent
-                            name="user_id"
-                            onChange={onChangeUser}
-                            dataOptions={listUser ? listUser : []}
-                            placeholder="Chọn nhân viên"
-                        />
+                        name="user_id"
+                        onChange={onChangeUser}
+                        dataOptions={listUser ? listUser : []}
+                        placeholder="Chọn nhân viên"
+                        /> : null
+                    }
+                        <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" placeholder="Chọn ngày chấm công" size="large" onChange={handleGetDate}/>
                         <ExportExcelComponent dataExport={dataExport} />
                     </div>
                     {
-                        role === 'admin' || isShowListTimeSheets && 
+                        role === 'admin' || isShowListTimeSheets ? 
                         <AddNewDialogComponent
                         fileds={dataForm}
                         title="chấm công"
                         onClose={onClose}
                         ref={ref}
                         onSubmit={onSubmit}
-                        />
+                        /> : null
                     }
                    
                 </div>

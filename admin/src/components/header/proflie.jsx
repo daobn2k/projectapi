@@ -43,7 +43,10 @@ export default function Profile({ isProfileVisible, handleCancel }) {
   }, []);
 
   const loadingInfo = (id) => {
-    getUserbyId(id).then((res) => setUserInfo(res.data.data));
+    getUserbyId(id).then((res) => {
+      setUserInfo(res.data.data)
+      store.setCurrentUser(res.data.data);
+    });
   };
   const editProfile = (values) => {
     UpdateAccount(user._id, {...values,avatar:url})

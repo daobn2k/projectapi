@@ -47,7 +47,6 @@ export class RoleService {
     }
 
     const totalRecord = await this.RoleModel.find().count().exec();
-    console.log(result,"result");
     
     return {
       message: 'SUCCESS',

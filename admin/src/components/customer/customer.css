@@ -48,3 +48,16 @@
 .ant-picker{
     height: 40px;
 }
+.root-filter{
+    width: 100%;
+    padding:12px 0;
+    display: flex;
+    align-items: center;
+    gap:16px;
+}
+
+.field-filter{
+    display: flex;
+    gap: 16px;
+}
+

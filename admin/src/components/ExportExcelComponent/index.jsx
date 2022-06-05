@@ -56,7 +56,7 @@ const ExportExcelComponent = (props) => {
           sheet1.row(7).style("bold", true);
           sheet1.row(2).style("bold", true);
     
-            const idxMax = data.length + 7;
+            const idxMax = data.length + 10;
             let idxEnd = Math.min(idxMax, 500);
             let idxBegin = 7;
             while (idxBegin < idxMax)
@@ -68,8 +68,8 @@ const ExportExcelComponent = (props) => {
     
            workbook.sheet(0).range("A7:AD7").map(cell => {
               let nameCell = sheet1.row(7).cell(cell._columnNumber).columnName();
-           sheet1.column(nameCell).width(cell && cell._value && cell._value.length > 0? cell._value.length + 8 : 0);
-           sheet1.column("AD").width(cell && cell._value && cell._value.length > 0 ? cell._value.length + 70 : 0) ;
+           sheet1.column(nameCell).width(cell && cell._value && cell._value.length > 0? cell._value.length + 10 : 0);
+           sheet1.column("AD").width(cell && cell._value && cell._value.length > 0 ? cell._value.length + 100 : 0) ;
            
     
           })

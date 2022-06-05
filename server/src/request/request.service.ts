@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as moment from 'moment';
 import { Model } from 'mongoose';
 import { rgx } from 'src/ultils';
 import { CreateRequestDto, QueryListRequests } from './dto/create-user.dto';
@@ -18,35 +19,54 @@ export class RequestService {
     return result;
   }
 
-  async findAll(query: QueryListRequests) {
+  async findAll(query: any) {
     const { page = 1, perPage = 5 ,fileds = 'name' ,keyword = ''} = query;
     const skip: number = (page - 1) * perPage;
     let result;
-    if(keyword !== ''){
+    if (Object.keys(query).length > 0) {
+      delete query.page
+      delete query.perPage
+      if(query.create_date){
+        const start = moment(query.create_date).startOf('day')
+        const end = moment(query.create_date).endOf('day')
+        query.create_date = {$gte:start,$lte:end}
+      }
+      if(query.end_date){
+        const start = moment(query.end_date).startOf('day')
+        const end = moment(query.end_date).endOf('day')
+        query.end_date = {$gte:start,$lte:end}
+      } 
+      if(query.from_date){
+        const start = moment(query.from_date).startOf('day')
+        const end = moment(query.from_date).endOf('day')
+        query.from_date = {$gte:start,$lte:end}
+      } 
+
+      console.log(query,"query");
+      
       result = await this.requestModel
-      .find({[fileds]:rgx(keyword)})
-      .limit(+perPage)
-      .skip(skip)
-      .sort({create_date:-1})
-      .populate('create_by_id')
-      .populate('user_id')
-      .populate('edit_by_id')
-      .exec();
-    }else{
+        .find({...query})
+        .limit(+perPage)
+        .skip(skip)
+        .sort({ create_date: -1 })
+        .populate('create_by_id')
+        .populate('user_id')
+        .populate('edit_by_id')
+        .exec();
+    } else {
       result = await this.requestModel
-      .find({})
-      .limit(+perPage)
-      .skip(skip)
-      .sort({create_date:-1})
-      .populate('create_by_id')
-      .populate('user_id')
-      .populate('edit_by_id')
-      .exec();
+        .find({})
+        .sort({ create_date: -1 })
+        .populate('create_by_id')
+        .populate('user_id')
+        .populate('edit_by_id')
+        .exec();
     }
+    const totalRecord = await this.requestModel.find().count().exec();
     return {
       message: 'SUCCESS',
       data: result,
-      total: result.length,
+      total: totalRecord,
     };
   }
 

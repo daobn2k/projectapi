@@ -10,7 +10,7 @@ import {
 } from './dto/create-time-sheets.dto';
 import { UpdateTimeSheetsDto } from './dto/update-time-sheets.dto';
 import { TimeSheets } from './entities/timesheets.entity';
-
+import * as moment from 'moment';
 @Injectable()
 export class TimeSheetsService {
   constructor(
@@ -35,10 +35,16 @@ export class TimeSheetsService {
     let totalRecord;
 
       const skip: number = (page - 1) * perPage;
+
       
       if (Object.keys(query).length > 0) {
         delete query.page
         delete query.perPage
+        if(query.create_date){
+          const start = moment(query.create_date).startOf('day')
+          const end = moment(query.create_date).endOf('day')
+          query.create_date = {$gte:start,$lte:end}
+        }
         result = await this.TimeSheetsModel
           .find({...query})
           .limit(+perPage)
@@ -58,7 +64,7 @@ export class TimeSheetsService {
           .exec();
       }
       totalRecord = await this.TimeSheetsModel.find().count().exec();
-
+      
     return {
       message: 'SUCCESS',
       data: result,

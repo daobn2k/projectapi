@@ -1,18 +1,25 @@
-import { notification, Space, Table, Input, Button, Spin, Typography } from 'antd';
+import { notification, Space, Table, Input, Button, Spin, Typography, DatePicker } from 'antd';
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { Link, useHistory } from 'react-router-dom';
-import { getRequest } from '../../axios';
+import { getRequest, GetUser } from '../../axios';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
-import { checkPermisstionUser, convertTimeStampUTCToLocal } from '../../shared';
+import { checkPermisstionUser, convertDataToOptions, convertTimeStampUTCToLocal } from '../../shared';
 import ExportExcelComponent from '../ExportExcelComponent';
 import { deleteRequest } from '../../axios/request';
 import PopupConfirmComponent from '../../common/PopupComfirmComponent';
 import { store } from '../../storage';
+import SelectComponent from '../../common/SelectComponent';
+import { getDataDeaprtment } from '../../axios/department';
+import { NotificationCommon } from '../../common/Notification';
+import * as _ from 'lodash';
+import moment from 'moment';
 
 const { Search } = Input;
 export default function ListRequest() {
     const [loading, setLoading] = useState(false);
+    const [listUser, setListUser] = useState([]);
+    const [listDepartment, setListDepartment] = useState([]);
     const user = store.getCurentUser();
 
     const columns = [
@@ -187,7 +194,28 @@ export default function ListRequest() {
 
     useEffect(() => {
         getDataExport();
+        getAllUser();
+        getDataListDeaprtment();
     }, []);
+
+    const getAllUser = async () => {
+        let d;
+        const res = await GetUser();
+        const { data } = res;
+        if (data.message === 'SUCCESS') {
+            d = convertDataToOptions(data.data);
+            setListUser(d);
+        } else {
+            NotificationCommon('error', 'Không lấy được thông tin người dùng');
+        }
+    };
+    const getDataListDeaprtment = async () => {
+        const result = await getDataDeaprtment();
+        if (result.status === 200) {
+            const d = convertDataToOptions(result.data.data);
+            setListDepartment(d);
+        }
+    };
     const dataExport = useMemo(() => {
         return {
             data: dataExportExcel,
@@ -196,6 +224,45 @@ export default function ListRequest() {
             fileName: 'Danh sách công việc',
         };
     }, [dataExportExcel]);
+
+    const handleGetDate = (e) => {
+        setParams({
+            ...params,
+            create_date: !_.isEmpty(e) ? moment(e).format('YYYY-MM-DD') : null,
+        });
+    };
+    const handleGetDateStart = (e) => {
+        setParams({
+            ...params,
+            from_date: !_.isEmpty(e) ? moment(e).format('YYYY-MM-DD') : null,
+        });
+    };
+    const handleGetDateEnd = (e) => {
+        setParams({
+            ...params,
+            end_date: !_.isEmpty(e) ? moment(e).format('YYYY-MM-DD') : null,
+        });
+    };
+    const onChangeDepartment = (e, name) => {
+        setParams({
+            ...params,
+            [name]:e
+        })
+    };
+    const onChangeCreateUser = (e, name) => {
+        setParams({
+            ...params,
+            [name]:e
+        })
+    };
+    const onChangeUser = (e, name) => {
+        setParams({
+            ...params,
+            [name]:e
+        })
+    };
+
+
     return (
         <Spin indicator={antIcon} spinning={false}>
             <Space className="Space">
@@ -217,6 +284,50 @@ export default function ListRequest() {
                     )}
                 </div>
             </Space>
+            <div className="root-filter">
+                <Typography>Bộ lọc:</Typography>
+                <div className="field-filter">
+                    <SelectComponent
+                        name="create_by_id"
+                        onChange={onChangeCreateUser}
+                        dataOptions={listUser ? listUser : []}
+                        placeholder="Chọn người giao việc"
+                    />
+                     <SelectComponent
+                        name="user_id"
+                        onChange={onChangeUser}
+                        dataOptions={listUser ? listUser : []}
+                        placeholder="Chọn người nhận việc"
+                    />
+                    {/* <SelectComponent
+                        name="department_id"
+                        onChange={onChangeDepartment}
+                        dataOptions={listDepartment ? listDepartment : []}
+                        placeholder="Chọn phòng ban"
+                    /> */}
+                    <DatePicker
+                        style={{ width: '100%' }}
+                        format="DD/MM/YYYY"
+                        placeholder="Chọn ngày tạo"
+                        size="large"
+                        onChange={handleGetDate}
+                    />
+                    <DatePicker
+                        style={{ width: '100%' }}
+                        format="DD/MM/YYYY"
+                        placeholder="Chọn ngày bắt đầu"
+                        size="large"
+                        onChange={handleGetDateStart}
+                    />
+                     <DatePicker
+                        style={{ width: '100%' }}
+                        format="DD/MM/YYYY"
+                        placeholder="Chọn ngày kết thúc"
+                        size="large"
+                        onChange={handleGetDateEnd}
+                    />
+                </div>
+            </div>
             <div className="space-table">
                 <ExportExcelComponent dataExport={dataExport} />
                 <Table

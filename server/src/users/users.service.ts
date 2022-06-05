@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as moment from 'moment';
 import { Model, ObjectId } from 'mongoose';
 import { rgx } from 'src/ultils';
 import {
@@ -30,23 +31,25 @@ export class UsersService {
     return result;
   }
 
-  async findAll(query: QueryListUsers) {
+  async findAll(query: any) {
     const { page , perPage , fileds = 'name', keyword = '' } = query;
     const skip: number = (page - 1) * perPage;
     let result;
-    if (keyword !== '') {
+    if (Object.keys(query).length > 0) {
+      delete query.page
+      delete query.perPage
+      if(query.create_date){
+        const start = moment(query.create_date).startOf('day')
+        const end = moment(query.create_date).endOf('day')
+        query.create_date = {$gte:start,$lte:end}
+      }
+      if(query.dob){
+        const start = moment(query.dob).startOf('day')
+        const end = moment(query.dob).endOf('day')
+        query.dob = {$gte:start,$lte:end}
+      } 
       result = await this.userModel
-        .find({ [fileds]: rgx(keyword) })
-        .limit(+perPage)
-        .skip(skip)
-        .sort({ create_date: -1 })
-        .populate('education_id')
-        .populate('department_id')
-        .populate('role_id')
-        .exec();
-    } else if (page && perPage) {
-      result = await this.userModel
-        .find({})
+        .find({...query})
         .limit(+perPage)
         .skip(skip)
         .sort({ create_date: -1 })
