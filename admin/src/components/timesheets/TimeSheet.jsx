@@ -323,7 +323,11 @@ export default function TimeSheet() {
     };
 
     const getDataPayRollExport = () => {
-        getDataTimeSheet()
+        let payload = {};
+        if (role === 'user') {
+            payload.user_id = user._id;
+        }
+        getDataTimeSheet(payload)
             .then((res) => {
                 const { data, status } = res;
                 if (status === 200) {

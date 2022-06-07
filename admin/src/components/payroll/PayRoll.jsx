@@ -144,7 +144,11 @@ export default function PayRollComponent() {
     };
 
     const getDataPayRollExport = () => {
-        getDataPayRoll()
+        let payload = {};
+        if (role === 'user') {
+            payload.user_id = user._id;
+        }
+        getDataPayRoll(payload)
             .then((res) => {
                 const { data, status } = res;
                 if (status === 200) {
