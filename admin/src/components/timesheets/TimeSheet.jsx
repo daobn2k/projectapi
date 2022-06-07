@@ -102,7 +102,7 @@ export default function TimeSheet() {
                 render: (e) => (
                     <Space size="middle">
                         {
-                            role === 'admin' || isShowListTimeSheets && 
+                            (role === 'admin' || isShowListTimeSheets) && 
                             <Fragment>
                                 <AiOutlineEdit
                             key={e.id}
@@ -362,13 +362,15 @@ export default function TimeSheet() {
             create_date: !_.isEmpty(e) ? moment(e).format("YYYY-MM-DD") : null
         })
     }
+
+    console.log(role,"role");
     return (
         <Spin indicator={antIcon} spinning={false}>
             <Space className="Space" size={14}>
                 <div className="top-table">
                     <div className="group-search">
                     {
-                        role === 'admin' || isShowListTimeSheets ?
+                        (role === 'admin' || isShowListTimeSheets) ?
                         <SelectComponent
                         name="user_id"
                         onChange={onChangeUser}
@@ -380,7 +382,7 @@ export default function TimeSheet() {
                         <ExportExcelComponent dataExport={dataExport} />
                     </div>
                     {
-                        role === 'admin' || isShowListTimeSheets ? 
+                        (role === 'admin' || isShowListTimeSheets) ? 
                         <AddNewDialogComponent
                         fileds={dataForm}
                         title="chấm công"

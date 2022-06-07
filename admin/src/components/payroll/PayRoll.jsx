@@ -101,7 +101,7 @@ export default function PayRollComponent() {
                 width: 100,
                 render: (e) => (
                     <Space size="middle">
-                        {role === 'admin' && isShowListTimeSheets && (
+                        {(role === 'admin' && isShowListTimeSheets) && (
                             <Fragment>
                                 <AiOutlineEdit key={e.id} onClick={() => handleEdit(e)} />
                                 <PopupConfirmComponent
@@ -244,7 +244,7 @@ export default function PayRollComponent() {
             <Space className="Space" size={14}>
                 <div className="top-table">
                     <div className="group-search">
-                        {role === 'admin' && isShowListTimeSheets && (
+                        {(role === 'admin' && isShowListTimeSheets) && (
                             <SelectComponent
                                 name="user_id"
                                 onChange={onChangeUser}
@@ -261,7 +261,7 @@ export default function PayRollComponent() {
                         />
                         <ExportExcelComponent dataExport={dataExport} />
                     </div>
-                    {role === 'admin' && isShowListTimeSheets && (
+                    {(role === 'admin' && isShowListTimeSheets) && (
                         <Link to="/payroll/new">
                             <Button className="btn-add" icon={<PlusOutlined />}>
                                 Thêm mới lương

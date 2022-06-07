@@ -8,6 +8,7 @@ import AddNewDialogComponent from "../AddNewDialogComponent";
 import { NotificationCommon } from "../../common/Notification";
 import { store } from "../../storage";
 import { deleteEvaluate, editEvaluate, getDataEvaluate, newEvaluate } from "../../axios/evaluate";
+import PopupConfirmComponent from "../../common/PopupComfirmComponent";
 const { Search } = Input;
 export default function ListReward() {
   const [data, setData] = useState();
@@ -95,7 +96,9 @@ export default function ListReward() {
                  role === 'admin' && 
                  <Fragment>
                       <AiOutlineEdit key={e.id} onClick={() => handleEdit(e)} />
-                      <AiFillDelete key={e.id} onClick={() => handleDelete(e._id)} />
+                      <PopupConfirmComponent title="thưởng nhân viên" data={e} handleDelete={handleDelete}>
+                                    <AiFillDelete />
+                      </PopupConfirmComponent>
                  </Fragment>
             }
          

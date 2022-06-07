@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as moment from 'moment';
 import { Model, Query } from 'mongoose';
 import { rgx } from 'src/ultils';
 import {
@@ -26,14 +27,18 @@ export class PayRollService {
     };
   }
 
-  async findAll(query: QueryListPayRoll) {
+  async findAll(query: any) {
     const { page , perPage , fileds = 'name', keyword = '' } = query;
     const skip: number = (page - 1) * perPage;
     let result;
     if (Object.keys(query).length > 0) {
       delete query.page
       delete query.perPage
-      
+      if(query.create_date){
+        const start = moment(query.create_date).startOf('day')
+        const end = moment(query.create_date).endOf('day')
+        query.create_date = {$gte:start,$lte:end}
+      }
       result = await this.PayRollModule
         .find({...query})
         .limit(+perPage)

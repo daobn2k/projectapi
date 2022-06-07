@@ -18,7 +18,7 @@ export default function AddPayRoll() {
     const [valueChooseUser, setValueChooseUser] = useState();
     const location = useLocation();
     const currentAccount = store.getCurentUser();
-
+    const history = useHistory();
     const { state } = location;
 
     const [form] = Form.useForm();
@@ -220,9 +220,19 @@ export default function AddPayRoll() {
             create_by_id:data.create_by_id,
         }
         createPayRoll(payload).then((res) => {
-            console.log(res,"res");
+            notification.success({
+                description: "Tạo mới tính lương thành công",
+                placement: "topRight",
+              });
+              history.push({
+                pathname: "/payroll/list",
+              });
         }).catch((err) => {
-            console.log(err,"err");
+            notification.error({
+                message: `Thông báo tạo mới`,
+                description: "Tạo mới tính lương thất bại",
+                placement: "topRight",
+            });
         }).finally((f) => {
             console.log("f",f)
         })

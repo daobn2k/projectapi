@@ -13,6 +13,7 @@ import AddNewDialogComponent from '../AddNewDialogComponent';
 import { NotificationCommon } from '../../common/Notification';
 import { store } from '../../storage';
 import { deleteEvaluate, editEvaluate, getDataEvaluate, newEvaluate } from '../../axios/evaluate';
+import PopupConfirmComponent from '../../common/PopupComfirmComponent';
 const { Search } = Input;
 export default function ListChastise() {
     const [data, setData] = useState();
@@ -87,7 +88,9 @@ export default function ListChastise() {
                         {role === 'admin' && (
                             <Fragment>
                                 <AiOutlineEdit key={e.id} onClick={() => handleEdit(e)} />
-                                <AiFillDelete key={e.id} onClick={() => handleDelete(e._id)} />
+                                <PopupConfirmComponent title="phạt" data={e} handleDelete={handleDelete}>
+                                    <AiFillDelete />
+                                </PopupConfirmComponent>
                             </Fragment>
                         )}
                     </Space>
